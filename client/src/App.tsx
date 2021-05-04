@@ -2,27 +2,40 @@ import React, { useEffect } from "react";
 
 import socketIOClient from "socket.io-client";
 
-import { ThemeProvider } from "@material-ui/core";
+import { ThemeProvider, Box, makeStyles, Theme } from "@material-ui/core";
 
 import "./App.css";
-import LandingPage from "./componants/LandingPage";
+import LandingPage from "./components/LandingPage";
+import SidePanel from "./components/Panel";
 import { theme } from "./providers/ThemeProvider";
-import MainPage from "./componants/MainPage";
+import MainPage from "./components/MainPage";
 import SocketProvider from "./providers/SocketContext";
 
 function App() {
- 
+  const classes = useStyles();
   return (
     <>
       <SocketProvider>
-        <MainPage />
-        <ThemeProvider theme={theme}>
-          <LandingPage />
-        </ThemeProvider>
+        <Box className={classes.appContainer}>
+          <Box className={classes.flexContainer}>
+            <SidePanel />
+            <MainPage />
+          </Box>
+        </Box>
+        <ThemeProvider theme={theme}>{/* <LandingPage /> */}</ThemeProvider>
       </SocketProvider>
-
     </>
   );
 }
+
+const useStyles = makeStyles((theme: Theme) => ({
+  flexContainer: {
+    display: "flex",
+    justifyContent: "center",
+  },
+  appContainer: {
+    width: "100vw",
+  },
+}));
 
 export default App;

@@ -35,7 +35,9 @@ function LandingPage() {
       </form>
         <Button
           onClick={() => {
+            if(username !== ""){
             getUserName(username)
+            }
           }}
         >
           Join

@@ -6,12 +6,15 @@ const { Server } = require('socket.io');
 const server = http.createServer(app);
 const io = new Server(server)
 
+const {addUser, removeUser, getUser, getUsersInRoom} = require('./users')
+
 io.on("connection", (socket) => {
     console.log("Client was connected", socket.id);
     io.emit('return-message', "Welcome!")
 
-    socket.on('join', (user) => {
-        console.log(user)
+    socket.on('join', (name, callback) => {
+        const {user, error} = addUser({id: socket.id, name})
+        /* if(error) return callback(error) */
     })
 
 

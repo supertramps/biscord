@@ -22,9 +22,9 @@ interface Props {
 function SocketProvider(props: Props) {
   const [messages, setMessages] = useState<any>([] as Message[]);
   const [room, setRoom] = useState<any>([] as Room[]);
-  const [user, setUser] = useState<any>([] as User[]);
+  const [user, setUser] = useState<any>("user");
   const ENDPOINT = 'localhost:6969'
-
+  
  
 
   function getUserName(value: any){
@@ -32,22 +32,16 @@ function SocketProvider(props: Props) {
   }
 
   useEffect(() => {
-    let socket = io(ENDPOINT, {
-      transports: ["websocket"],
-    });
-    socket.emit('join', user)
-
-    /* socket.on("connect", () => {
-      console.log("connected");
-    });
-    socket.on("event", (data: any) => {
-      console.log(data);
-    }); */
-
-    /* return () => {
-      socket.emit('disconnect');
-      socket.off();
-    } */
+    
+    if(user !== "user") {
+      console.log(user)
+      let socket = io(ENDPOINT, {
+        transports: ["websocket"],
+      });
+      socket.emit('join', user)
+    }
+      
+    
   }, [ENDPOINT, user]);
 
   return (

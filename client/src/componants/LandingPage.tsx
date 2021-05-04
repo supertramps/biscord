@@ -31,5 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         justifyContent: "center",
         alignItems: "center",
         height: "100vh",   
-    }
+        background: "#2C2F33"
+    },
+
 }));

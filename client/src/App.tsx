@@ -1,10 +1,11 @@
 import React from 'react'
 import './App.css';
+import LandingPage from './componants/LandingPage';
 
 function App() {
   return (
    <>
-   <div>Hello world</div>
+   <LandingPage/>
    </>
   );
 }

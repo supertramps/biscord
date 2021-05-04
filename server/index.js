@@ -12,9 +12,14 @@ io.on("connection", (socket) => {
     console.log("Client was connected", socket.id);
     io.emit('return-message', "Welcome!")
 
-    socket.on('join', (name, callback) => {
+    socket.on('add-to-user-database', (name, callback) => {
         const {user, error} = addUser({id: socket.id, name})
         /* if(error) return callback(error) */
+    })
+
+    socket.on('user-session', (socket) => {
+        const user = getUser(socket.id)
+        socket.emit(user)
     })
 
 

@@ -8,10 +8,12 @@ export interface User {
 export interface Room {}
 
 interface State {
+  usersession: any;
   getUserName: (value: any) => void;
 }
 
 export const SocketContext = createContext<State>({
+    usersession: "",
     getUserName: () => {},
 });
 
@@ -23,30 +25,30 @@ function SocketProvider(props: Props) {
   const [messages, setMessages] = useState<any>([] as Message[]);
   const [room, setRoom] = useState<any>([] as Room[]);
   const [user, setUser] = useState<any>("user");
+  const [socket, setSocket] = useState<any>()
   const ENDPOINT = 'localhost:6969'
   
  
+  
 
   function getUserName(value: any){
     setUser(value)
   }
 
   useEffect(() => {
-    
-    if(user !== "user") {
-      console.log(user)
+    if(user !== "user") { 
       let socket = io(ENDPOINT, {
         transports: ["websocket"],
       });
-      socket.emit('join', user)
+      setSocket(socket)
+      socket.emit('add-to-user-database', user)
     }
-      
-    
   }, [ENDPOINT, user]);
 
   return (
     <SocketContext.Provider 
       value={{
+        usersession: socket,
         getUserName: getUserName,
       }}>
         {props.children}

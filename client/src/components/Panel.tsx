@@ -12,8 +12,23 @@ import {
   Tooltip,
   Zoom,
 } from "@material-ui/core";
+import { useContext, useEffect } from "react";
+import {SocketContext} from "../providers/SocketContext";
 
 function SidePanel() {
+ const { usersession } = useContext(SocketContext);
+
+useEffect(() => {
+  if(!usersession){
+    return;
+  }
+  usersession.emit('user-session', usersession.id)
+ usersession.on('user-session', (user: any) => {
+  console.log(user)
+ })
+
+})
+
   const classes = useStyles();
   return (
     <Box className={classes.root}>

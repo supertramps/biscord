@@ -31,11 +31,11 @@ io.on("connection", (socket) => {
 
         console.log("rooms:",io.sockets.adapter.rooms)
         socket.to(data.room).emit('joined-room', `A user just joined the room ${socket.id}`)
-    })
+    })*/
 
     socket.on('disconnect', () => {
-        console.log('Rooms: ', io.sockets.adapter.rooms)
-    }) */
+        console.log('user disconnected')
+    }) 
 })
 
 const getApiAndEmit = socket => {

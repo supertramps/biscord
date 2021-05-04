@@ -12,12 +12,15 @@ import {
   Tooltip,
   Zoom,
 } from "@material-ui/core";
-// import GifIcon from "@material-ui/icons/Gif";
-// import { useContext } from "react";
+
+import { useContext } from "react";
+import SocketContext, { SocketConsumer } from "../providers/SocketContext";
+
 
 function MainPage() {
   const classes = useStyles();
   return (
+
     <Box className={classes.root}>
       <Typography variant="body1">Test</Typography>
       <Typography variant="body2">super</Typography>
@@ -41,7 +44,6 @@ function MainPage() {
           </Box>
         </form>
       </Box>
-    </Box>
   );
 }
 

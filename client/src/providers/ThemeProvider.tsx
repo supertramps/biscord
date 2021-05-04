@@ -15,19 +15,20 @@ export const theme = createMuiTheme({
   typography: {
     h1: {
       fontSize: 55,
-      color:"white"
+      color: "white",
     },
     h5: {
       fontSize: "2rem",
-      fontWeight: 500,
+      fontFamily: "Uni-Sans",
     },
     body1: {
-      fontSize: "1.2rem",
+      fontSize: "1.5rem",
       color: "#D9D9D9",
+      fontFamily: "whitney",
     },
     body2: {
-      fontsize: "1rem",
-      color: "#6E767D",
+      fontsize: "0.8rem",
+      color: "#99AAB5",
     },
   },
 });

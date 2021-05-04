@@ -1,4 +1,7 @@
 import React, { useEffect } from "react";
+
+import socketIOClient from "socket.io-client";
+
 import { ThemeProvider } from "@material-ui/core";
 
 import "./App.css";
@@ -17,6 +20,7 @@ function App() {
           <LandingPage />
         </ThemeProvider>
       </SocketProvider>
+
     </>
   );
 }

@@ -10,6 +10,10 @@ io.on("connection", (socket) => {
     console.log("Client was connected", socket.id);
     io.emit('return-message', "Welcome!")
 
+    socket.on('join', (user) => {
+        console.log(user)
+    })
+
     /* socket.broadcast.emit('user-connected', socket.id)
     socket.emit('return-message', "Welcome!") */
 

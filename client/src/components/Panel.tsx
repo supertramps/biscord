@@ -22,10 +22,20 @@ function SidePanel() {
           <TextField placeholder="search..."></TextField>
         </Box>
         <Box mt={2} ml={5} className={classes.roomList}>
-          <Typography>#React</Typography>
-          <Typography>#Javascript</Typography>
-          <Typography>#Node</Typography>
-          <Typography>#Typescript</Typography>
+          <Box>
+            <Link>
+              <Typography variant="body1">#React</Typography>
+            </Link>
+          </Box>
+          <Box>
+            <Typography variant="body1">#Javascript</Typography>
+          </Box>
+          <Box>
+            <Typography variant="body1">#Node</Typography>
+          </Box>
+          <Box>
+            <Typography variant="body1">#Typescript</Typography>
+          </Box>
         </Box>
       </Box>
       <Box className={classes.bottomContainer}>

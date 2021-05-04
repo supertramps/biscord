@@ -13,6 +13,8 @@ import {
   Zoom,
 } from "@material-ui/core";
 
+import discordDark from "../assets/discord-dark.png";
+
 import { useContext } from "react";
 import SocketContext, { SocketConsumer } from "../providers/SocketContext";
 
@@ -20,10 +22,9 @@ function MainPage() {
   const classes = useStyles();
   return (
     <Box className={classes.root}>
-      <Typography variant="body1">Test</Typography>
-      <Typography variant="body2">super</Typography>
-      <Typography variant="h5">BISCORD</Typography>
-      <Box className={classes.messageContainer}></Box>
+      <Box className={classes.messageContainer}>
+        <img src={discordDark} alt="" />
+      </Box>
       <Box mb={3} className={classes.formContainer}>
         <form className={classes.formStyling}>
           <Box className={classes.formFlex}>
@@ -54,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: "center",
     height: "100vh",
     width: "100%",
-    backgroundColor: "#36393F",
+    backgroundColor: "#2C2F33",
   },
   formContainer: {
     width: "100%",
@@ -103,6 +104,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   messageContainer: {
     height: "100%",
     width: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
 }));
 

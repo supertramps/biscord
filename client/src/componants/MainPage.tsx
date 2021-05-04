@@ -13,17 +13,19 @@ import {
   Zoom,
 } from "@material-ui/core";
 import { useContext } from "react";
+import SocketContext, { SocketConsumer } from "../providers/SocketContext";
 
 function MainPage() {
   const classes = useStyles();
   return (
-    <Box className={classes.root}>
-      <Box mb={3} className={classes.formContainer}>
-        <form className={classes.formStyling}>
-          <TextField label="Message #ROOM"></TextField>
-        </form>
+    
+      <Box className={classes.root}>
+        <Box mb={3} className={classes.formContainer}>
+          <form className={classes.formStyling}>
+            <TextField label="Message #ROOM"></TextField>
+          </form>
+        </Box>
       </Box>
-    </Box>
   );
 }
 

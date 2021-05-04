@@ -53,6 +53,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: "center",
     alignItems: "center",
     height: "100vh",
+    width: "100%",
     backgroundColor: "#36393F",
   },
   formContainer: {

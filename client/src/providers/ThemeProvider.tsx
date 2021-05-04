@@ -14,8 +14,9 @@ export const theme = createMuiTheme({
   },
   typography: {
     h1: {
-      fontSize: 55,
+      fontSize: "4rem",
       color: "white",
+      fontFamily: "Uni-Sans",
     },
     h5: {
       fontSize: "2rem",

@@ -1,12 +1,9 @@
-import React from 'react'
-import './App.css';
+import React from "react";
+import "./App.css";
+import MainPage from "./componants/MainPage";
 
 function App() {
-  return (
-   <>
-   <div>Hello world</div>
-   </>
-  );
+  return <MainPage />;
 }
 
 export default App;

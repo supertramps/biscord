@@ -26,6 +26,7 @@ function App() {
           </Box>
         </SocketProvider>
       </ThemeProvider>
+
     </>
   );
 }

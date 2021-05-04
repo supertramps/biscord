@@ -22,7 +22,7 @@ function App() {
             <MainPage />
           </Box>
         </Box>
-        <ThemeProvider theme={theme}>{/* <LandingPage /> */}</ThemeProvider>
+        <ThemeProvider theme={theme}>{<LandingPage />}</ThemeProvider>
       </SocketProvider>
     </>
   );

@@ -15,15 +15,17 @@ function App() {
   const classes = useStyles();
   return (
     <>
-      <SocketProvider>
-        <Box className={classes.appContainer}>
-          <Box className={classes.flexContainer}>
-            <SidePanel />
-            <MainPage />
+      <ThemeProvider theme={theme}>
+        <SocketProvider>
+          <Box className={classes.appContainer}>
+            <Box className={classes.flexContainer}>
+              <SidePanel />
+              <MainPage />
+            </Box>
+            <LandingPage />
           </Box>
-        </Box>
-        <ThemeProvider theme={theme}>{/* <LandingPage /> */}</ThemeProvider>
-      </SocketProvider>
+        </SocketProvider>
+      </ThemeProvider>
     </>
   );
 }
@@ -34,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: "center",
   },
   appContainer: {
-    width: "100vw",
+    width: "100%",
   },
 }));
 

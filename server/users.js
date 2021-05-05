@@ -1,6 +1,4 @@
-
 const users = [];
-
 
 function addUser({id, name}){
     const exisitingUser = users.find((user) => user.name === name);

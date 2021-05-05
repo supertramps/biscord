@@ -11,7 +11,7 @@ const {addUser, removeUser, getUser, getUsersInRoom, addUserToRoom} = require('.
 io.on("connection", (socket) => {
 
     console.log("Client was connected", socket.id);
-
+    
     socket.on('add-to-user-database', (name) => {
         const {user, error} = addUser({id: socket.id, name})
         const loggedInUser = getUser(socket.id)

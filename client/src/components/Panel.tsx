@@ -25,22 +25,19 @@ function SidePanel(props:Props) {
   const { socket, room } = useContext(SocketContext);
   const [user, setUser] = useState<any>();
   
-  console.log(room)
-  function createRoom() {
-    socket.emit('create-room', user)
-  }
+  console.log(socket)
 
-useEffect(() => {
-  const loadUser = async () => {
-    if(!socket){
-      return;
+  useEffect(() => {
+    const loadUser = async () => {
+      if(!socket){
+        return;
+      }
+      await socket.on('user-session', (lUser: any) => {
+          setUser(lUser)
+      })
     }
-    await socket.on('user-session', (lUser: any) => {
-        setUser(lUser)
-    })
-  }
-  loadUser();
-})
+    loadUser();
+  })
 
   return (
     <Box className={classes.root}>

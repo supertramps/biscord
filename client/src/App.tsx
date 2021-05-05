@@ -17,6 +17,8 @@ function App() {
   const [openInputs, setOpenInputs] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<any>()
 
+  console.log(userInfo)
+
   return (
     <>
       <ThemeProvider theme={theme}>

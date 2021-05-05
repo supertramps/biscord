@@ -12,20 +12,64 @@ import {
   Tooltip,
   Zoom,
 } from "@material-ui/core";
+import moment from "moment";
 
 import discordDark from "../assets/discord-dark.png";
 
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import SocketContext, { SocketConsumer } from "../providers/SocketContext";
 import ChatMessage from "./ChatMessage";
 
 function MainPage() {
+  const [messages, setMessages] = useState<string[]>();
+  const [messageHolder, setMessageHolder] = useState("");
+
+  const addMessageToArray = () => {
+    if (!messages) {
+      setMessages([messageHolder]);
+    } else if (messages) {
+      setMessages([...messages, messageHolder]);
+    }
+  };
+
+  // const today = moment();
+  // const postTime = moment();
+  // let timeShort = "m";
+  // let diff = today.diff(postTime, "seconds");
+
+  // if (diff >= 1) {
+  //   diff = today.diff(postTime, "hours");
+  //   timeShort = "h";
+  // }
+  // if (diff >= 24 && timeShort === "h") {
+  //   diff = today.diff(postTime, "days");
+  //   timeShort = "d";
+  // }
+
   const classes = useStyles();
   return (
     <Box className={classes.root}>
-      <Box className={classes.messageContainer}>
-        <img src={discordDark} alt="" />
-        {/* <ChatMessage/> */}
+      <Box className={classes.contentWrapper}>
+        <Box
+          className={
+            messages ? classes.messageContainer : classes.logoContainer
+          }
+        >
+          {messages ? (
+            messages
+              .map((m, i) => (
+                <ChatMessage
+                  time={moment().format("MMM Do YY")}
+                  profile={"Z"}
+                  key={i}
+                  message={m}
+                />
+              ))
+              .reverse()
+          ) : (
+            <img src={discordDark} alt="" />
+          )}
+        </Box>
       </Box>
       <Box mb={3} className={classes.formContainer}>
         <form className={classes.formStyling}>
@@ -35,10 +79,15 @@ function MainPage() {
                 placeholder="Message #React"
                 type="text"
                 className={classes.textFieldStyling}
+                onChange={(event) => setMessageHolder(event.target.value)}
               />
             </Box>
             <Box className={classes.buttonContainer}>
-              <Button color="primary" className={classes.buttonStyling}>
+              <Button
+                onClick={addMessageToArray}
+                color="primary"
+                className={classes.buttonStyling}
+              >
                 Send
               </Button>
             </Box>
@@ -105,10 +154,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   messageContainer: {
     height: "100%",
+    display: "flex",
+    overflow: "auto",
+    alignItems: "flex-start",
+    flexDirection: "column-reverse",
+  },
+  logoContainer: {
+    height: "100%",
     width: "100%",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+  },
+  contentWrapper: {
+    width: "100%",
+    height: "100%",
   },
 }));
 

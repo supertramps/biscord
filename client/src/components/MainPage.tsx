@@ -12,6 +12,7 @@ import {
   Tooltip,
   Zoom,
 } from "@material-ui/core";
+import moment from "moment";
 
 import discordDark from "../assets/discord-dark.png";
 import { useContext, useState } from "react";
@@ -23,6 +24,35 @@ interface Props{
 }
 
 function MainPage(props: Props) {
+  const [messages, setMessages] = useState<string[]>();
+  const [messageHolder, setMessageHolder] = useState("");
+  import React, { useContext, useState } from "react";
+  import SocketContext, { SocketConsumer } from "../providers/SocketContext";
+  import ChatMessage from "./ChatMessage";
+
+  const addMessageToArray = () => {
+    if (!messages) {
+      setMessages([messageHolder]);
+    } else if (messages) {
+      setMessages([...messages, messageHolder]);
+    }
+  };
+
+  // const today = moment();
+  // const postTime = moment();
+  // let timeShort = "m";
+  // let diff = today.diff(postTime, "seconds");
+
+  // if (diff >= 1) {
+  //   diff = today.diff(postTime, "hours");
+  //   timeShort = "h";
+  // }
+  // if (diff >= 24 && timeShort === "h") {
+  //   diff = today.diff(postTime, "days");
+  //   timeShort = "d";
+  // }
+
+
   const classes = useStyles();
   const {creatNewRoom} = useContext(SocketContext)
   const [values, setValues] = useState<Object>({
@@ -91,12 +121,56 @@ function MainPage(props: Props) {
                   Send
                 </Button>
               </Box>
-            </Box>
+              </Box>
           </form>
         </Box>
       </>
-      )
-      }
+      <Box className={classes.contentWrapper}>
+        <Box
+          className={
+            messages ? classes.messageContainer : classes.logoContainer
+          }
+        >
+          {messages ? (
+            messages
+              .map((m, i) => (
+                <ChatMessage
+                  time={moment().format("MMM Do YY")}
+                  profile={"Z"}
+                  key={i}
+                  message={m}
+                />
+              ))
+              .reverse()
+          ) : (
+            <img src={discordDark} alt="" />
+          )}
+        </Box>
+      </Box>
+      <Box mb={3} className={classes.formContainer}>
+        <form className={classes.formStyling}>
+          <Box className={classes.formFlex}>
+              <Box mr={2} className={classes.inputContainer}>
+                <input
+                  placeholder="Message #React"
+                  type="text"
+                  className={classes.textFieldStyling}
+                  onChange={(event) => setMessageHolder(event.target.value)}
+                />
+              </Box>
+              <Box className={classes.buttonContainer}>
+                <Button
+                  onClick={addMessageToArray}
+                  color="primary"
+                  className={classes.buttonStyling}
+                >
+                  Send
+                </Button>
+                </Box>
+             </Box>
+          </form>
+        </Box> )
+      }    
     </Box>
   );
 }
@@ -157,12 +231,20 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   messageContainer: {
     height: "100%",
+    display: "flex",
+    overflow: "auto",
+    alignItems: "flex-start",
+    flexDirection: "column-reverse",
+  },
+  logoContainer: {
+    height: "100%",
     width: "100%",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "column",
   },
+
   textFieldStyle: {
     width: "30rem",
     background: "#40444B",
@@ -173,7 +255,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "column",
-  }
+  },
+  contentWrapper: {
+    width: "100%",
+    height: "100%",
+  },
+
 }));
 
 export default MainPage;

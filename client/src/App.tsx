@@ -10,6 +10,7 @@ import SidePanel from "./components/Panel";
 import { theme } from "./providers/ThemeProvider";
 import MainPage from "./components/MainPage";
 import SocketProvider from "./providers/SocketContext";
+import Giphy from "./components/Giphy";
 
 function App() {
   const classes = useStyles();
@@ -18,6 +19,7 @@ function App() {
 
   return (
     <>
+      <ThemeProvider theme={theme}>
       <SocketProvider>
         <Box className={classes.appContainer}>
           <Box className={classes.flexContainer}>
@@ -33,6 +35,7 @@ function App() {
         </Box>
         <ThemeProvider theme={theme}>{<LandingPage />}</ThemeProvider>
       </SocketProvider>
+      </ThemeProvider>
     </>
   );
 }

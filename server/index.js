@@ -18,7 +18,8 @@ io.on("connection", (socket) => {
     })
 
     socket.on('create-room', (msg) => {
-        console.log(msg)
+        socket.join(msg.roomInfo.roomName)
+        console.log("rooms:" ,io.sockets.adapter.rooms)
     })
 
 

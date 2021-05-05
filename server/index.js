@@ -10,6 +10,8 @@ const {addUser, removeUser, getUser, getUsersInRoom, addUserToRoom} = require('.
 
 io.on("connection", (socket) => {
 
+   
+
     console.log("Client was connected", socket.id);
     
     socket.on('add-to-user-database', (name) => {
@@ -21,6 +23,7 @@ io.on("connection", (socket) => {
     socket.on('create-room', (msg) => {
         const user = addUserToRoom(msg.userInfo.id, msg.roomInfo.roomName)
         socket.join(msg.roomInfo.roomName)
+        console.log("rooms:",io.sockets.adapter.rooms)
         socket.emit('room-session', user)
     })
 

@@ -25,7 +25,7 @@ function SidePanel(props:Props) {
   const { socket, room } = useContext(SocketContext);
   const [user, setUser] = useState<any>();
   
-  console.log(socket)
+  console.log(room.room)
 
   useEffect(() => {
     const loadUser = async () => {
@@ -48,7 +48,7 @@ function SidePanel(props:Props) {
         <Box mt={2} ml={5} className={classes.roomList}>
           <Box>
             <Link>
-              <Typography variant="body1">#React</Typography>
+              <Typography variant="body1">{`#${room.room}`}</Typography>
             </Link>
           </Box>
           <Box>

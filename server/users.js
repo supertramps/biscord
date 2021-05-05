@@ -10,7 +10,6 @@ function addUser({id, name}){
     }
     const user = { id, name}; 
     users.push(user);
-    console.log(users)
     return user
 }
 

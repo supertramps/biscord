@@ -62,7 +62,7 @@ function SidePanel(props:Props) {
                   }}
                >
                 { room.room ? `#${room.room}` : null }
-                </Typography>
+              </Typography>
              </Link>
            </Box>
           ) : null}

@@ -15,26 +15,23 @@ import Giphy from "./components/Giphy";
 function App() {
   const classes = useStyles();
   const [openInputs, setOpenInputs] = useState<boolean>(false);
-  const [userInfo, setUserInfo] = useState<any>()
+  const [userInfo, setUserInfo] = useState<any>();
 
   return (
     <>
       <ThemeProvider theme={theme}>
-      <SocketProvider>
-        <Box className={classes.appContainer}>
-          <Box className={classes.flexContainer}>
-            <SidePanel 
-              createInputFields={setOpenInputs}
-              userInfo = {setUserInfo}
-            />
-            <MainPage 
-              inputFieldsOpen={openInputs}
-              userInfo={userInfo}
-            />
+        <SocketProvider>
+          <Box className={classes.appContainer}>
+            <Box className={classes.flexContainer}>
+              <SidePanel
+                createInputFields={setOpenInputs}
+                userInfo={setUserInfo}
+              />
+              <MainPage inputFieldsOpen={openInputs} userInfo={userInfo} />
+            </Box>
           </Box>
-        </Box>
-        <ThemeProvider theme={theme}>{<LandingPage />}</ThemeProvider>
-      </SocketProvider>
+          <ThemeProvider theme={theme}>{<LandingPage />}</ThemeProvider>
+        </SocketProvider>
       </ThemeProvider>
     </>
   );
@@ -46,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: "center",
   },
   appContainer: {
-    width: "100vw",
+    width: "100%",
   },
 }));
 

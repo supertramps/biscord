@@ -81,6 +81,14 @@ function SidePanel(props:Props) {
           </Box>
         </Box>
         <Box mb={2} className={classes.buttonContainer}>
+        <Button 
+            className={classes.buttonStyling}
+            onClick={() => {
+              
+            }}
+          >
+            Join Room
+          </Button>
           <Button 
             className={classes.buttonStyling}
             onClick={() => {

@@ -18,7 +18,8 @@ io.on("connection", (socket) => {
     })
 
     socket.on('create-room', (msg) => {
-        const user = addUserToRoom(msg.userInfo.id, msg.roomInfo.roomName)
+        console.log(msg)
+        const user = addUserToRoom(msg.userInfo.id, msg.roomInfo.roomName, msg.roomInfo.password)
         const rooms = io.of("/").adapter.rooms;
         socket.emit('room-session', user)
         socket.join(msg.roomInfo.roomName)

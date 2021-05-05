@@ -2,12 +2,12 @@ const users = [
     {
         "id": "UOivvYk5-EvfoI8qAAAF",
         "name": "asdasdsdf",
-        "room": "asdasd"
+        "room": "React"
     },
     {
         "id": "EN7n_2f2LJkKnw0dAAAH",
         "name": "asdassdfsdf",
-        "room": "asdas"
+        "room": "Javascript"
     }
 ];
 
@@ -21,11 +21,12 @@ function addUser({id, name}){
     return user
 }
 
-function addUserToRoom(id, room){
+function addUserToRoom(id, room, password){
     users.map(user => {
         if(user.id === id){
             user.room = room
-            return user.room
+            user.password = password
+            return user
         } else {
             return user
         }

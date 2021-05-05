@@ -1,19 +1,27 @@
 import { Avatar, Box, makeStyles, Theme, Typography } from "@material-ui/core";
 import React from "react";
 
-function ChatMessage() {
-  const classes = useStyles();
+interface Iprops {
+  message: string;
+  profile: string;
+  time: string | (string | number)[];
+}
 
+function ChatMessage(props: Iprops) {
+  const classes = useStyles();
+ 
   return (
     <Box className={classes.root}>
       <Box className={classes.chatMetaData}>
         <Typography variant="body2">Zazzi</Typography>
-        <Typography variant="body2">Today</Typography>
+        <Typography variant="body2">
+         {props.time}
+        </Typography>
       </Box>
       <Box className={classes.contentWrapper}>
-        <Avatar className={classes.avatarStyle}>Z</Avatar>
+        <Avatar className={classes.avatarStyle}>{props.profile}</Avatar>
         <Box className={classes.messageWrapper}>
-          <Typography>Chat message here lol</Typography>
+          <Typography>{props.message}</Typography>
         </Box>
       </Box>
     </Box>
@@ -22,14 +30,14 @@ function ChatMessage() {
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: "flex",
-    justifyContent: "flex-end",
+    marginBottom: ".5rem",
+    width: "100%",
     flexDirection: "column",
-    position: "absolute",
-    left: "25rem",
-    height: "80%",
   },
   chatMetaData: {
     display: "flex",
+    justifyContent: "center",
+    borderBottom: "black solid 1px",
     "& > * ": {
       margin: "0.5rem",
     },
@@ -37,6 +45,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   contentWrapper: {
     display: "flex",
     position: "relative",
+    alignItems: "flex-end",
   },
   messageWrapper: {
     background: "#40444B",
@@ -44,9 +53,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   avatarStyle: {
     bottom: 0,
-    left: "-3rem",
     margin: ".2rem",
-    position: "absolute",
   },
 }));
 

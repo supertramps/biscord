@@ -13,27 +13,35 @@ import {
   Zoom,
 } from "@material-ui/core";
 import { useContext, useEffect, useState } from "react";
-import {SocketContext} from "../providers/SocketContext";
+import {SocketContext } from "../providers/SocketContext";
 
-function SidePanel() {
+interface Props {
+  createInputFields: any;
+  userInfo: any;
+}
+
+function SidePanel(props:Props) {
   const classes = useStyles();
-  const { usersession } = useContext(SocketContext);
-  const [user, setUser] = useState<any>("");
+  const { socket, room } = useContext(SocketContext);
+  const [user, setUser] = useState<any>();
+  
+  console.log(room)
+  function createRoom() {
+    socket.emit('create-room', user)
+  }
 
 useEffect(() => {
   const loadUser = async () => {
-    if(!usersession){
+    if(!socket){
       return;
     }
-    await usersession.on('user-session', (lUser: any) => {
+    await socket.on('user-session', (lUser: any) => {
         setUser(lUser)
     })
   }
   loadUser();
 })
 
-console.log(user)
-  
   return (
     <Box className={classes.root}>
       <Box className={classes.topContainer}>
@@ -65,7 +73,8 @@ console.log(user)
                 <Avatar>Z</Avatar>
               </Box>
               <Box ml={1}>
-                <Typography>{!user.name ? "placeholder" : user.name}
+                <Typography>
+                {!user ? "placeholder" : user.name}
               </Typography>
               </Box>
             </Box>
@@ -76,7 +85,15 @@ console.log(user)
           </Box>
         </Box>
         <Box mb={2} className={classes.buttonContainer}>
-          <Button className={classes.buttonStyling}>Create Room</Button>
+          <Button 
+            className={classes.buttonStyling}
+            onClick={() => {
+              props.createInputFields(true)
+              props.userInfo(user)
+            }}
+          >
+            Create Room
+          </Button>
         </Box>
       </Box>
     </Box>

@@ -1,20 +1,27 @@
 import { createContext, useEffect, useState } from "react";
 import io from "socket.io-client";
+import { ObjectType } from "typescript";
 
 export interface Message {}
 export interface User {
   user: string
 }
-export interface Room {}
+export interface Room {
+  
+}
 
 interface State {
-  usersession: any;
+  socket: any;
+  room: any;
   getUserName: (value: any) => void;
+  creatNewRoom: (roomInfo: object, userInfo: object) => void;
 }
 
 export const SocketContext = createContext<State>({
-    usersession: "",
+    socket: "",
+    room: {},
     getUserName: () => {},
+    creatNewRoom: () => {},
 });
 
 interface Props {
@@ -28,11 +35,15 @@ function SocketProvider(props: Props) {
   const [socket, setSocket] = useState<any>()
   const ENDPOINT = 'localhost:6969'
   
- 
-  
-
   function getUserName(value: any){
     setUser(value)
+  }
+
+  function createNewRoom(roomInfo: object, userInfo: any){
+    socket.emit('create-room', {roomInfo, userInfo})
+    socket.on('room-session', (room: any) => {
+      setRoom(room)
+    })
   }
 
   useEffect(() => {
@@ -45,11 +56,17 @@ function SocketProvider(props: Props) {
     }
   }, [ENDPOINT, user]);
 
+  useEffect(() => {
+
+  })
+
   return (
     <SocketContext.Provider 
       value={{
-        usersession: socket,
+        socket: socket,
+        room: room,
         getUserName: getUserName,
+        creatNewRoom: createNewRoom,
       }}>
         {props.children}
     </SocketContext.Provider>

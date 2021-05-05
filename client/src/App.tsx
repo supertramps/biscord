@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import socketIOClient from "socket.io-client";
 
@@ -14,19 +14,27 @@ import Giphy from "./components/Giphy";
 
 function App() {
   const classes = useStyles();
+  const [openInputs, setOpenInputs] = useState<boolean>(false);
+  const [userInfo, setUserInfo] = useState<any>()
+
   return (
     <>
       <ThemeProvider theme={theme}>
-        <SocketProvider>
-          <Box className={classes.appContainer}>
-            <Box className={classes.flexContainer}>
-              <SidePanel />
-              <MainPage />
-            </Box>
-            {/* <Giphy /> */}
-            <LandingPage />
+      <SocketProvider>
+        <Box className={classes.appContainer}>
+          <Box className={classes.flexContainer}>
+            <SidePanel 
+              createInputFields={setOpenInputs}
+              userInfo = {setUserInfo}
+            />
+            <MainPage 
+              inputFieldsOpen={openInputs}
+              userInfo={userInfo}
+            />
           </Box>
-        </SocketProvider>
+        </Box>
+        <ThemeProvider theme={theme}>{<LandingPage />}</ThemeProvider>
+      </SocketProvider>
       </ThemeProvider>
     </>
   );
@@ -38,7 +46,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: "center",
   },
   appContainer: {
-    width: "100%",
+    width: "100vw",
   },
 }));
 

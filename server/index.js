@@ -22,8 +22,7 @@ io.on("connection", (socket) => {
         const user = addUserToRoom(msg.userInfo.id, msg.roomInfo.roomName, msg.roomInfo.password)
         socket.join(msg.roomInfo.roomName)
         const rooms = io.of("/").adapter.rooms;
-        socket.emit('room-session', user)
-        
+        socket.emit('room-session', user)  
     })
 
   socket.emit('room-session', users)

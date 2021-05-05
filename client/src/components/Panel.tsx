@@ -12,24 +12,28 @@ import {
   Tooltip,
   Zoom,
 } from "@material-ui/core";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import {SocketContext} from "../providers/SocketContext";
 
 function SidePanel() {
- const { usersession } = useContext(SocketContext);
+  const classes = useStyles();
+  const { usersession } = useContext(SocketContext);
+  const [user, setUser] = useState<any>("");
 
 useEffect(() => {
-  if(!usersession){
-    return;
+  const loadUser = async () => {
+    if(!usersession){
+      return;
+    }
+    await usersession.on('user-session', (lUser: any) => {
+        setUser(lUser)
+    })
   }
-  usersession.emit('user-session', usersession.id)
- usersession.on('user-session', (user: any) => {
-  console.log(user)
- })
-
+  loadUser();
 })
 
-  const classes = useStyles();
+console.log(user)
+  
   return (
     <Box className={classes.root}>
       <Box className={classes.topContainer}>
@@ -51,7 +55,8 @@ useEffect(() => {
                 <Avatar>Z</Avatar>
               </Box>
               <Box ml={1}>
-                <Typography>Zazzi</Typography>
+                <Typography>{!user.name ? "placeholder" : user.name}
+              </Typography>
               </Box>
             </Box>
             <Typography>X</Typography>

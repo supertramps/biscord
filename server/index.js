@@ -10,16 +10,17 @@ const {addUser, removeUser, getUser, getUsersInRoom} = require('./users')
 
 io.on("connection", (socket) => {
     console.log("Client was connected", socket.id);
-    io.emit('return-message', "Welcome!")
 
-    socket.on('add-to-user-database', (name, callback) => {
+    socket.on('add-to-user-database', (name) => {
         const {user, error} = addUser({id: socket.id, name})
-        /* if(error) return callback(error) */
+        let getLoggedInUser = getUser(socket.id)
+        socket.emit('user-session', getLoggedInUser)
     })
 
     socket.on('user-session', (socket) => {
-        const user = getUser(socket.id)
-        socket.emit(user)
+        console.log(socket)
+        /* const user = getUser(socket.id) */
+        /* socket.emit('user-session', user) */
     })
 
 

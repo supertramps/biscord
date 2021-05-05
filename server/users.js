@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const users = [
     {
         "id": "UOivvYk5-EvfoI8qAAAF",
@@ -12,6 +13,9 @@ const users = [
         "password": "1234"
     }
 ];
+=======
+const users = [];
+>>>>>>> parent of 681406e (niiiice)
 
 function addUser({id, name}){
     const exisitingUser = users.find((user) => user.name === name);
@@ -47,4 +51,4 @@ const getUser = (id) =>  users.find((user) => user.id === id);
 
 const getUsersInRoom = (room) => users.filter((user) => user.room === room)
 
-module.exports = { addUser, removeUser, getUser, getUsersInRoom, addUserToRoom, users}
+module.exports = { addUser, removeUser, getUser, getUsersInRoom, addUserToRoom}

@@ -24,10 +24,8 @@ function SidePanel(props:Props) {
   const classes = useStyles();
   const { socket, room } = useContext(SocketContext);
   const [user, setUser] = useState<any>();
-  const [rooms, setRooms] = useState<any>();
   
-  console.log(rooms)
-  
+  console.log(room)
 
   useEffect(() => {
     const loadUser = async () => {
@@ -36,9 +34,6 @@ function SidePanel(props:Props) {
       }
       await socket.on('user-session', (lUser: any) => {
           setUser(lUser)
-      })
-      await socket.on('room-session', (room: any) => {
-        setRooms(room)
       })
     }
     loadUser();
@@ -51,6 +46,7 @@ function SidePanel(props:Props) {
           <TextField placeholder="search..."></TextField>
         </Box>
         <Box mt={2} ml={5} className={classes.roomList}>
+<<<<<<< HEAD
           {
           rooms ? rooms.map((room: any) => 
             <Box>
@@ -66,6 +62,22 @@ function SidePanel(props:Props) {
              </Link>
            </Box>
           ) : null}
+=======
+          <Box>
+            <Link>
+              <Typography variant="body1">{`#${room.room}`}</Typography>
+            </Link>
+          </Box>
+          <Box>
+            <Typography variant="body1">#Javascript</Typography>
+          </Box>
+          <Box>
+            <Typography variant="body1">#Node</Typography>
+          </Box>
+          <Box>
+            <Typography variant="body1">#Typescript</Typography>
+          </Box>
+>>>>>>> parent of 681406e (niiiice)
         </Box>
       </Box>
       <Box className={classes.bottomContainer}>

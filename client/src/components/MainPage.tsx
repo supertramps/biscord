@@ -14,11 +14,11 @@ import {
 } from "@material-ui/core";
 import moment from "moment";
 import discordDark from "../assets/discord-dark.png";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { SocketContext } from "../providers/SocketContext";
 import ChatMessage from "./ChatMessage";
 
-interface Props{
+interface Props {
   inputFieldsOpen: any;
   userInfo: any;
 }
@@ -27,128 +27,133 @@ function MainPage(props: Props) {
   const [messages, setMessages] = useState<string[]>();
   const [messageHolder, setMessageHolder] = useState("");
   const classes = useStyles();
-  const {creatNewRoom} = useContext(SocketContext)
+  const { creatNewRoom, socket } = useContext(SocketContext);
+  const [user, setUser] = useState<any>();
+  const [trimedName, setTrimedName] = useState<string>("");
   const [values, setValues] = useState<Object>({
     roomName: "",
     password: "",
+  });
+
+  function trimForAvatar() {
+    const trimedName: string = user.name.slice(0, 1);
+    setTrimedName(trimedName);
+  }
+
+  useEffect(() => {
+    const loadUser = async () => {
+      if(!socket){
+        return;
+      }
+      await socket.on('user-session', (lUser: any) => {
+          setUser(lUser)
+      })
+    }
+    loadUser();
   })
+
 
   const addMessageToArray = () => {
     if (!messages) {
+      trimForAvatar();
       setMessages([messageHolder]);
     } else if (messages) {
+      trimForAvatar();
       setMessages([...messages, messageHolder]);
     }
   };
 
-  // const today = moment();
-  // const postTime = moment();
-  // let timeShort = "m";
-  // let diff = today.diff(postTime, "seconds");
-
-  // if (diff >= 1) {
-  //   diff = today.diff(postTime, "hours");
-  //   timeShort = "h";
-  // }
-  // if (diff >= 24 && timeShort === "h") {
-  //   diff = today.diff(postTime, "days");
-  //   timeShort = "d";
-  // }
-
-
-  
-
-  const handleChange = (e: { target: { name: string; value: string; }; }) => {
+  const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
     setValues((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
-  
+
   return (
     <Box className={classes.root}>
-      { props.inputFieldsOpen ? (
+      {props.inputFieldsOpen ? (
         <Box className={classes.root}>
-        <Box className={classes.messageContainer}>
-          <img src={discordDark} alt="" />
-          <form noValidate autoComplete="off" className={classes.form}>
-            <TextField 
-              className={classes.textFieldStyle} 
-              id="outlined-basic" 
-              label="Room name..." 
-              variant="outlined" 
-              name="roomName"
-              onChange={handleChange}
-            />
-            <TextField 
-              className={classes.textFieldStyle} 
-              id="outlined-basic" 
-              label="Password..." 
-              variant="outlined" 
-              name="password"
-              onChange={handleChange}
-            />
-          </form>
-          <Button
-            onClick={() => {
-              creatNewRoom(values, props.userInfo)
-            }}
-          >
-            Create
-          </Button>
-        </Box>
-      </Box>
-      ) : ( 
-        <>
-      <Box className={classes.contentWrapper}>
-        <Box
-          className={
-            messages ? classes.messageContainer : classes.logoContainer
-          }
-        >
-          {messages ? (
-            messages
-              .map((m, i) => (
-                <ChatMessage
-                  time={moment().format("MMM Do YY")}
-                  profile={"Z"}
-                  key={i}
-                  message={m}
-                />
-              ))
-              .reverse()
-          ) : (
+          <Box className={classes.messageContainer}>
             <img src={discordDark} alt="" />
-          )}
+            <form noValidate autoComplete="off" className={classes.form}>
+              <TextField
+                className={classes.textFieldStyle}
+                id="outlined-basic"
+                label="Room name..."
+                variant="outlined"
+                name="roomName"
+                onChange={handleChange}
+              />
+              <TextField
+                className={classes.textFieldStyle}
+                id="outlined-basic"
+                label="Password..."
+                variant="outlined"
+                name="password"
+                onChange={handleChange}
+              />
+            </form>
+            <Button
+              onClick={() => {
+                creatNewRoom(values, props.userInfo);
+              }}
+            >
+              Create
+            </Button>
+          </Box>
         </Box>
-      </Box>
-      <Box mb={3} className={classes.formContainer}>
-        <form className={classes.formStyling}>
-          <Box className={classes.formFlex}>
-              <Box mr={2} className={classes.inputContainer}>
-                <input
-                  placeholder="Message #React"
-                  type="text"
-                  className={classes.textFieldStyling}
-                  onChange={(event) => setMessageHolder(event.target.value)}
-                />
-              </Box>
-              <Box className={classes.buttonContainer}>
-                <Button
-                  onClick={addMessageToArray}
-                  color="primary"
-                  className={classes.buttonStyling}
-                >
-                  Send
-                </Button>
+      ) : (
+        <>
+          <Box className={classes.contentWrapper}>
+            <Box
+              className={
+                messages ? classes.messageContainer : classes.logoContainer
+              }
+            >
+              {messages ? (
+                messages
+                  .map((m, i) => (
+                    <ChatMessage
+                      time={moment().format("MMM Do YY")}
+                      avatar={trimedName}
+                      profile={user.name}
+                      key={i}
+                      message={m}
+                    />
+                  ))
+                  .reverse()
+              ) : (
+                <img src={discordDark} alt="" />
+              )}
+            </Box>
+          </Box>
+          <Box mb={3} className={classes.formContainer}>
+            <form className={classes.formStyling}>
+              <Box className={classes.formFlex}>
+                <Box mr={2} className={classes.inputContainer}>
+                  <input
+                    placeholder="Message #React"
+                    type="text"
+                    className={classes.textFieldStyling}
+                    onChange={(event) => setMessageHolder(event.target.value)}
+                  />
                 </Box>
-             </Box>
-          </form>
-        </Box>
-      </>
+                <Box className={classes.buttonContainer}>
+                  <Button
+                    onClick={addMessageToArray}
+                    color="primary"
+                    className={classes.buttonStyling}
+                  >
+                    Send
+                  </Button>
+                </Box>
+              </Box>
+            </form>
+          </Box>
+        </>
       )}
-         
     </Box>
   );
 }
@@ -226,7 +231,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   textFieldStyle: {
     width: "30rem",
     background: "#40444B",
-    margin: '1rem',
+    margin: "1rem",
   },
   form: {
     display: "flex",
@@ -238,7 +243,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: "100%",
     height: "100%",
   },
-
 }));
 
 export default MainPage;

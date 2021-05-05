@@ -14,8 +14,8 @@ import {
 } from "@material-ui/core";
 
 import discordDark from "../assets/discord-dark.png";
-import { useContext } from "react";
-import SocketContext, { SocketConsumer } from "../providers/SocketContext";
+import { useContext, useState } from "react";
+import  { SocketContext } from "../providers/SocketContext";
 
 interface Props{
   inputFieldsOpen: any;
@@ -23,8 +23,21 @@ interface Props{
 
 function MainPage(props: Props) {
   const classes = useStyles();
+  const {creatNewRoom} = useContext(SocketContext)
+  const [values, setValues] = useState<Object>({
+    roomName: "",
+    password: "",
+  })
 
-  console.log(props)
+  console.log(values)
+
+  const handleChange = (e: { target: { name: string; value: string; }; }) => {
+    const { name, value } = e.target;
+    setValues((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
   
   return (
     <Box className={classes.root}>
@@ -38,26 +51,21 @@ function MainPage(props: Props) {
               id="outlined-basic" 
               label="Room name..." 
               variant="outlined" 
-              /* onChange={(event) => handleChange(event.target.value)} */
+              name="roomName"
+              onChange={handleChange}
             />
             <TextField 
               className={classes.textFieldStyle} 
               id="outlined-basic" 
               label="Password..." 
               variant="outlined" 
-              /* onChange={(event) => handleChange(event.target.value)} */
-            />
-            <TextField 
-              className={classes.textFieldStyle} 
-              id="outlined-basic" 
-              label="Confirm your password..." 
-              variant="outlined" 
-              /* onChange={(event) => handleChange(event.target.value)} */
+              name="password"
+              onChange={handleChange}
             />
           </form>
           <Button
             onClick={() => {
-              
+              creatNewRoom(values)
             }}
           >
             Create

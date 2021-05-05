@@ -10,11 +10,13 @@ export interface Room {}
 interface State {
   socket: any;
   getUserName: (value: any) => void;
+  creatNewRoom: (roomInfo: object, userInfo: object) => void;
 }
 
 export const SocketContext = createContext<State>({
     socket: "",
     getUserName: () => {},
+    creatNewRoom: () => {},
 });
 
 interface Props {
@@ -32,6 +34,10 @@ function SocketProvider(props: Props) {
     setUser(value)
   }
 
+  function createNewRoom(roomInfo: object, userInfo: any){
+    console.log(roomInfo)
+  }
+
   useEffect(() => {
     if(user !== "user") { 
       let socket = io(ENDPOINT, {
@@ -43,7 +49,7 @@ function SocketProvider(props: Props) {
   }, [ENDPOINT, user]);
 
   useEffect(() => {
-    
+
   })
 
   return (
@@ -51,6 +57,7 @@ function SocketProvider(props: Props) {
       value={{
         socket: socket,
         getUserName: getUserName,
+        creatNewRoom: createNewRoom,
       }}>
         {props.children}
     </SocketContext.Provider>

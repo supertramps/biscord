@@ -17,7 +17,7 @@ import discordDark from "../assets/discord-dark.png";
 import { useContext, useState } from "react";
 import { SocketContext } from "../providers/SocketContext";
 import ChatMessage from "./ChatMessage";
-import GifIcon from "@material-ui/icons/Gif";
+import GifIcon from "../assets/gif_icon.svg";
 
 interface Props {
   inputFieldsOpen: any;
@@ -131,8 +131,8 @@ function MainPage(props: Props) {
                     onChange={(event) => setMessageHolder(event.target.value)}
                   />
                 </Box>
-                <Box>
-                  <GifIcon />
+                <Box className={classes.gifIconContainer}>
+                  <img className={classes.gifIcon} src={GifIcon} alt="" />
                 </Box>
                 <Box className={classes.buttonContainer}>
                   <Button
@@ -188,6 +188,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   inputContainer: {
     width: "100%",
     height: "100%",
+    boxShadow: "3px 5px 6px -4px rgba(0,0,0,0.7)",
   },
   inputForm: {
     color: "#fff",
@@ -201,6 +202,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: "#7289DA",
     color: "#fff",
     fontFamily: "whitney",
+    boxShadow: "3px 5px 6px -4px rgba(0,0,0,0.7)",
   },
   formFlex: {
     display: "flex",
@@ -243,6 +245,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   roomFormContainer: {
     display: "flex",
     flexDirection: "column",
+  },
+  gifIcon: {
+    height: "2.8rem",
+  },
+  gifIconContainer: {
+    backgroundColor: "#40444B",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: "5px",
+    boxShadow: "3px 5px 6px -4px rgba(0,0,0,0.7)",
   },
 }));
 

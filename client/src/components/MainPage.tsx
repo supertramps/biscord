@@ -13,10 +13,10 @@ import {
   Zoom,
 } from "@material-ui/core";
 import moment from "moment";
-
 import discordDark from "../assets/discord-dark.png";
 import { useContext, useState } from "react";
-import  { SocketContext } from "../providers/SocketContext";
+import { SocketContext } from "../providers/SocketContext";
+import ChatMessage from "./ChatMessage";
 
 interface Props{
   inputFieldsOpen: any;
@@ -26,9 +26,12 @@ interface Props{
 function MainPage(props: Props) {
   const [messages, setMessages] = useState<string[]>();
   const [messageHolder, setMessageHolder] = useState("");
-  import React, { useContext, useState } from "react";
-  import SocketContext, { SocketConsumer } from "../providers/SocketContext";
-  import ChatMessage from "./ChatMessage";
+  const classes = useStyles();
+  const {creatNewRoom} = useContext(SocketContext)
+  const [values, setValues] = useState<Object>({
+    roomName: "",
+    password: "",
+  })
 
   const addMessageToArray = () => {
     if (!messages) {
@@ -53,12 +56,7 @@ function MainPage(props: Props) {
   // }
 
 
-  const classes = useStyles();
-  const {creatNewRoom} = useContext(SocketContext)
-  const [values, setValues] = useState<Object>({
-    roomName: "",
-    password: "",
-  })
+  
 
   const handleChange = (e: { target: { name: string; value: string; }; }) => {
     const { name, value } = e.target;
@@ -102,29 +100,7 @@ function MainPage(props: Props) {
         </Box>
       </Box>
       ) : ( 
-      <>
-        <Box className={classes.messageContainer}>
-          <img src={discordDark} alt="" />
-        </Box>
-        <Box mb={3} className={classes.formContainer}>
-          <form className={classes.formStyling}>
-            <Box className={classes.formFlex}>
-              <Box mr={2} className={classes.inputContainer}>
-                <input
-                  placeholder="Message #React"
-                  type="text"
-                  className={classes.textFieldStyling}
-                />
-              </Box>
-              <Box className={classes.buttonContainer}>
-                <Button color="primary" className={classes.buttonStyling}>
-                  Send
-                </Button>
-              </Box>
-              </Box>
-          </form>
-        </Box>
-      </>
+        <>
       <Box className={classes.contentWrapper}>
         <Box
           className={
@@ -169,8 +145,10 @@ function MainPage(props: Props) {
                 </Box>
              </Box>
           </form>
-        </Box> )
-      }    
+        </Box>
+      </>
+      )}
+         
     </Box>
   );
 }

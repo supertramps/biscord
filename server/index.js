@@ -9,9 +9,8 @@ const io = new Server(server);
 const {addUser, removeUser, getUser, getUsersInRoom, addUserToRoom} = require('./users')
 
 io.on("connection", (socket) => {
-
     console.log("Client was connected", socket.id);
-
+    
     socket.on('add-to-user-database', (name) => {
         const {user, error} = addUser({id: socket.id, name})
         const loggedInUser = getUser(socket.id)
@@ -20,8 +19,12 @@ io.on("connection", (socket) => {
 
     socket.on('create-room', (msg) => {
         const user = addUserToRoom(msg.userInfo.id, msg.roomInfo.roomName)
+        
+        const rooms = io.of("/").adapter.rooms;
+        
+        console.log("rooms:",rooms)
+        socket.emit('room-session', rooms)
         socket.join(msg.roomInfo.roomName)
-        socket.emit('room-session', user)
     })
 
 

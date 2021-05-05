@@ -39,6 +39,8 @@ function SocketProvider(props: Props) {
     setUser(value)
   }
 
+  console.log(room)
+
   function createNewRoom(roomInfo: object, userInfo: any){
     socket.emit('create-room', {roomInfo, userInfo})
     socket.on('room-session', (room: any) => {

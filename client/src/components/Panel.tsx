@@ -26,21 +26,18 @@ function SidePanel(props:Props) {
   const [user, setUser] = useState<any>();
   
   console.log(room)
-  function createRoom() {
-    socket.emit('create-room', user)
-  }
 
-useEffect(() => {
-  const loadUser = async () => {
-    if(!socket){
-      return;
+  useEffect(() => {
+    const loadUser = async () => {
+      if(!socket){
+        return;
+      }
+      await socket.on('user-session', (lUser: any) => {
+          setUser(lUser)
+      })
     }
-    await socket.on('user-session', (lUser: any) => {
-        setUser(lUser)
-    })
-  }
-  loadUser();
-})
+    loadUser();
+  })
 
   return (
     <Box className={classes.root}>
@@ -51,7 +48,7 @@ useEffect(() => {
         <Box mt={2} ml={5} className={classes.roomList}>
           <Box>
             <Link>
-              <Typography variant="body1">#React</Typography>
+              <Typography variant="body1">{`#${room.room}`}</Typography>
             </Link>
           </Box>
           <Box>

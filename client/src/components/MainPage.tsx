@@ -17,8 +17,9 @@ import discordDark from "../assets/discord-dark.png";
 import { useContext, useState } from "react";
 import { SocketContext } from "../providers/SocketContext";
 import ChatMessage from "./ChatMessage";
+import GifIcon from "@material-ui/icons/Gif";
 
-interface Props{
+interface Props {
   inputFieldsOpen: any;
   userInfo: any;
 }
@@ -27,11 +28,11 @@ function MainPage(props: Props) {
   const [messages, setMessages] = useState<string[]>();
   const [messageHolder, setMessageHolder] = useState("");
   const classes = useStyles();
-  const {creatNewRoom} = useContext(SocketContext)
+  const { creatNewRoom } = useContext(SocketContext);
   const [values, setValues] = useState<Object>({
     roomName: "",
     password: "",
-  })
+  });
 
   const addMessageToArray = () => {
     if (!messages) {
@@ -55,100 +56,98 @@ function MainPage(props: Props) {
   //   timeShort = "d";
   // }
 
-
-  
-
-  const handleChange = (e: { target: { name: string; value: string; }; }) => {
+  const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
     setValues((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
-  
+
   return (
     <Box className={classes.root}>
-      { props.inputFieldsOpen ? (
+      {props.inputFieldsOpen ? (
         <Box className={classes.root}>
-        <Box className={classes.messageContainer}>
-          <img src={discordDark} alt="" />
-          <form noValidate autoComplete="off" className={classes.form}>
-            <TextField 
-              className={classes.textFieldStyle} 
-              id="outlined-basic" 
-              label="Room name..." 
-              variant="outlined" 
-              name="roomName"
-              onChange={handleChange}
-            />
-            <TextField 
-              className={classes.textFieldStyle} 
-              id="outlined-basic" 
-              label="Password..." 
-              variant="outlined" 
-              name="password"
-              onChange={handleChange}
-            />
-          </form>
-          <Button
-            onClick={() => {
-              creatNewRoom(values, props.userInfo)
-            }}
-          >
-            Create
-          </Button>
+          <Box className={classes.roomFormContainer}>
+            <form noValidate autoComplete="off" className={classes.form}>
+              <TextField
+                className={classes.textFieldStyle}
+                id="outlined-basic"
+                label="Room name..."
+                variant="outlined"
+                name="roomName"
+                onChange={handleChange}
+              />
+              <TextField
+                className={classes.textFieldStyle}
+                id="outlined-basic"
+                label="Password..."
+                variant="outlined"
+                name="password"
+                onChange={handleChange}
+              />
+            </form>
+            <Button
+              onClick={() => {
+                creatNewRoom(values, props.userInfo);
+              }}
+            >
+              Create
+            </Button>
+          </Box>
         </Box>
-      </Box>
-      ) : ( 
+      ) : (
         <>
-      <Box className={classes.contentWrapper}>
-        <Box
-          className={
-            messages ? classes.messageContainer : classes.logoContainer
-          }
-        >
-          {messages ? (
-            messages
-              .map((m, i) => (
-                <ChatMessage
-                  time={moment().format("MMM Do YY")}
-                  profile={"Z"}
-                  key={i}
-                  message={m}
-                />
-              ))
-              .reverse()
-          ) : (
-            <img src={discordDark} alt="" />
-          )}
-        </Box>
-      </Box>
-      <Box mb={3} className={classes.formContainer}>
-        <form className={classes.formStyling}>
-          <Box className={classes.formFlex}>
-              <Box mr={2} className={classes.inputContainer}>
-                <input
-                  placeholder="Message #React"
-                  type="text"
-                  className={classes.textFieldStyling}
-                  onChange={(event) => setMessageHolder(event.target.value)}
-                />
-              </Box>
-              <Box className={classes.buttonContainer}>
-                <Button
-                  onClick={addMessageToArray}
-                  color="primary"
-                  className={classes.buttonStyling}
-                >
-                  Send
-                </Button>
+          <Box className={classes.contentWrapper}>
+            <Box
+              className={
+                messages ? classes.messageContainer : classes.logoContainer
+              }
+            >
+              {messages ? (
+                messages
+                  .map((m, i) => (
+                    <ChatMessage
+                      time={moment().format("MMM Do YY")}
+                      profile={"Z"}
+                      key={i}
+                      message={m}
+                    />
+                  ))
+                  .reverse()
+              ) : (
+                <img src={discordDark} alt="" />
+              )}
+            </Box>
+          </Box>
+          <Box mb={3} className={classes.formContainer}>
+            <form className={classes.formStyling}>
+              <Box className={classes.formFlex}>
+                <Box mr={2} className={classes.inputContainer}>
+                  <input
+                    placeholder="Message #React"
+                    type="text"
+                    className={classes.textFieldStyling}
+                    onChange={(event) => setMessageHolder(event.target.value)}
+                  />
                 </Box>
-             </Box>
-          </form>
-        </Box>
-      </>
+                <Box>
+                  <GifIcon />
+                </Box>
+                <Box className={classes.buttonContainer}>
+                  <Button
+                    onClick={addMessageToArray}
+                    color="primary"
+                    className={classes.buttonStyling}
+                  >
+                    Send
+                  </Button>
+                </Box>
+              </Box>
+            </form>
+          </Box>
+        </>
       )}
-         
     </Box>
   );
 }
@@ -180,7 +179,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: "#40444B",
     border: "none",
     fontFamily: "whitney",
-    color: "fff",
+    color: "#fff",
     fontSize: "1rem",
     outline: "none",
     borderRadius: "10px",
@@ -189,6 +188,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   inputContainer: {
     width: "100%",
     height: "100%",
+  },
+  inputForm: {
+    color: "#fff",
   },
   buttonContainer: {
     marginLeft: "2rem",
@@ -226,7 +228,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   textFieldStyle: {
     width: "30rem",
     background: "#40444B",
-    margin: '1rem',
+    margin: "1rem",
   },
   form: {
     display: "flex",
@@ -238,7 +240,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: "100%",
     height: "100%",
   },
-
+  roomFormContainer: {
+    display: "flex",
+    flexDirection: "column",
+  },
 }));
 
 export default MainPage;

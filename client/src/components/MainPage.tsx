@@ -17,6 +17,7 @@ import discordDark from "../assets/discord-dark.png";
 import { useContext, useEffect, useState } from "react";
 import { SocketContext } from "../providers/SocketContext";
 import ChatMessage from "./ChatMessage";
+import GifIcon from "../assets/gif_icon.svg";
 
 interface Props {
   inputFieldsOpen: any;
@@ -30,10 +31,12 @@ function MainPage(props: Props) {
   const { creatNewRoom, socket } = useContext(SocketContext);
   const [user, setUser] = useState<any>();
   const [trimedName, setTrimedName] = useState<string>("");
+
   const [values, setValues] = useState<Object>({
     roomName: "",
     password: "",
   });
+
 
   function trimForAvatar() {
     const trimedName: string = user.name.slice(0, 1);
@@ -51,6 +54,7 @@ function MainPage(props: Props) {
     }
     loadUser();
   })
+
 
 
   const addMessageToArray = () => {
@@ -75,8 +79,8 @@ function MainPage(props: Props) {
     <Box className={classes.root}>
       {props.inputFieldsOpen ? (
         <Box className={classes.root}>
-          <Box className={classes.messageContainer}>
-            <img src={discordDark} alt="" />
+
+          <Box className={classes.roomFormContainer}>
             <form noValidate autoComplete="off" className={classes.form}>
               <TextField
                 className={classes.textFieldStyle}
@@ -117,8 +121,10 @@ function MainPage(props: Props) {
                   .map((m, i) => (
                     <ChatMessage
                       time={moment().format("MMM Do YY")}
+
                       avatar={trimedName}
                       profile={user.name}
+
                       key={i}
                       message={m}
                     />
@@ -140,6 +146,11 @@ function MainPage(props: Props) {
                     onChange={(event) => setMessageHolder(event.target.value)}
                   />
                 </Box>
+
+                <Box className={classes.gifIconContainer}>
+                  <img className={classes.gifIcon} src={GifIcon} alt="" />
+                </Box>
+
                 <Box className={classes.buttonContainer}>
                   <Button
                     onClick={addMessageToArray}
@@ -185,7 +196,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: "#40444B",
     border: "none",
     fontFamily: "whitney",
-    color: "fff",
+    color: "#fff",
     fontSize: "1rem",
     outline: "none",
     borderRadius: "10px",
@@ -194,6 +205,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   inputContainer: {
     width: "100%",
     height: "100%",
+    boxShadow: "3px 5px 6px -4px rgba(0,0,0,0.7)",
+  },
+  inputForm: {
+    color: "#fff",
   },
   buttonContainer: {
     marginLeft: "2rem",
@@ -204,6 +219,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: "#7289DA",
     color: "#fff",
     fontFamily: "whitney",
+    boxShadow: "3px 5px 6px -4px rgba(0,0,0,0.7)",
   },
   formFlex: {
     display: "flex",
@@ -242,6 +258,22 @@ const useStyles = makeStyles((theme: Theme) => ({
   contentWrapper: {
     width: "100%",
     height: "100%",
+  },
+
+  roomFormContainer: {
+    display: "flex",
+    flexDirection: "column",
+  },
+  gifIcon: {
+    height: "2.8rem",
+  },
+  gifIconContainer: {
+    backgroundColor: "#40444B",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: "5px",
+    boxShadow: "3px 5px 6px -4px rgba(0,0,0,0.7)",
   },
 }));
 

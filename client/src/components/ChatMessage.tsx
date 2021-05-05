@@ -10,19 +10,20 @@ interface Iprops {
 
 function ChatMessage(props: Iprops) {
   const classes = useStyles();
- 
+
   return (
     <Box className={classes.root}>
-      <Box className={classes.chatMetaData}>
+
+      <Box ml={2} className={classes.chatMetaData}>
         <Typography variant="body2">{props.profile}</Typography>
-        <Typography variant="body2">
-         {props.time}
-        </Typography>
+        <Typography variant="body2">{props.time}</Typography>
       </Box>
       <Box className={classes.contentWrapper}>
-        <Avatar className={classes.avatarStyle}>{props.avatar}</Avatar>
-        <Box className={classes.messageWrapper}>
-          <Typography>{props.message}</Typography>
+        <Box ml={2}>
+          <Avatar className={classes.avatarStyle}>{props.avatar}</Avatar>
+        </Box>
+        <Box ml={2} className={classes.messageWrapper}>
+          <Typography variant="body1">{props.message}</Typography>
         </Box>
       </Box>
     </Box>
@@ -37,8 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   chatMetaData: {
     display: "flex",
-    justifyContent: "center",
-    borderBottom: "black solid 1px",
+    justifyContent: "flex-start",
     "& > * ": {
       margin: "0.5rem",
     },
@@ -50,11 +50,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   messageWrapper: {
     background: "#40444B",
-    padding: "1rem",
+    padding: ".5rem",
+    borderRadius: "10px",
   },
   avatarStyle: {
     bottom: 0,
     margin: ".2rem",
+    width: "3rem",
+    height: "3rem",
   },
 }));
 

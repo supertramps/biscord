@@ -18,10 +18,9 @@ io.on("connection", (socket) => {
     })
 
     socket.on('create-room', (msg) => {
-        addUserToRoom(msg.userInfo.id, msg.roomInfo.roomName)
+        const user = addUserToRoom(msg.userInfo.id, msg.roomInfo.roomName)
         socket.join(msg.roomInfo.roomName)
-        /* console.log("rooms:" ,io.sockets.adapter.rooms) */
-        socket.emit('room-session', io.sockets.adapter.rooms)
+        socket.emit('room-session', user)
     })
 
 

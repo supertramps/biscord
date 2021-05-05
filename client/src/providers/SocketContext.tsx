@@ -1,20 +1,25 @@
 import { createContext, useEffect, useState } from "react";
 import io from "socket.io-client";
+import { ObjectType } from "typescript";
 
 export interface Message {}
 export interface User {
   user: string
 }
-export interface Room {}
+export interface Room {
+  
+}
 
 interface State {
   socket: any;
+  room: any;
   getUserName: (value: any) => void;
   creatNewRoom: (roomInfo: object, userInfo: object) => void;
 }
 
 export const SocketContext = createContext<State>({
     socket: "",
+    room: {},
     getUserName: () => {},
     creatNewRoom: () => {},
 });
@@ -59,6 +64,7 @@ function SocketProvider(props: Props) {
     <SocketContext.Provider 
       value={{
         socket: socket,
+        room: room,
         getUserName: getUserName,
         creatNewRoom: createNewRoom,
       }}>

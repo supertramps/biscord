@@ -13,7 +13,7 @@ import {
   Zoom,
 } from "@material-ui/core";
 import { useContext, useEffect, useState } from "react";
-import {SocketContext} from "../providers/SocketContext";
+import {SocketContext } from "../providers/SocketContext";
 
 interface Props {
   createInputFields: any;
@@ -22,10 +22,10 @@ interface Props {
 
 function SidePanel(props:Props) {
   const classes = useStyles();
-  const { socket } = useContext(SocketContext);
+  const { socket, room } = useContext(SocketContext);
   const [user, setUser] = useState<any>();
-  const [room, setRoom] = useState<any>();
-
+  
+  console.log(room)
   function createRoom() {
     socket.emit('create-room', user)
   }
@@ -38,9 +38,6 @@ useEffect(() => {
     await socket.on('user-session', (lUser: any) => {
         setUser(lUser)
     })
-    await socket.on('room-session', (room: any) => {
-      setUser(room)
-  })
   }
   loadUser();
 })

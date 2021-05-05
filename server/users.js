@@ -3,7 +3,6 @@ const users = [];
 
 
 function addUser({id, name}){
-    /* name = name.trim().toLowerCase(); */
     const exisitingUser = users.find((user) => user.name === name);
     if(exisitingUser){
         return { error: "Usernmae is taken"}
@@ -14,12 +13,15 @@ function addUser({id, name}){
 }
 
 function addUserToRoom(id, room){
-    const exisitingUser = users.find((user) => user.id === id);
-    if(exisitingUser){
-        const user = { ...exisitingUser, room: room }
-        console.log(user)
-        return user
-    } 
+    users.map(user => {
+        if(user.id === id){
+            user.room = room
+            return user.room
+        } else {
+            return user
+        }
+    }) 
+    return users;
 }
 
 function removeUser(id){

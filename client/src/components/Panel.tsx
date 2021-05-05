@@ -17,6 +17,7 @@ import {SocketContext} from "../providers/SocketContext";
 
 interface Props {
   createInputFields: any;
+  userInfo: any;
 }
 
 function SidePanel(props:Props) {
@@ -87,6 +88,7 @@ useEffect(() => {
             className={classes.buttonStyling}
             onClick={() => {
               props.createInputFields(true)
+              props.userInfo(user)
             }}
           >
             Create Room

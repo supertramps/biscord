@@ -35,7 +35,7 @@ function SocketProvider(props: Props) {
   }
 
   function createNewRoom(roomInfo: object, userInfo: any){
-    console.log(roomInfo)
+    console.log(roomInfo, userInfo)
   }
 
   useEffect(() => {

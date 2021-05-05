@@ -19,6 +19,7 @@ import  { SocketContext } from "../providers/SocketContext";
 
 interface Props{
   inputFieldsOpen: any;
+  userInfo: any;
 }
 
 function MainPage(props: Props) {
@@ -28,8 +29,6 @@ function MainPage(props: Props) {
     roomName: "",
     password: "",
   })
-
-  console.log(values)
 
   const handleChange = (e: { target: { name: string; value: string; }; }) => {
     const { name, value } = e.target;
@@ -65,7 +64,7 @@ function MainPage(props: Props) {
           </form>
           <Button
             onClick={() => {
-              creatNewRoom(values)
+              creatNewRoom(values, props.userInfo)
             }}
           >
             Create

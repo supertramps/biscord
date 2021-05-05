@@ -14,14 +14,21 @@ import SocketProvider from "./providers/SocketContext";
 function App() {
   const classes = useStyles();
   const [openInputs, setOpenInputs] = useState<boolean>(false);
+  const [userInfo, setUserInfo] = useState<any>()
 
   return (
     <>
       <SocketProvider>
         <Box className={classes.appContainer}>
           <Box className={classes.flexContainer}>
-            <SidePanel createInputFields={setOpenInputs}/>
-            <MainPage inputFieldsOpen={openInputs}/>
+            <SidePanel 
+              createInputFields={setOpenInputs}
+              userInfo = {setUserInfo}
+            />
+            <MainPage 
+              inputFieldsOpen={openInputs}
+              userInfo={userInfo}
+            />
           </Box>
         </Box>
         <ThemeProvider theme={theme}>{<LandingPage />}</ThemeProvider>

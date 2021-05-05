@@ -24,8 +24,8 @@ function MainPage() {
   return (
     <Box className={classes.root}>
       <Box className={classes.messageContainer}>
-        {/* <img src={discordDark} alt="" /> */}
-        <ChatMessage/>
+        <img src={discordDark} alt="" />
+        {/* <ChatMessage/> */}
       </Box>
       <Box mb={3} className={classes.formContainer}>
         <form className={classes.formStyling}>

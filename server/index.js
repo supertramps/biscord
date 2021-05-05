@@ -26,8 +26,7 @@ io.on("connection", (socket) => {
         
     })
 
-  socket.on('room-session', users)
-
+  socket.emit('room-session', users)
 
   socket.on("join", (user) => {
     console.log(user);

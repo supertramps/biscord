@@ -1,4 +1,15 @@
-const users = [];
+const users = [
+    {
+        "id": "UOivvYk5-EvfoI8qAAAF",
+        "name": "asdasdsdf",
+        "room": "asdasd"
+    },
+    {
+        "id": "EN7n_2f2LJkKnw0dAAAH",
+        "name": "asdassdfsdf",
+        "room": "asdas"
+    }
+];
 
 function addUser({id, name}){
     const exisitingUser = users.find((user) => user.name === name);
@@ -34,4 +45,4 @@ const getUser = (id) =>  users.find((user) => user.id === id);
 
 const getUsersInRoom = (room) => users.filter((user) => user.room === room)
 
-module.exports = { addUser, removeUser, getUser, getUsersInRoom, addUserToRoom}
+module.exports = { addUser, removeUser, getUser, getUsersInRoom, addUserToRoom, users}

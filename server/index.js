@@ -6,20 +6,22 @@ const { Server } = require('socket.io');
 const server = http.createServer(app);
 const io = new Server(server)
 
-const {addUser, removeUser, getUser, getUsersInRoom} = require('./users')
+const {addUser, removeUser, getUser, getUsersInRoom, addUserToRoom} = require('./users')
 
 io.on("connection", (socket) => {
     console.log("Client was connected", socket.id);
 
     socket.on('add-to-user-database', (name) => {
         const {user, error} = addUser({id: socket.id, name})
-        let getLoggedInUser = getUser(socket.id)
-        socket.emit('user-session', getLoggedInUser)
+        const loggedInUser = getUser(socket.id)
+        socket.emit('user-session', loggedInUser)
     })
 
     socket.on('create-room', (msg) => {
+        addUserToRoom(msg.userInfo.id, msg.roomInfo.roomName)
         socket.join(msg.roomInfo.roomName)
-        console.log("rooms:" ,io.sockets.adapter.rooms)
+        /* console.log("rooms:" ,io.sockets.adapter.rooms) */
+        socket.emit('room-session', io.sockets.adapter.rooms)
     })
 
 

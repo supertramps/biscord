@@ -24,6 +24,7 @@ function SidePanel(props:Props) {
   const classes = useStyles();
   const { socket } = useContext(SocketContext);
   const [user, setUser] = useState<any>();
+  const [room, setRoom] = useState<any>();
 
   function createRoom() {
     socket.emit('create-room', user)
@@ -37,6 +38,9 @@ useEffect(() => {
     await socket.on('user-session', (lUser: any) => {
         setUser(lUser)
     })
+    await socket.on('room-session', (room: any) => {
+      setUser(room)
+  })
   }
   loadUser();
 })

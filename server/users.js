@@ -13,6 +13,15 @@ function addUser({id, name}){
     return user
 }
 
+function addUserToRoom(id, room){
+    const exisitingUser = users.find((user) => user.id === id);
+    if(exisitingUser){
+        const user = { ...exisitingUser, room: room }
+        console.log(user)
+        return user
+    } 
+}
+
 function removeUser(id){
     const index = users.findIndex((user) => user.id === id);
 
@@ -25,4 +34,4 @@ const getUser = (id) =>  users.find((user) => user.id === id);
 
 const getUsersInRoom = (room) => users.filter((user) => user.room === room)
 
-module.exports = { addUser, removeUser, getUser, getUsersInRoom}
+module.exports = { addUser, removeUser, getUser, getUsersInRoom, addUserToRoom}

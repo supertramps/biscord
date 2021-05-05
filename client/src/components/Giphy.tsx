@@ -14,7 +14,7 @@ import {
   Tooltip,
   Zoom,
 } from "@material-ui/core";
-import request from "superagent";
+
 
 function Giphy() {
   const [gifURL, setGifURL] = useState<string>("");

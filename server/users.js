@@ -2,12 +2,14 @@ const users = [
     {
         "id": "UOivvYk5-EvfoI8qAAAF",
         "name": "asdasdsdf",
-        "room": "React"
+        "room": "React",
+        "password": "1234"
     },
     {
         "id": "EN7n_2f2LJkKnw0dAAAH",
         "name": "asdassdfsdf",
-        "room": "Javascript"
+        "room": "Javascript",
+        "password": "1234"
     }
 ];
 
@@ -36,7 +38,6 @@ function addUserToRoom(id, room, password){
 
 function removeUser(id){
     const index = users.findIndex((user) => user.id === id);
-
     if (index !== -1){
         return users.splice(index, 1)[0]
     }

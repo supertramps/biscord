@@ -14,7 +14,6 @@ import {
 } from "@material-ui/core";
 import moment from "moment";
 
-
 import discordDark from "../assets/discord-dark.png";
 
 import React, { useContext, useState } from "react";
@@ -47,8 +46,6 @@ function MainPage() {
   //   timeShort = "d";
   // }
 
-
-
   const classes = useStyles();
   return (
     <Box className={classes.root}>
@@ -60,7 +57,14 @@ function MainPage() {
         >
           {messages ? (
             messages
-              .map((m, i) => <ChatMessage time={moment().format("MMM Do YY")} profile={"Z"} key={i} message={m} />)
+              .map((m, i) => (
+                <ChatMessage
+                  time={moment().format("MMM Do YY")}
+                  profile={"Z"}
+                  key={i}
+                  message={m}
+                />
+              ))
               .reverse()
           ) : (
             <img src={discordDark} alt="" />
@@ -103,9 +107,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: "100vh",
     width: "100%",
     backgroundColor: "#2C2F33",
-    "& > *": {
-      border: "red 1px solid",
-    },
   },
   formContainer: {
     width: "100%",

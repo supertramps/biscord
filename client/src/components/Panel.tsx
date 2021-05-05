@@ -25,7 +25,7 @@ function SidePanel(props:Props) {
   const { socket, room } = useContext(SocketContext);
   const [user, setUser] = useState<any>();
   
-  console.log(room.room)
+  console.log(room)
 
   useEffect(() => {
     const loadUser = async () => {

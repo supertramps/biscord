@@ -33,8 +33,6 @@ function MainPage(props: Props) {
     password: "",
   })
 
-  console.log(props.userInfo)
-
   const addMessageToArray = () => {
     if (!messages) {
       setMessages([messageHolder]);

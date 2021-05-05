@@ -6,9 +6,24 @@ const { Server } = require("socket.io");
 const server = http.createServer(app);
 const io = new Server(server);
 
+const {addUser, removeUser, getUser, getUsersInRoom} = require('./users')
+
 io.on("connection", (socket) => {
-  console.log("Client was connected", socket.id);
-  io.emit("return-message", "Welcome!");
+
+    console.log("Client was connected", socket.id);
+
+    socket.on('add-to-user-database', (name) => {
+        const {user, error} = addUser({id: socket.id, name})
+        let getLoggedInUser = getUser(socket.id)
+        socket.emit('user-session', getLoggedInUser)
+    })
+
+    socket.on('user-session', (socket) => {
+        console.log(socket)
+        /* const user = getUser(socket.id) */
+        /* socket.emit('user-session', user) */
+    })
+
 
   socket.on("join", (user) => {
     console.log(user);

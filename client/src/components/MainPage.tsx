@@ -14,35 +14,82 @@ import {
 } from "@material-ui/core";
 
 import discordDark from "../assets/discord-dark.png";
-
 import { useContext } from "react";
 import SocketContext, { SocketConsumer } from "../providers/SocketContext";
 
-function MainPage() {
+interface Props{
+  inputFieldsOpen: any;
+}
+
+function MainPage(props: Props) {
   const classes = useStyles();
+
+  console.log(props)
+  
   return (
     <Box className={classes.root}>
-      <Box className={classes.messageContainer}>
-        <img src={discordDark} alt="" />
+      { props.inputFieldsOpen ? (
+        <Box className={classes.root}>
+        <Box className={classes.messageContainer}>
+          <img src={discordDark} alt="" />
+          <form noValidate autoComplete="off" className={classes.form}>
+            <TextField 
+              className={classes.textFieldStyle} 
+              id="outlined-basic" 
+              label="Room name..." 
+              variant="outlined" 
+              /* onChange={(event) => handleChange(event.target.value)} */
+            />
+            <TextField 
+              className={classes.textFieldStyle} 
+              id="outlined-basic" 
+              label="Password..." 
+              variant="outlined" 
+              /* onChange={(event) => handleChange(event.target.value)} */
+            />
+            <TextField 
+              className={classes.textFieldStyle} 
+              id="outlined-basic" 
+              label="Confirm your password..." 
+              variant="outlined" 
+              /* onChange={(event) => handleChange(event.target.value)} */
+            />
+          </form>
+          <Button
+            onClick={() => {
+              
+            }}
+          >
+            Create
+          </Button>
+        </Box>
       </Box>
-      <Box mb={3} className={classes.formContainer}>
-        <form className={classes.formStyling}>
-          <Box className={classes.formFlex}>
-            <Box mr={2} className={classes.inputContainer}>
-              <input
-                placeholder="Message #React"
-                type="text"
-                className={classes.textFieldStyling}
-              />
+      ) : ( 
+      <>
+        <Box className={classes.messageContainer}>
+          <img src={discordDark} alt="" />
+        </Box>
+        <Box mb={3} className={classes.formContainer}>
+          <form className={classes.formStyling}>
+            <Box className={classes.formFlex}>
+              <Box mr={2} className={classes.inputContainer}>
+                <input
+                  placeholder="Message #React"
+                  type="text"
+                  className={classes.textFieldStyling}
+                />
+              </Box>
+              <Box className={classes.buttonContainer}>
+                <Button color="primary" className={classes.buttonStyling}>
+                  Send
+                </Button>
+              </Box>
             </Box>
-            <Box className={classes.buttonContainer}>
-              <Button color="primary" className={classes.buttonStyling}>
-                Send
-              </Button>
-            </Box>
-          </Box>
-        </form>
-      </Box>
+          </form>
+        </Box>
+      </>
+      )
+      }
     </Box>
   );
 }
@@ -107,7 +154,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    flexDirection: "column",
   },
+  textFieldStyle: {
+    width: "30rem",
+    background: "#40444B",
+    margin: '1rem',
+  },
+  form: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
+  }
 }));
 
 export default MainPage;

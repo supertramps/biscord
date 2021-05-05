@@ -8,12 +8,12 @@ export interface User {
 export interface Room {}
 
 interface State {
-  usersession: any;
+  socket: any;
   getUserName: (value: any) => void;
 }
 
 export const SocketContext = createContext<State>({
-    usersession: "",
+    socket: "",
     getUserName: () => {},
 });
 
@@ -28,9 +28,6 @@ function SocketProvider(props: Props) {
   const [socket, setSocket] = useState<any>()
   const ENDPOINT = 'localhost:6969'
   
- 
-  
-
   function getUserName(value: any){
     setUser(value)
   }
@@ -45,10 +42,14 @@ function SocketProvider(props: Props) {
     }
   }, [ENDPOINT, user]);
 
+  useEffect(() => {
+    
+  })
+
   return (
     <SocketContext.Provider 
       value={{
-        usersession: socket,
+        socket: socket,
         getUserName: getUserName,
       }}>
         {props.children}

@@ -17,10 +17,8 @@ io.on("connection", (socket) => {
         socket.emit('user-session', getLoggedInUser)
     })
 
-    socket.on('user-session', (socket) => {
-        console.log(socket)
-        /* const user = getUser(socket.id) */
-        /* socket.emit('user-session', user) */
+    socket.on('create-room', (msg) => {
+        console.log(msg)
     })
 
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import socketIOClient from "socket.io-client";
 
@@ -13,20 +13,19 @@ import SocketProvider from "./providers/SocketContext";
 
 function App() {
   const classes = useStyles();
+  const [openInputs, setOpenInputs] = useState<boolean>(false);
+
   return (
     <>
-      <ThemeProvider theme={theme}>
-        <SocketProvider>
-          <Box className={classes.appContainer}>
-            <Box className={classes.flexContainer}>
-              <SidePanel />
-              <MainPage />
-            </Box>
-            <LandingPage />
+      <SocketProvider>
+        <Box className={classes.appContainer}>
+          <Box className={classes.flexContainer}>
+            <SidePanel createInputFields={setOpenInputs}/>
+            <MainPage inputFieldsOpen={openInputs}/>
           </Box>
-        </SocketProvider>
-      </ThemeProvider>
-
+        </Box>
+        <ThemeProvider theme={theme}>{<LandingPage />}</ThemeProvider>
+      </SocketProvider>
     </>
   );
 }
@@ -37,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: "center",
   },
   appContainer: {
-    width: "100%",
+    width: "100vw",
   },
 }));
 

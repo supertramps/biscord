@@ -14,7 +14,7 @@ import {
 } from "@material-ui/core";
 import moment from "moment";
 import discordDark from "../assets/discord-dark.png";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { SocketContext } from "../providers/SocketContext";
 import ChatMessage from "./ChatMessage";
 import GifIcon from "../assets/gif_icon.svg";
@@ -28,33 +28,44 @@ function MainPage(props: Props) {
   const [messages, setMessages] = useState<string[]>();
   const [messageHolder, setMessageHolder] = useState("");
   const classes = useStyles();
-  const { creatNewRoom } = useContext(SocketContext);
+  const { creatNewRoom, socket } = useContext(SocketContext);
+  const [user, setUser] = useState<any>();
+  const [trimedName, setTrimedName] = useState<string>("");
+
   const [values, setValues] = useState<Object>({
     roomName: "",
     password: "",
   });
 
+
+  function trimForAvatar() {
+    const trimedName: string = user.name.slice(0, 1);
+    setTrimedName(trimedName);
+  }
+
+  useEffect(() => {
+    const loadUser = async () => {
+      if(!socket){
+        return;
+      }
+      await socket.on('user-session', (lUser: any) => {
+          setUser(lUser)
+      })
+    }
+    loadUser();
+  })
+
+
+
   const addMessageToArray = () => {
     if (!messages) {
+      trimForAvatar();
       setMessages([messageHolder]);
     } else if (messages) {
+      trimForAvatar();
       setMessages([...messages, messageHolder]);
     }
   };
-
-  // const today = moment();
-  // const postTime = moment();
-  // let timeShort = "m";
-  // let diff = today.diff(postTime, "seconds");
-
-  // if (diff >= 1) {
-  //   diff = today.diff(postTime, "hours");
-  //   timeShort = "h";
-  // }
-  // if (diff >= 24 && timeShort === "h") {
-  //   diff = today.diff(postTime, "days");
-  //   timeShort = "d";
-  // }
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
@@ -68,6 +79,7 @@ function MainPage(props: Props) {
     <Box className={classes.root}>
       {props.inputFieldsOpen ? (
         <Box className={classes.root}>
+
           <Box className={classes.roomFormContainer}>
             <form noValidate autoComplete="off" className={classes.form}>
               <TextField
@@ -109,7 +121,10 @@ function MainPage(props: Props) {
                   .map((m, i) => (
                     <ChatMessage
                       time={moment().format("MMM Do YY")}
-                      profile={"Z"}
+
+                      avatar={trimedName}
+                      profile={user.name}
+
                       key={i}
                       message={m}
                     />
@@ -131,9 +146,11 @@ function MainPage(props: Props) {
                     onChange={(event) => setMessageHolder(event.target.value)}
                   />
                 </Box>
+
                 <Box className={classes.gifIconContainer}>
                   <img className={classes.gifIcon} src={GifIcon} alt="" />
                 </Box>
+
                 <Box className={classes.buttonContainer}>
                   <Button
                     onClick={addMessageToArray}
@@ -242,6 +259,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: "100%",
     height: "100%",
   },
+
   roomFormContainer: {
     display: "flex",
     flexDirection: "column",

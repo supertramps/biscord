@@ -4,6 +4,7 @@ import React from "react";
 interface Iprops {
   message: string;
   profile: string;
+  avatar: string;
   time: string | (string | number)[];
 }
 
@@ -12,13 +13,14 @@ function ChatMessage(props: Iprops) {
 
   return (
     <Box className={classes.root}>
+
       <Box ml={2} className={classes.chatMetaData}>
-        <Typography variant="body2">Zazzi</Typography>
+        <Typography variant="body2">{props.profile}</Typography>
         <Typography variant="body2">{props.time}</Typography>
       </Box>
       <Box className={classes.contentWrapper}>
         <Box ml={2}>
-          <Avatar className={classes.avatarStyle}>{props.profile}</Avatar>
+          <Avatar className={classes.avatarStyle}>{props.avatar}</Avatar>
         </Box>
         <Box ml={2} className={classes.messageWrapper}>
           <Typography variant="body1">{props.message}</Typography>

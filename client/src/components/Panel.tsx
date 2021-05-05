@@ -52,10 +52,17 @@ function SidePanel(props:Props) {
         </Box>
         <Box mt={2} ml={5} className={classes.roomList}>
           {
-          rooms ? rooms.map((rooms: any) => 
+          rooms ? rooms.map((room: any) => 
             <Box>
              <Link>
-               <Typography variant="body1">{`#${rooms.room}`}</Typography>
+               <Typography 
+                  variant="body1"
+                  onClick={()=>{
+                    console.log(room)
+                  }}
+               >
+                {`#${room.room}`}
+                </Typography>
              </Link>
            </Box>
           ) : null}

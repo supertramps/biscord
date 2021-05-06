@@ -35,6 +35,7 @@ function MainPage(props: Props) {
   const [user, setUser] = useState<any>();
   const [trimedName, setTrimedName] = useState<string>("");
   const [gifGalleryOpen, setGifGalleryOpen] = useState<boolean>(false);
+  const [chosenGif, setChosenGif] = useState<string>("");
 
   const [values, setValues] = useState<Object>({
     roomName: "",
@@ -90,7 +91,7 @@ function MainPage(props: Props) {
     {
       columns: 2,
       imageWidth: 240,
-      gutter: 5,
+      gutter: 10,
     },
   ];
 
@@ -143,6 +144,7 @@ function MainPage(props: Props) {
                       profile={user.name}
                       key={i}
                       message={m}
+                      gifUrl={chosenGif}
                     />
                   ))
                   .reverse()
@@ -157,7 +159,7 @@ function MainPage(props: Props) {
                 <ReactGiphySearchbox
                   apiKey="nGgKX5djKNAVoYChgFHSzk7Q2tnOs65p"
                   // @ts-ignore
-                  onSelect={(item) => console.log(item)}
+                  onSelect={(item) => setChosenGif(item.embed_url)}
                   autoFocus={true}
                   masonryConfig={gifContainerOptions}
                   poweredByGiphy={false}
@@ -165,6 +167,7 @@ function MainPage(props: Props) {
                   searchFormClassName={"gifForm"}
                   listWrapperClassName={"gifList"}
                   searchPlaceholder="Look for dank GIFs 😎..."
+                  rating="pg13"
                 />
               </Box>
             </Box>
@@ -194,7 +197,10 @@ function MainPage(props: Props) {
 
                 <Box className={classes.buttonContainer}>
                   <Button
-                    onClick={addMessageToArray}
+                    onClick={() => {
+                      addMessageToArray();
+                      setChosenGif("");
+                    }}
                     color="primary"
                     className={classes.buttonStyling}
                   >

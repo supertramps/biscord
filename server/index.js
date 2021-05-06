@@ -1,3 +1,4 @@
+const { AccessTimeSharp } = require("@material-ui/icons");
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 6969;
@@ -10,22 +11,22 @@ const {addUser, removeUser, getUser, getUsersInRoom, addUserToRoom, users} = req
 
 io.on("connection", (socket) => {
     console.log("Client was connected", socket.id);
-    
+
     socket.on('add-to-user-database', (name) => {
-        const {user, error} = addUser({id: socket.id, name})
+        const {user, error} = addUser({id: socket.id, name, room: 'Lobby'})
         const loggedInUser = getUser(socket.id)
         socket.emit('user-session', loggedInUser)
+        socket.join("Lobby")
+        console.log(io.sockets.adapter.rooms)
     })
 
     socket.on('create-room', (msg) => {
-        console.log(msg)
         const user = addUserToRoom(msg.userInfo.id, msg.roomInfo.roomName, msg.roomInfo.password)
         socket.join(msg.roomInfo.roomName)
-        const rooms = io.of("/").adapter.rooms;
-        socket.emit('room-session', user)  
+        io.emit('room-session', user)  
     })
 
-  socket.emit('room-session', users)
+    io.emit('room-session', users)
 
   socket.on("join", (user) => {
     console.log(user);
@@ -59,11 +60,15 @@ io.on("connection", (socket) => {
   });
 });
 
-const getApiAndEmit = (socket) => {
-  const response = new Date();
-  // Emitting a new message. Will be consumed by the client
-  socket.emit("FromAPI", response);
-};
+/* function getRooms() {
+  const sockets = Object.values(io.sockets.sockets)
+  let rooms = []
+  for(const socket of sockets){
+    const actualRooms = Object.keys(socket.rooms).filter(room => room !== socket.id)
+    rooms.push(actualRooms)
+  }
+  return [...new Set(rooms)]
+} */
 
 server.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

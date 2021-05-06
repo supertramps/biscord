@@ -1,24 +1,12 @@
-const users = [
-    {
-        "id": "UOivvYk5-EvfoI8qAAAF",
-        "name": "asdasdsdf",
-        "room": "React",
-        "password": "1234"
-    },
-    {
-        "id": "EN7n_2f2LJkKnw0dAAAH",
-        "name": "asdassdfsdf",
-        "room": "Javascript",
-        "password": "1234"
-    }
-];
+const users = [];
 
-function addUser({id, name}){
+function addUser({id, name, room}){
+    console.log(room)
     const exisitingUser = users.find((user) => user.name === name);
     if(exisitingUser){
         return { error: "Usernmae is taken"}
     }
-    const user = { id, name}; 
+    const user = { id, name, room}; 
     users.push(user);
     return user
 }
@@ -33,7 +21,8 @@ function addUserToRoom(id, room, password){
             return user
         }
     }) 
-    return users;
+    console.log(users)
+    return users;  
 }
 
 function removeUser(id){

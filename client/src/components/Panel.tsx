@@ -27,6 +27,7 @@ function SidePanel(props:Props) {
   const [rooms, setRooms] = useState<any>();
   
   console.log(rooms)
+  console.log(user)
 
   useEffect(() => {
     const loadUser = async () => {
@@ -37,7 +38,8 @@ function SidePanel(props:Props) {
           setUser(lUser)
       })
       await socket.on('room-session', (room: any) => {
-        setRooms(room)
+        console.log(room)
+        /* setRooms(room) */
       })
     }
     loadUser();

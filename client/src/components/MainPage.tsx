@@ -18,6 +18,8 @@ import { useContext, useEffect, useState } from "react";
 import { SocketContext } from "../providers/SocketContext";
 import ChatMessage from "./ChatMessage";
 import GifIcon from "../assets/gif_icon.svg";
+// @ts-ignore
+import ReactGiphySearchbox from "react-giphy-searchbox";
 
 interface Props {
   inputFieldsOpen: any;
@@ -31,31 +33,39 @@ function MainPage(props: Props) {
   const { creatNewRoom, socket } = useContext(SocketContext);
   const [user, setUser] = useState<any>();
   const [trimedName, setTrimedName] = useState<string>("");
+  const [gifGalleryOpen, setGifGalleryOpen] = useState<boolean>(false);
 
   const [values, setValues] = useState<Object>({
     roomName: "",
     password: "",
   });
 
-
   function trimForAvatar() {
     const trimedName: string = user.name.slice(0, 1);
     setTrimedName(trimedName);
   }
 
+  function openGifGallery() {
+    if (gifGalleryOpen === false) {
+      setGifGalleryOpen(true);
+    } else if (gifGalleryOpen === true) {
+      setGifGalleryOpen(false);
+    }
+
+    console.log("GIF panel is open");
+  }
+
   useEffect(() => {
     const loadUser = async () => {
-      if(!socket){
+      if (!socket) {
         return;
       }
-      await socket.on('user-session', (lUser: any) => {
-          setUser(lUser)
-      })
-    }
+      await socket.on("user-session", (lUser: any) => {
+        setUser(lUser);
+      });
+    };
     loadUser();
-  })
-
-
+  });
 
   const addMessageToArray = () => {
     if (!messages) {
@@ -75,11 +85,18 @@ function MainPage(props: Props) {
     }));
   };
 
+  const gifContainerOptions = [
+    {
+      columns: 2,
+      imageWidth: 240,
+      gutter: 5,
+    },
+  ];
+
   return (
     <Box className={classes.root}>
       {props.inputFieldsOpen ? (
         <Box className={classes.root}>
-
           <Box className={classes.roomFormContainer}>
             <form noValidate autoComplete="off" className={classes.form}>
               <TextField
@@ -121,10 +138,8 @@ function MainPage(props: Props) {
                   .map((m, i) => (
                     <ChatMessage
                       time={moment().format("MMM Do YY")}
-
                       avatar={trimedName}
                       profile={user.name}
-
                       key={i}
                       message={m}
                     />
@@ -135,6 +150,24 @@ function MainPage(props: Props) {
               )}
             </Box>
           </Box>
+          {gifGalleryOpen ? (
+            <Box className={classes.gifContainer}>
+              <Box>
+                <ReactGiphySearchbox
+                  apiKey="nGgKX5djKNAVoYChgFHSzk7Q2tnOs65p"
+                  // @ts-ignore
+                  onSelect={(item) => console.log(item)}
+                  autoFocus={true}
+                  masonryConfig={gifContainerOptions}
+                  poweredByGiphy={false}
+                  wrapperClassName={"gifContainer"}
+                  searchFormClassName={"gifForm"}
+                  listWrapperClassName={"gifList"}
+                  searchPlaceholder="Look for dank GIFs"
+                />
+              </Box>
+            </Box>
+          ) : null}
           <Box mb={3} className={classes.formContainer}>
             <form className={classes.formStyling}>
               <Box className={classes.formFlex}>
@@ -148,7 +181,14 @@ function MainPage(props: Props) {
                 </Box>
 
                 <Box className={classes.gifIconContainer}>
-                  <img className={classes.gifIcon} src={GifIcon} alt="" />
+                  <Button
+                    className={classes.gifButton}
+                    onClick={() => {
+                      openGifGallery();
+                    }}
+                  >
+                    <img src={GifIcon} className={classes.gifIcon} alt="" />
+                  </Button>
                 </Box>
 
                 <Box className={classes.buttonContainer}>
@@ -266,6 +306,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   gifIcon: {
     height: "2.8rem",
+    cursor: "pointer",
   },
   gifIconContainer: {
     backgroundColor: "#40444B",
@@ -274,6 +315,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: "center",
     borderRadius: "5px",
     boxShadow: "3px 5px 6px -4px rgba(0,0,0,0.7)",
+  },
+  gifButton: {
+    height: "2.8rem",
+  },
+  gifContainer: {
+    position: "absolute",
+    bottom: "5rem",
+    right: "5rem",
+    backgroundColor: "#40444B",
+    borderRadius: "10px",
   },
 }));
 

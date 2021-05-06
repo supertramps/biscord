@@ -8,7 +8,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-
 @font-face {
   font-family: "Uni-Sans";
   src: local("Uni-Sans"),
@@ -24,4 +23,34 @@ body {
   /* Chrome, Firefox, Opera, Safari 10.1+ */
   color: #fff;
   opacity: 1; /* Firefox */
+}
+
+.gifContainer {
+  background-color: #40444b00;
+  overflow: hidden;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.gifForm > input {
+  color: #fff;
+  background-color: #40444b;
+  font-family: whitney;
+  border-radius: 10px;
+  padding: 0.5rem;
+  border: 1px solid #656c79;
+  display: flex;
+  width: 485px;
+}
+
+.gifList {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  border-radius: 10px;
+}
+.reactGiphySearchbox-listWrapper {
+  border-radius: 10px !important;
+  background-color: #40444b;
 }

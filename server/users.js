@@ -1,7 +1,6 @@
 const users = [];
 
 function addUser({id, name, room}){
-    console.log(room)
     const exisitingUser = users.find((user) => user.name === name);
     if(exisitingUser){
         return { error: "Usernmae is taken"}
@@ -21,7 +20,6 @@ function addUserToRoom(id, room, password){
             return user
         }
     }) 
-    console.log(users)
     return users;  
 }
 

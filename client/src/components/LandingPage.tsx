@@ -26,7 +26,7 @@ function LandingPage() {
       </Typography>
       <img className={classes.logoIconStyle} src={logoGif} alt="logo.gif" />
       <Typography className={classes.greeterStyle}>
-        Like Discord, but with a B
+        Like Discord with a 🐝
       </Typography>
       <form noValidate autoComplete="off">
         <TextField

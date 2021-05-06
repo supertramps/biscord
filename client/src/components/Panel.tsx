@@ -48,6 +48,11 @@ function SidePanel(props: Props) {
     setAvatarLetter(avatarLetter);
   }
 
+  function switchRooms(user: any, room: any){
+    console.log(user)
+    socket.emit("switch-room", {user, room})
+  }
+
   useEffect(() => {
     const loadUser = async () => {
       if (!socket) {
@@ -66,6 +71,7 @@ function SidePanel(props: Props) {
       getAvatarLetter();
     }
   });
+
 
   return (
     <Box className={classes.root}>
@@ -89,7 +95,7 @@ function SidePanel(props: Props) {
                       key={i}
                       variant="body1"
                       onClick={() => {
-                        console.log(room);
+                        switchRooms(user, room)
                       }}
                     >
                       {room ? `#${room}` : null}

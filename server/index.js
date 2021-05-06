@@ -26,25 +26,33 @@ function onConnection(socket) {
       console.log("test");
       io.to(socked.id).emit("joined-succ", "joined");
       io.to("Lobby").to("joined", `joined the room!`);
-      io.emit("rooms updated", getRooms());
+      io.emit("rooms-updated", getRooms());
     });
+    io.emit("room-session", getRooms());
     const rooms = getRooms();
     console.log(rooms)
     socket.emit("user-session", loggedInUser);
   });
 
-  socket.on("create-room", (msg) => {
+  socket.on("create-room", (data) => {
     const user = addUserToRoom(
-      msg.userInfo.id,
-      msg.roomInfo.roomName,
-      msg.roomInfo.password
+      data.userInfo.id,
+      data.roomInfo.roomName,
+      data.roomInfo.password
     );
     socket.leave("Lobby");
-    socket.join(msg.roomInfo.roomName);
+    socket.join(data.roomInfo.roomName);
     io.emit("room-session", getRooms());
-    const rooms = getRooms();
-    console.log(rooms, "lolololo");
+    console.log(io.sockets.adapter.rooms)
   });
+
+  socket.on('switch-room', (data) => {
+      socket.leave(data.user.room)
+      socket.join(data.room)
+      io.emit("room-session", getRooms());
+      console.log(data.room)
+      console.log(io.sockets.adapter.rooms)
+  })
 
   io.emit("room-session", getRooms());
 

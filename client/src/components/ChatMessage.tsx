@@ -6,6 +6,7 @@ interface Iprops {
   profile: string;
   avatar: string;
   time: string | (string | number)[];
+  gifUrl?: string;
 }
 
 function ChatMessage(props: Iprops) {
@@ -13,7 +14,6 @@ function ChatMessage(props: Iprops) {
 
   return (
     <Box className={classes.root}>
-
       <Box ml={2} className={classes.chatMetaData}>
         <Typography variant="body2">{props.profile}</Typography>
         <Typography variant="body2">{props.time}</Typography>
@@ -23,6 +23,7 @@ function ChatMessage(props: Iprops) {
           <Avatar className={classes.avatarStyle}>{props.avatar}</Avatar>
         </Box>
         <Box ml={2} className={classes.messageWrapper}>
+          {props.gifUrl ? <iframe src={props.gifUrl}></iframe> : null}
           <Typography variant="body1">{props.message}</Typography>
         </Box>
       </Box>
@@ -58,6 +59,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: ".2rem",
     width: "3rem",
     height: "3rem",
+    background:
+      "linear-gradient(126.18deg, #5317FD -6.87%, rgba(236, 152, 233, 0.91) 125.18%)",
   },
 }));
 

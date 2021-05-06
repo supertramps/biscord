@@ -117,8 +117,10 @@ function SidePanel(props: Props) {
             </Box>
             <Typography>X</Typography>
           </Box>
-          <Box className={classes.connectionStatus}>
-            <img src={statusIcon} alt="" />
+          <Box mt={1} className={classes.connectionStatus}>
+            <Box mr={1}>
+              <img src={statusIcon} alt="" />
+            </Box>
             {!user ? (
               <Typography>Disconnected</Typography>
             ) : (
@@ -188,6 +190,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   connectionStatus: {
     display: "flex",
+    alignItems: "center",
   },
   buttonStyling: {
     width: "100%",
@@ -211,7 +214,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: "center",
   },
   searchBarContainer: {
-    width: "100%",
     height: "2.8rem",
     backgroundColor: "#40444B",
     border: "none",

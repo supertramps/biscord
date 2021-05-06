@@ -18,6 +18,7 @@ import { useContext, useEffect, useState } from "react";
 import { SocketContext } from "../providers/SocketContext";
 import ChatMessage from "./ChatMessage";
 import GifIcon from "../assets/gif_icon.svg";
+
 // @ts-ignore
 import ReactGiphySearchbox from "react-giphy-searchbox";
 
@@ -163,7 +164,7 @@ function MainPage(props: Props) {
                   wrapperClassName={"gifContainer"}
                   searchFormClassName={"gifForm"}
                   listWrapperClassName={"gifList"}
-                  searchPlaceholder="Look for dank GIFs"
+                  searchPlaceholder="Look for dank GIFs 😎..."
                 />
               </Box>
             </Box>

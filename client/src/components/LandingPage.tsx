@@ -10,8 +10,6 @@ import {
 import logoGif from "../assets/biscord.gif";
 import { SocketContext } from "../providers/SocketContext";
 
-
-
 function LandingPage() {
   const classes = useStyles();
   const [username, setUsername] = useState<string>("");
@@ -37,10 +35,14 @@ function LandingPage() {
           label="Your name..."
           variant="outlined"
           onChange={(event) => handleChange(event.target.value)}
+          InputProps={{
+            classes: { notchedOutline: classes.noBorder },
+          }}
         />
       </form>
       <Box mt={3}>
         <Button
+          className={classes.joinButton}
           color="secondary"
           onClick={() => {
             if (username !== "") {
@@ -74,5 +76,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   textFieldStyle: {
     width: "30rem",
     background: "#40444B",
+    boxShadow: "3px 5px 6px -4px rgba(0,0,0,0.7)",
+    borderRadius: "10px",
+  },
+  joinButton: {
+    backgroundColor: "#7289DA",
+    color: "#fff",
+    fontFamily: "whitney",
+  },
+  noBorder: {
+    border: "none",
   },
 }));

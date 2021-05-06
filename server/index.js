@@ -28,7 +28,8 @@ function onConnection(socket) {
       io.to("Lobby").to("joined", `joined the room!`);
       io.emit("rooms updated", getRooms());
     });
-    getRooms();
+    const rooms = getRooms();
+    console.log(rooms)
     socket.emit("user-session", loggedInUser);
   });
 
@@ -44,6 +45,7 @@ function onConnection(socket) {
     const rooms = getRooms();
     console.log(rooms, "lolololo");
   });
+
   io.emit("room-session", getRooms());
 
   socket.on("join", (user) => {
@@ -69,7 +71,6 @@ function getRooms() {
       rooms.push(actualRooms[0]);
     }
   }
-  console.log(rooms, "fuuuuuck");
   return [...new Set(rooms)];
 }
 

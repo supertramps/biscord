@@ -31,6 +31,7 @@ function SidePanel(props: Props) {
   const [statusIcon, setStatusIcon] = useState<any>(offlineIcon);
   const [avatarLetter, setAvatarLetter] = useState<string>("");
 
+  console.log(rooms)
   // Checks if there is a user, changes connection status
   function checkIfOnline() {
     if (!user) {
@@ -56,8 +57,7 @@ function SidePanel(props: Props) {
         setUser(lUser);
       });
       await socket.on("room-session", (room: any) => {
-        console.log(room);
-        /* setRooms(room) */
+        setRooms(room) 
       });
     };
     loadUser();
@@ -92,7 +92,7 @@ function SidePanel(props: Props) {
                         console.log(room);
                       }}
                     >
-                      {room.room ? `#${room.room}` : null}
+                      {room ? `#${room}` : null}
                     </Typography>
                   </Link>
                 </Box>

@@ -22,9 +22,9 @@ function onConnection(socket){
         io.to("Lobby").to('joined', `joined the room!`)
         /* io.emit('rooms updated', findRooms()) */
       })
-      /* findRooms() */
+      findRooms()
       getRooms()
-      ActiveRooms()
+      /* ActiveRooms() */
       socket.emit('user-session', loggedInUser)
   })
 
@@ -73,23 +73,24 @@ socket.on("disconnect", () => {
 
 io.on("connection", onConnection);
 
-/* function findRooms() {
+function findRooms() {
   var availableRooms = [];
   var rooms = io.sockets.adapter.rooms;
-  console.log(rooms)
+  
   if (rooms) {
       for (var room of rooms) {
-        console.log(room)
-          if (!rooms[room].hasOwnProperty(room)) {
+        /* console.log(room) */
+          
+          /* if (!rooms[room].hasOwnProperty(room)) {
               availableRooms.push(room);
-          }
+          } */
       }
   }
   console.log(availableRooms)
   return availableRooms;
-} */
+}
 
-function ActiveRooms(){
+ /* function ActiveRooms(){
   var activeRooms = [];
   Object.keys(io.sockets.adapter.rooms).forEach(room=>{
       var isRoom = true;
@@ -99,18 +100,20 @@ function ActiveRooms(){
       if(isRoom)activeRooms.push(room);
   });
   console.log(activeRooms)
-  return activeRooms;}
+  return activeRooms;} */
 
-function getRooms() {
-  const sockets = Object.keys(io.sockets.adapter.rooms)
-  console.log(sockets)
-  let rooms = []
-  /* for(const socket of sockets){
-    const actualRooms = Object.keys(socket.rooms).filter(room => room !== socket.id)
-    rooms.push(actualRooms)
-  }
-  return [...new Set(rooms)] */
-}
+  function getRooms() {
+    const socketsRooms = io.sockets.adapter.rooms
+    let rooms = []
+    
+    for(const socket of socketsRooms){
+      const actualRooms = socket.filter(room => room !== socket[1])
+      /* console.log(actualRooms) */
+      /* rooms.push(actualRooms) */
+    }
+    /* console.log(rooms) */
+    return [...new Set(rooms)]
+  } 
 
 server.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

@@ -13,61 +13,91 @@ import {
   Zoom,
 } from "@material-ui/core";
 import { useContext, useEffect, useState } from "react";
-import {SocketContext } from "../providers/SocketContext";
+import { SocketContext } from "../providers/SocketContext";
+import searchIcon from "../assets/search_icon.svg";
+import onlineIcon from "../assets/online_icon.svg";
+import offlineIcon from "../assets/offline_icon.svg";
 
 interface Props {
   createInputFields: any;
   userInfo: any;
 }
 
-function SidePanel(props:Props) {
+function SidePanel(props: Props) {
   const classes = useStyles();
   const { socket, room } = useContext(SocketContext);
   const [user, setUser] = useState<any>();
   const [rooms, setRooms] = useState<any>();
-  
-  console.log(rooms)
-  console.log(user)
+  const [statusIcon, setStatusIcon] = useState<any>(offlineIcon);
+  const [avatarLetter, setAvatarLetter] = useState<string>("");
+
+  // Checks if there is a user, changes connection status
+  function checkIfOnline() {
+    if (!user) {
+      setStatusIcon(offlineIcon);
+    } else {
+      setStatusIcon(onlineIcon);
+    }
+  }
+
+  // Get first letter from user.name to set as avatar
+  function getAvatarLetter() {
+    const username = user.name;
+    const avatarLetter = username.charAt(0).toUpperCase();
+    setAvatarLetter(avatarLetter);
+  }
 
   useEffect(() => {
     const loadUser = async () => {
-      if(!socket){
+      if (!socket) {
         return;
       }
-      await socket.on('user-session', (lUser: any) => {
-          setUser(lUser)
-      })
-      await socket.on('room-session', (room: any) => {
-        console.log(room)
+      await socket.on("user-session", (lUser: any) => {
+        setUser(lUser);
+      });
+      await socket.on("room-session", (room: any) => {
+        console.log(room);
         /* setRooms(room) */
-      })
-    }
+      });
+    };
     loadUser();
-  })
+    checkIfOnline();
+    if (user) {
+      getAvatarLetter();
+    }
+  });
 
   return (
     <Box className={classes.root}>
       <Box className={classes.topContainer}>
         <Box className={classes.searchBarContainer}>
-          <TextField placeholder="search..."></TextField>
+          <Box>
+            <input
+              placeholder="Search..."
+              type="text"
+              className={classes.searchBarContainer}
+            />
+          </Box>
+          <img src={searchIcon} alt="" />
         </Box>
         <Box mt={2} ml={5} className={classes.roomList}>
-          {
-          rooms ? rooms.map((room: any, i: number) => 
-            <Box>
-             <Link>
-               <Typography 
-                  key={i}
-                  variant="body1"
-                  onClick={()=>{
-                    console.log(room)
-                  }}
-               >
-                { room.room ? `#${room.room}` : null }
-              </Typography>
-             </Link>
-           </Box>
-          ) : null}
+          {rooms
+            ? rooms.map((room: any, i: number) => (
+                <Box>
+                  <Link>
+                    <Typography
+                      key={i}
+                      variant="body1"
+                      onClick={() => {
+                        console.log(room);
+                      }}
+                    >
+                      {room.room ? `#${room.room}` : null}
+                    </Typography>
+                  </Link>
+                </Box>
+              ))
+            : null}
         </Box>
       </Box>
       <Box className={classes.bottomContainer}>
@@ -75,34 +105,38 @@ function SidePanel(props:Props) {
           <Box className={classes.statusBoxContent}>
             <Box className={classes.statusBoxFlex}>
               <Box>
-                <Avatar>Z</Avatar>
+                {!user ? null : (
+                  <Avatar className={classes.avatarStyling}>
+                    {avatarLetter}
+                  </Avatar>
+                )}
               </Box>
               <Box ml={1}>
-                <Typography>
-                {!user ? "placeholder" : user.name}
-              </Typography>
+                <Typography>{!user ? "Please log in" : user.name}</Typography>
               </Box>
             </Box>
             <Typography>X</Typography>
           </Box>
-          <Box>
-            <Typography>Connected</Typography>
+          <Box className={classes.connectionStatus}>
+            <img src={statusIcon} alt="" />
+            {!user ? (
+              <Typography>Disconnected</Typography>
+            ) : (
+              <Typography>Connected</Typography>
+            )}
           </Box>
         </Box>
         <Box mb={2} className={classes.buttonContainer}>
-        <Button 
-            className={classes.buttonStyling}
-            onClick={() => {
-              
-            }}
-          >
+          <Button className={classes.buttonStyling} onClick={() => {}}>
             Join Room
           </Button>
-          <Button 
+        </Box>
+        <Box mb={3} className={classes.buttonContainer}>
+          <Button
             className={classes.buttonStyling}
             onClick={() => {
-              props.createInputFields(true)
-              props.userInfo(user)
+              props.createInputFields(true);
+              props.userInfo(user);
             }}
           >
             Create Room
@@ -138,6 +172,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
+    boxShadow: "3px 5px 6px -4px rgba(0,0,0,0.7)",
   },
   statusBoxFlex: {
     display: "flex",
@@ -146,6 +181,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: "flex",
     alignItems: "flex-start",
     justifyContent: "space-between",
+  },
+  avatarStyling: {
+    background:
+      "linear-gradient(126.18deg, #5317FD -6.87%, rgba(236, 152, 233, 0.91) 125.18%)",
+  },
+  connectionStatus: {
+    display: "flex",
   },
   buttonStyling: {
     width: "100%",
@@ -157,6 +199,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
+    boxShadow: "3px 5px 6px -4px rgba(0,0,0,0.7)",
   },
   buttonContainer: {
     width: "50%",
@@ -168,8 +211,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: "center",
   },
   searchBarContainer: {
-    width: "80%",
-    backgroundColor: "#303338",
+    width: "100%",
+    height: "2.8rem",
+    backgroundColor: "#40444B",
+    border: "none",
+    fontFamily: "whitney",
+    color: "#fff",
+    fontSize: "1rem",
+    outline: "none",
+    borderRadius: "10px",
+    paddingInline: "1rem",
+    display: "flex",
+    justifyContent: "space-between",
   },
   topContainer: {
     display: "flex",

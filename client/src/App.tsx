@@ -10,7 +10,6 @@ import SidePanel from "./components/Panel";
 import { theme } from "./providers/ThemeProvider";
 import MainPage from "./components/MainPage";
 import SocketProvider from "./providers/SocketContext";
-import Giphy from "./components/Giphy";
 
 function App() {
   const classes = useStyles();

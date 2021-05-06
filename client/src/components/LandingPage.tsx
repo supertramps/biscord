@@ -10,7 +10,11 @@ import {
 import logoGif from "../assets/biscord.gif";
 import { SocketContext } from "../providers/SocketContext";
 
-function LandingPage() {
+interface IProps {
+  usernameSet: (value: boolean) => void;
+}
+
+function LandingPage(props: IProps) {
   const classes = useStyles();
   const [username, setUsername] = useState<string>("");
   const { getUserName } = useContext(SocketContext);
@@ -47,6 +51,7 @@ function LandingPage() {
           onClick={() => {
             if (username !== "") {
               getUserName(username);
+              props.usernameSet(true);
             }
           }}
         >

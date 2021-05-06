@@ -24,8 +24,9 @@ function SidePanel(props:Props) {
   const classes = useStyles();
   const { socket, room } = useContext(SocketContext);
   const [user, setUser] = useState<any>();
+  const [rooms, setRooms] = useState<any>();
   
-  console.log(room)
+  console.log(rooms)
 
   useEffect(() => {
     const loadUser = async () => {
@@ -34,6 +35,9 @@ function SidePanel(props:Props) {
       }
       await socket.on('user-session', (lUser: any) => {
           setUser(lUser)
+      })
+      await socket.on('room-session', (room: any) => {
+        setRooms(room)
       })
     }
     loadUser();
@@ -46,20 +50,22 @@ function SidePanel(props:Props) {
           <TextField placeholder="search..."></TextField>
         </Box>
         <Box mt={2} ml={5} className={classes.roomList}>
-          <Box>
-            <Link>
-              <Typography variant="body1">{`#${room.room}`}</Typography>
-            </Link>
-          </Box>
-          <Box>
-            <Typography variant="body1">#Javascript</Typography>
-          </Box>
-          <Box>
-            <Typography variant="body1">#Node</Typography>
-          </Box>
-          <Box>
-            <Typography variant="body1">#Typescript</Typography>
-          </Box>
+          {
+          rooms ? rooms.map((room: any, i: number) => 
+            <Box>
+             <Link>
+               <Typography 
+                  key={i}
+                  variant="body1"
+                  onClick={()=>{
+                    console.log(room)
+                  }}
+               >
+                { room.room ? `#${room.room}` : null }
+              </Typography>
+             </Link>
+           </Box>
+          ) : null}
         </Box>
       </Box>
       <Box className={classes.bottomContainer}>
@@ -82,6 +88,14 @@ function SidePanel(props:Props) {
           </Box>
         </Box>
         <Box mb={2} className={classes.buttonContainer}>
+        <Button 
+            className={classes.buttonStyling}
+            onClick={() => {
+              
+            }}
+          >
+            Join Room
+          </Button>
           <Button 
             className={classes.buttonStyling}
             onClick={() => {

@@ -20,6 +20,9 @@ function App() {
   function setRenders(value: boolean) {
     setUsernameSet(value);
   }
+  function handleInputField(value:boolean){
+    setOpenInputs(value)
+  }
 
   return (
     <>
@@ -34,7 +37,7 @@ function App() {
                   createInputFields={setOpenInputs}
                   userInfo={setUserInfo}
                 />
-                <MainPage inputFieldsOpen={openInputs} userInfo={userInfo} />
+                <MainPage handleInputField={handleInputField} inputFieldsOpen={openInputs} userInfo={userInfo} />
               </Box>
             </Box>
           )}

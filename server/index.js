@@ -40,6 +40,7 @@ function onConnection(socket) {
       data.roomInfo.password
     );
     socket.join(data.roomInfo.roomName);
+    io.to(data.room).emit("joined", `${userSession.name} joined ${data.room}`);
     io.emit("room-session", getRooms());
     socket.emit("current-room", userSession);
     console.log(io.sockets.adapter.rooms)
@@ -54,6 +55,7 @@ function onConnection(socket) {
         data.room,
       );
       socket.join(data.room)  
+      io.to(data.room).emit("joined", `${userSession.name} joined ${data.room}`);
       socket.emit("current-room", userSession);
       io.emit("room-session", getRooms()); 
       console.log(io.sockets.adapter.rooms)

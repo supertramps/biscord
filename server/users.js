@@ -1,49 +1,57 @@
 const users = [];
 
-function addUser({id, name, room}){
-    const exisitingUser = users.find((user) => user.name === name);
-    if(exisitingUser){
-        return { error: "Usernmae is taken"}
+function addUser({ id, name, room }) {
+  const exisitingUser = users.find((user) => user.name === name);
+  if (exisitingUser) {
+    return { error: "Usernmae is taken" };
+  }
+  const user = { id, name, room, password: "" };
+  users.push(user);
+  return user;
+}
+
+function createRoom(id, room, password) {
+  users.map((user) => {
+    if (user.id === id) {
+      user.room = room;
+      user.password = password;
+      return user;
+    } else {
+      return user;
     }
-    const user = { id, name, room}; 
-    users.push(user);
-    return user
+  });
+  return users;
 }
 
-function createRoom(id, room, password){
-    users.map(user => {
-        if(user.id === id){
-            user.room = room
-            user.password = password
-            return user
-        } else {
-            return user
-        }
-    }) 
-    return users;  
-}
-
-function switchRoom(id, room){
-    users.map(user => {
-        if(user.id === id){
-            user.room = room
-            return user
-        } else {
-            return user
-        }
-    }) 
-    return users;  
-}
-
-function removeUser(id){
-    const index = users.findIndex((user) => user.id === id);
-    if (index !== -1){
-        return users.splice(index, 1)[0]
+function switchRoom(id, room) {
+  users.map((user) => {
+    if (user.id === id) {
+      user.room = room;
+      return user;
+    } else {
+      return user;
     }
+  });
+  return users;
 }
 
-const getUser = (id) =>  users.find((user) => user.id === id);
+function removeUser(id) {
+  const index = users.findIndex((user) => user.id === id);
+  if (index !== -1) {
+    return users.splice(index, 1)[0];
+  }
+}
 
-const getUsersInRoom = (room) => users.filter((user) => user.room === room)
+const getUser = (id) => users.find((user) => user.id === id);
 
-module.exports = { addUser, removeUser, getUser, getUsersInRoom, createRoom, switchRoom, users}
+const getUsersInRoom = (room) => users.filter((user) => user.room === room);
+
+module.exports = {
+  addUser,
+  removeUser,
+  getUser,
+  getUsersInRoom,
+  createRoom,
+  switchRoom,
+  users,
+};

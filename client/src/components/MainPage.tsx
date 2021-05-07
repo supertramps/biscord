@@ -25,6 +25,7 @@ import ReactGiphySearchbox from "react-giphy-searchbox";
 interface Props {
   inputFieldsOpen: any;
   userInfo: any;
+  handleInputField: (value: boolean) => void;
 }
 
 function MainPage(props: Props) {
@@ -107,6 +108,7 @@ function MainPage(props: Props) {
                 label="Room name..."
                 variant="outlined"
                 name="roomName"
+                inputProps={{ maxLength: 15}}
                 onChange={handleChange}
               />
               <TextField
@@ -121,6 +123,7 @@ function MainPage(props: Props) {
             <Button
               onClick={() => {
                 creatNewRoom(values, props.userInfo);
+                props.handleInputField(false);
               }}
             >
               Create

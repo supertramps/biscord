@@ -36,10 +36,10 @@ function MainPage(props: Props) {
   const [trimedName, setTrimedName] = useState<string>("");
   const [gifGalleryOpen, setGifGalleryOpen] = useState<boolean>(false);
   const [chosenGif, setChosenGif] = useState<string>("");
-  const [joinedMessage, setJoinedMessage] = useState<any>([]);
+  const [message, setJoinedMessage] = useState<any>([]);
 
   
-  console.log(joinedMessage)
+  console.log(message)
 
   const [values, setValues] = useState<Object>({
     roomName: "",
@@ -70,8 +70,12 @@ function MainPage(props: Props) {
       await socket.on("user-session", (lUser: any) => {
         setUser(lUser);
       });
-      await socket.on("joined", (message: string) => {
-        setJoinedMessage((_prevState: any) => [...joinedMessage, message])
+      await socket.on("joined", (msg: string) => {
+        setJoinedMessage((_prevState: any) => [...message, msg])
+      })
+      await socket.on('left', (msg: string) => {
+        console.log(msg)
+        setJoinedMessage((_prevState: any) => [...message, msg])
       })
     };
     loadUser();
@@ -139,7 +143,7 @@ function MainPage(props: Props) {
         <>
           <Box className={classes.contentWrapper}>
             <Box>
-                {joinedMessage.map((msg: string) =>[
+                {message.map((msg: string) =>[
                   <Typography>
                     {msg}
                   </Typography>

@@ -33,6 +33,7 @@ function onConnection(socket) {
   socket.on("create-room", (data) => {
     const userSession = getUser(socket.id);
     socket.leave(userSession.room);
+    io.to(userSession.room).emit("left", `${userSession.name} left the room`);
     const user = createRoom(
       data.userInfo.id,
       data.roomInfo.roomName,
@@ -47,6 +48,7 @@ function onConnection(socket) {
   socket.on('switch-room', (data) => {
       const userSession = getUser(socket.id);
       socket.leave(userSession.room)
+      io.to(userSession.room).emit("left", `${userSession.name} left the room`);
       const user = switchRoom(
         socket.id,
         data.room,

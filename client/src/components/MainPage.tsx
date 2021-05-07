@@ -38,7 +38,7 @@ function MainPage(props: Props) {
   const [gifGalleryOpen, setGifGalleryOpen] = useState<boolean>(false);
   const [chosenGif, setChosenGif] = useState<string>("");
 
-  const [values, setValues] = useState<Object>({
+  const [values, setValues] = useState<object>({
     roomName: "",
     password: "",
   });
@@ -57,8 +57,6 @@ function MainPage(props: Props) {
     console.log("GIF panel is open");
   }
 
-  console.log(user)
-  
   useEffect(() => {
     const loadUser = async () => {
       if (!socket) {
@@ -109,9 +107,12 @@ function MainPage(props: Props) {
                 label="Room name..."
                 variant="outlined"
                 name="roomName"
-                inputProps={{ maxLength: 15}}
+                inputProps={{ maxLength: 15 }}
                 onChange={handleChange}
               />
+              <Typography variant="body2">
+                Password is not required (but your room might be raided ⚔)
+              </Typography>
               <TextField
                 className={classes.textFieldStyle}
                 id="outlined-basic"
@@ -121,14 +122,18 @@ function MainPage(props: Props) {
                 onChange={handleChange}
               />
             </form>
-            <Button
-              onClick={() => {
-                creatNewRoom(values, props.userInfo);
-                props.handleInputField(false);
-              }}
-            >
-              Create
-            </Button>
+            <Box>
+              <Button
+                color="secondary"
+                variant="contained"
+                onClick={() => {
+                  creatNewRoom(values, props.userInfo);
+                  props.handleInputField(false);
+                }}
+              >
+                Create
+              </Button>
+            </Box>
           </Box>
         </Box>
       ) : (
@@ -314,6 +319,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   roomFormContainer: {
     display: "flex",
     flexDirection: "column",
+    alignItems: "center",
   },
   gifIcon: {
     height: "2.8rem",

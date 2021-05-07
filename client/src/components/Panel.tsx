@@ -17,6 +17,7 @@ import { SocketContext } from "../providers/SocketContext";
 import searchIcon from "../assets/search_icon.svg";
 import onlineIcon from "../assets/online_icon.svg";
 import offlineIcon from "../assets/offline_icon.svg";
+import passwordIcon from "../assets/password.svg";
 
 interface Props {
   createInputFields: any;
@@ -31,7 +32,6 @@ function SidePanel(props: Props) {
   const [statusIcon, setStatusIcon] = useState<any>(offlineIcon);
   const [avatarLetter, setAvatarLetter] = useState<string>("");
   const [userRoom, setCurrentUserRoom] = useState<any>();
-  
   // Checks if there is a user, changes connection status
   function checkIfOnline() {
     if (!user) {
@@ -48,8 +48,8 @@ function SidePanel(props: Props) {
     setAvatarLetter(avatarLetter);
   }
 
-  function switchRooms(userSwitch: any, room: any){
-    socket.emit("switch-room", { userSwitch, room})
+  function switchRooms(userSwitch: any, room: any) {
+    socket.emit("switch-room", { userSwitch, room });
   }
 
   useEffect(() => {
@@ -61,10 +61,10 @@ function SidePanel(props: Props) {
         setUser(lUser);
       });
       await socket.on("room-session", (room: any) => {
-        setRooms(room) 
+        setRooms(room);
       });
       await socket.on("current-room", (room: any) => {
-        setCurrentUserRoom(room) 
+        setCurrentUserRoom(room);
       });
     };
     loadUser();
@@ -72,6 +72,7 @@ function SidePanel(props: Props) {
     if (user) {
       getAvatarLetter();
     }
+    console.log(userRoom);
   });
 
   return (
@@ -90,18 +91,23 @@ function SidePanel(props: Props) {
         <Box mt={2} ml={5} className={classes.roomList}>
           {rooms
             ? rooms.map((room: any, i: number) => (
-                <Box>
+                <Box className={classes.roomContainer}>
                   <Link>
                     <Typography
                       key={i}
                       variant="body1"
                       onClick={() => {
-                        switchRooms(userRoom, room)
+                        switchRooms(userRoom, room);
                       }}
                     >
                       {room ? `#${room}` : null}
                     </Typography>
                   </Link>
+                  {/* {!userRoom!.password === undefined ? (
+                    <Box ml={2} mt={1}>
+                      <img src={passwordIcon} alt="" />
+                    </Box>
+                  ) : null} */}
                 </Box>
               ))
             : null}
@@ -129,9 +135,9 @@ function SidePanel(props: Props) {
               <img src={statusIcon} alt="" />
             </Box>
             {!user ? (
-              <Typography>Disconnected</Typography>
+              <Typography variant="body2">Disconnected</Typography>
             ) : (
-              <Typography>Connected</Typography>
+              <Typography variant="body2">Connected</Typography>
             )}
           </Box>
         </Box>
@@ -235,6 +241,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: "center",
     padding: "2rem",
     width: "100%",
+  },
+  roomContainer: {
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
   },
 }));
 

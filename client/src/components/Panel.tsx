@@ -31,7 +31,9 @@ function SidePanel(props: Props) {
   const [rooms, setRooms] = useState<any>();
   const [statusIcon, setStatusIcon] = useState<any>(offlineIcon);
   const [avatarLetter, setAvatarLetter] = useState<string>("");
-  const [userRoom, setCurrentUserRoom] = useState<any>()
+
+  const [userRoom, setCurrentUserRoom] = useState<any>({ password: "" });
+
 
   // Checks if there is a user, changes connection status
   function checkIfOnline() {
@@ -53,6 +55,14 @@ function SidePanel(props: Props) {
     socket.emit("switch-room", { userSwitch, room });
   }
 
+  const checkIfValid = () => {
+    if (!userRoom) {
+      return;
+    } else {
+      return userRoom;
+    }
+  };
+
   useEffect(() => {
     const loadUser = async () => {
       if (!socket) {
@@ -61,7 +71,9 @@ function SidePanel(props: Props) {
       await socket.on("user-session", (lUser: any) => {
         setUser(lUser);
       });
+
       await socket.on("room-session", (room: any) => {
+        console.log(room, "room log");
         setRooms(room);
       });
       await socket.on("current-room", (room: any) => {
@@ -70,10 +82,11 @@ function SidePanel(props: Props) {
     };
     loadUser();
     checkIfOnline();
+    checkIfValid();
     if (user) {
       getAvatarLetter();
     }
-    console.log(userRoom);
+    console.log(rooms, "rooms");
   });
 
   return (
@@ -101,14 +114,15 @@ function SidePanel(props: Props) {
                         switchRooms(userRoom, room);
                       }}
                     >
-                      {room ? `#${room}` : null}
+                      {room.room ? `#${room.room}` : null}
                     </Typography>
                   </Link>
-                  {/* {!userRoom!.password === undefined ? (
+
+                  {rooms.password !== "" ? (
                     <Box ml={2} mt={1}>
                       <img src={passwordIcon} alt="" />
                     </Box>
-                  ) : null} */}
+                  ) : null}
                 </Box>
               ))
             : null}

@@ -12,7 +12,8 @@ const {
   removeUser,
   getUser,
   getUsersInRoom,
-  addUserToRoom,
+  createRoom,
+  switchRoom,
   users,
 } = require("./users");
 
@@ -29,36 +30,36 @@ function onConnection(socket) {
       io.emit("rooms-updated", getRooms());
     });
     io.emit("room-session", getRooms());
-    const rooms = getRooms();
-    console.log(rooms)
     socket.emit("user-session", loggedInUser);
   });
 
   socket.on("create-room", (data) => {
-    const user = addUserToRoom(
+    const user = createRoom(
       data.userInfo.id,
       data.roomInfo.roomName,
       data.roomInfo.password
     );
+    const userSession = getUser(socket.id);
     socket.leave("Lobby");
     socket.join(data.roomInfo.roomName);
     io.emit("room-session", getRooms());
-    console.log(io.sockets.adapter.rooms)
+    socket.emit("current-room", userSession);
   });
 
   socket.on('switch-room', (data) => {
-      socket.leave(data.user.room)
-      socket.join(data.room)
-      io.emit("room-session", getRooms());
-      console.log(data.room)
+      const userSession = getUser(socket.id);
+      socket.leave(userSession.room)
+      const user = switchRoom(
+        socket.id,
+        data.room,
+      );
+      socket.join(data.room)  
+      socket.emit("current-room", userSession);
+      io.emit("room-session", getRooms()); 
       console.log(io.sockets.adapter.rooms)
   })
 
-  io.emit("room-session", getRooms());
-
-  socket.on("join", (user) => {
-    console.log(user);
-  });
+  /* io.emit("room-session", getRooms()); */
 
   socket.on("disconnect", () => {
     console.log("user disconnected");
@@ -70,11 +71,8 @@ io.on("connection", onConnection);
 function getRooms() {
   let rooms = [];
   const socketsRooms = io.sockets.adapter.rooms;
-
   for (const socket of socketsRooms) {
     const actualRooms = socket.filter((key) => key === socket[0]);
-    console.log(actualRooms[0], "actual rooms");
-
     if (actualRooms[0].length < 19) {
       rooms.push(actualRooms[0]);
     }

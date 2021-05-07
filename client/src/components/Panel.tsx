@@ -30,8 +30,11 @@ function SidePanel(props: Props) {
   const [rooms, setRooms] = useState<any>();
   const [statusIcon, setStatusIcon] = useState<any>(offlineIcon);
   const [avatarLetter, setAvatarLetter] = useState<string>("");
+  const [userRoom, setCurrentUserRoom] = useState<any>()
 
   console.log(rooms)
+  console.log(userRoom)
+
   // Checks if there is a user, changes connection status
   function checkIfOnline() {
     if (!user) {
@@ -48,9 +51,8 @@ function SidePanel(props: Props) {
     setAvatarLetter(avatarLetter);
   }
 
-  function switchRooms(user: any, room: any){
-    console.log(user)
-    socket.emit("switch-room", {user, room})
+  function switchRooms(userSwitch: any, room: any){
+    socket.emit("switch-room", { userSwitch, room})
   }
 
   useEffect(() => {
@@ -64,6 +66,9 @@ function SidePanel(props: Props) {
       await socket.on("room-session", (room: any) => {
         setRooms(room) 
       });
+      await socket.on("current-room", (room: any) => {
+        setCurrentUserRoom(room) 
+      });
     };
     loadUser();
     checkIfOnline();
@@ -71,7 +76,6 @@ function SidePanel(props: Props) {
       getAvatarLetter();
     }
   });
-
 
   return (
     <Box className={classes.root}>
@@ -95,7 +99,7 @@ function SidePanel(props: Props) {
                       key={i}
                       variant="body1"
                       onClick={() => {
-                        switchRooms(user, room)
+                        switchRooms(userRoom, room)
                       }}
                     >
                       {room ? `#${room}` : null}
@@ -133,11 +137,6 @@ function SidePanel(props: Props) {
               <Typography>Connected</Typography>
             )}
           </Box>
-        </Box>
-        <Box mb={2} className={classes.buttonContainer}>
-          <Button className={classes.buttonStyling} onClick={() => {}}>
-            Join Room
-          </Button>
         </Box>
         <Box mb={3} className={classes.buttonContainer}>
           <Button

@@ -54,10 +54,11 @@ function MainPage(props: Props) {
     } else if (gifGalleryOpen === true) {
       setGifGalleryOpen(false);
     }
-
     console.log("GIF panel is open");
   }
 
+  console.log(user)
+  
   useEffect(() => {
     const loadUser = async () => {
       if (!socket) {

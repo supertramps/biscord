@@ -46,6 +46,14 @@ function onConnection(socket) {
     console.log(io.sockets.adapter.rooms)
   });
 
+
+  socket.on("chat-message", (msg) => {
+    const loggedInUser = getUser(socket.id);
+    console.log(loggedInUser.room);
+    console.log(msg);
+    io.to(loggedInUser.room).emit("chat-message", { msg, loggedInUser });
+  });
+
   socket.on('switch-room', (data) => {
       const userSession = getUser(socket.id);
       socket.leave(userSession.room)

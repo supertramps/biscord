@@ -25,22 +25,23 @@ function onConnection(socket) {
     const loggedInUser = getUser(socket.id);
     socket.join("Lobby");
     io.to(socket.id).emit("joined-successfully", "joined");
-    io.to('Lobby').emit("joined", `${loggedInUser.name} joined the Lobby`);
+    io.to('Lobby').emit("joined", `${loggedInUser.name} joined the #Lobby`);
     io.emit("room-session", getRooms());
     socket.emit("user-session", loggedInUser);
   });
 
   socket.on("create-room", (data) => {
+    const userSession = getUser(socket.id);
+    socket.leave(userSession.room);
     const user = createRoom(
       data.userInfo.id,
       data.roomInfo.roomName,
       data.roomInfo.password
     );
-    const userSession = getUser(socket.id);
-    socket.leave("Lobby");
     socket.join(data.roomInfo.roomName);
     io.emit("room-session", getRooms());
     socket.emit("current-room", userSession);
+    console.log(io.sockets.adapter.rooms)
   });
 
   socket.on('switch-room', (data) => {

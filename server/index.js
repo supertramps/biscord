@@ -46,21 +46,23 @@ function onConnection(socket) {
     socket.emit("current-room", userSession);
   });
 
-  socket.on('switch-room', (data) => {
-      const userSession = getUser(socket.id);
-      socket.leave(userSession.room)
-      const user = switchRoom(
-        socket.id,
-        data.room,
-      );
-      socket.join(data.room)  
-      socket.emit("current-room", userSession);
-      io.emit("room-session", getRooms()); 
-      console.log(io.sockets.adapter.rooms)
-  })
+  socket.on("switch-room", (data) => {
+    const userSession = getUser(socket.id);
+    socket.leave(userSession.room);
+    const user = switchRoom(socket.id, data.room);
+    socket.join(data.room);
+    socket.emit("current-room", userSession);
+    io.emit("room-session", getRooms());
+    console.log(io.sockets.adapter.rooms);
+  });
 
   /* io.emit("room-session", getRooms()); */
 
+  socket.on("chat-message", (msg) => {
+    const loggedInUser = getUser(socket.id);
+    console.log(msg);
+    io.emit("chat-message",{ msg, loggedInUser });
+  });
   socket.on("disconnect", () => {
     console.log("user disconnected");
   });

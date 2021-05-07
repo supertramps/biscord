@@ -29,12 +29,12 @@ interface Props {
 }
 
 function MainPage(props: Props) {
-  const [messages, setMessages] = useState<string[]>();
+  const [messages, setMessages] = useState<any>();
   const [messageHolder, setMessageHolder] = useState("");
   const classes = useStyles();
   const { creatNewRoom, socket } = useContext(SocketContext);
   const [user, setUser] = useState<any>();
-  const [trimedName, setTrimedName] = useState<string>("");
+  const [messageSender, setMessageSender] = useState<any>();
   const [gifGalleryOpen, setGifGalleryOpen] = useState<boolean>(false);
   const [chosenGif, setChosenGif] = useState<string>("");
 
@@ -42,11 +42,6 @@ function MainPage(props: Props) {
     roomName: "",
     password: "",
   });
-
-  function trimForAvatar() {
-    const trimedName: string = user.name.slice(0, 1);
-    setTrimedName(trimedName);
-  }
 
   function openGifGallery() {
     if (gifGalleryOpen === false) {
@@ -57,8 +52,8 @@ function MainPage(props: Props) {
     console.log("GIF panel is open");
   }
 
-  console.log(user)
-  
+  console.log(messages);
+
   useEffect(() => {
     const loadUser = async () => {
       if (!socket) {
@@ -67,19 +62,19 @@ function MainPage(props: Props) {
       await socket.on("user-session", (lUser: any) => {
         setUser(lUser);
       });
+      await socket.on("chat-message", function (data: any) {
+        if (!messages) {
+          setMessages([data]);
+        } else {
+          console.log(data);
+
+          setMessages([...messages, data]);
+          setMessageSender(data);
+        }
+      });
     };
     loadUser();
   });
-
-  const addMessageToArray = () => {
-    if (!messages) {
-      trimForAvatar();
-      setMessages([messageHolder]);
-    } else if (messages) {
-      trimForAvatar();
-      setMessages([...messages, messageHolder]);
-    }
-  };
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
@@ -109,7 +104,7 @@ function MainPage(props: Props) {
                 label="Room name..."
                 variant="outlined"
                 name="roomName"
-                inputProps={{ maxLength: 15}}
+                inputProps={{ maxLength: 15 }}
                 onChange={handleChange}
               />
               <TextField
@@ -141,13 +136,12 @@ function MainPage(props: Props) {
             >
               {messages ? (
                 messages
-                  .map((m, i) => (
+                  .map((m: any, i: any) => (
                     <ChatMessage
                       time={moment().format("MMM Do YY")}
-                      avatar={trimedName}
-                      profile={user.name}
+                      profile={m.loggedInUser}
                       key={i}
-                      message={m}
+                      message={m.msg}
                       gifUrl={chosenGif}
                     />
                   ))
@@ -202,8 +196,9 @@ function MainPage(props: Props) {
                 <Box className={classes.buttonContainer}>
                   <Button
                     onClick={() => {
-                      addMessageToArray();
+                      // addMessageToArray();
                       setChosenGif("");
+                      socket.emit("chat-message", messageHolder, user.name);
                     }}
                     color="primary"
                     className={classes.buttonStyling}

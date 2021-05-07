@@ -10,11 +10,23 @@ function addUser({id, name, room}){
     return user
 }
 
-function addUserToRoom(id, room, password){
+function createRoom(id, room, password){
     users.map(user => {
         if(user.id === id){
             user.room = room
             user.password = password
+            return user
+        } else {
+            return user
+        }
+    }) 
+    return users;  
+}
+
+function switchRoom(id, room){
+    users.map(user => {
+        if(user.id === id){
+            user.room = room
             return user
         } else {
             return user
@@ -34,4 +46,4 @@ const getUser = (id) =>  users.find((user) => user.id === id);
 
 const getUsersInRoom = (room) => users.filter((user) => user.room === room)
 
-module.exports = { addUser, removeUser, getUser, getUsersInRoom, addUserToRoom, users}
+module.exports = { addUser, removeUser, getUser, getUsersInRoom, createRoom, switchRoom, users}

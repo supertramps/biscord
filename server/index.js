@@ -56,6 +56,7 @@ function onConnection(socket) {
       socket.join(data.room)  
       socket.emit("current-room", userSession);
       io.emit("room-session", getRooms()); 
+      console.log(io.sockets.adapter.rooms)
   })
 
   /* io.emit("room-session", getRooms()); */

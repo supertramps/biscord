@@ -31,7 +31,9 @@ function SidePanel(props: Props) {
   const [rooms, setRooms] = useState<any>();
   const [statusIcon, setStatusIcon] = useState<any>(offlineIcon);
   const [avatarLetter, setAvatarLetter] = useState<string>("");
+
   const [userRoom, setCurrentUserRoom] = useState<any>({ password: "" });
+
 
   // Checks if there is a user, changes connection status
   function checkIfOnline() {

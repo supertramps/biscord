@@ -29,12 +29,11 @@ interface Props {
 }
 
 function MainPage(props: Props) {
-  const [messages, setMessages] = useState<string[]>();
+  const [messages, setMessages] = useState<any>();
   const [messageHolder, setMessageHolder] = useState("");
   const classes = useStyles();
   const { creatNewRoom, socket } = useContext(SocketContext);
   const [user, setUser] = useState<any>();
-  const [trimedName, setTrimedName] = useState<string>("");
   const [gifGalleryOpen, setGifGalleryOpen] = useState<boolean>(false);
   const [chosenGif, setChosenGif] = useState<string>("");
   const [message, setJoinedMessage] = useState<any>([]);
@@ -47,11 +46,6 @@ function MainPage(props: Props) {
     password: "",
   });
 
-  function trimForAvatar() {
-    const trimedName: string = user.name.slice(0, 1);
-    setTrimedName(trimedName);
-  }
-
   function openGifGallery() {
     if (gifGalleryOpen === false) {
       setGifGalleryOpen(true);
@@ -59,6 +53,10 @@ function MainPage(props: Props) {
       setGifGalleryOpen(false);
     }
     console.log("GIF panel is open");
+  }
+
+  function postman() {
+    socket.emit("chat-message", messageHolder);
   }
 
   useEffect(() => {
@@ -69,6 +67,15 @@ function MainPage(props: Props) {
       await socket.on("user-session", (lUser: any) => {
         setUser(lUser);
       });
+
+      await socket.on("chat-message", function (data: any) {
+        if (!messages) {
+          setMessages([data]);
+        } else {
+          setMessages([...messages, data]);
+        }
+      });
+
       await socket.on("joined", (msg: string) => {
         setJoinedMessage((_prevState: any) => [...message, msg])
       })
@@ -76,19 +83,10 @@ function MainPage(props: Props) {
         console.log(msg)
         setJoinedMessage((_prevState: any) => [...message, msg])
       })
+
     };
     loadUser();
   });
-
-  const addMessageToArray = () => {
-    if (!messages) {
-      trimForAvatar();
-      setMessages([messageHolder]);
-    } else if (messages) {
-      trimForAvatar();
-      setMessages([...messages, messageHolder]);
-    }
-  };
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
@@ -165,13 +163,12 @@ function MainPage(props: Props) {
               
               {messages ? (
                 messages
-                  .map((m, i) => (
+                  .map((m: any, i: any) => (
                     <ChatMessage
                       time={moment().format("MMM Do YY")}
-                      avatar={trimedName}
-                      profile={user.name}
+                      profile={m.loggedInUser}
                       key={i}
-                      message={m}
+                      message={m.msg}
                       gifUrl={chosenGif}
                     />
                   ))
@@ -226,8 +223,9 @@ function MainPage(props: Props) {
                 <Box className={classes.buttonContainer}>
                   <Button
                     onClick={() => {
-                      addMessageToArray();
+                      // addMessageToArray();
                       setChosenGif("");
+                      postman();
                     }}
                     color="primary"
                     className={classes.buttonStyling}

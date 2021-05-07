@@ -34,7 +34,6 @@ function MainPage(props: Props) {
   const classes = useStyles();
   const { creatNewRoom, socket } = useContext(SocketContext);
   const [user, setUser] = useState<any>();
-  const [messageSender, setMessageSender] = useState<any>();
   const [gifGalleryOpen, setGifGalleryOpen] = useState<boolean>(false);
   const [chosenGif, setChosenGif] = useState<string>("");
 
@@ -52,7 +51,9 @@ function MainPage(props: Props) {
     console.log("GIF panel is open");
   }
 
-  console.log(messages);
+  function postman() {
+    socket.emit("chat-message", messageHolder);
+  }
 
   useEffect(() => {
     const loadUser = async () => {
@@ -66,10 +67,7 @@ function MainPage(props: Props) {
         if (!messages) {
           setMessages([data]);
         } else {
-          console.log(data);
-
           setMessages([...messages, data]);
-          setMessageSender(data);
         }
       });
     };
@@ -198,7 +196,7 @@ function MainPage(props: Props) {
                     onClick={() => {
                       // addMessageToArray();
                       setChosenGif("");
-                      socket.emit("chat-message", messageHolder, user.name);
+                      postman();
                     }}
                     color="primary"
                     className={classes.buttonStyling}

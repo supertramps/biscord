@@ -36,8 +36,12 @@ function MainPage(props: Props) {
   const [user, setUser] = useState<any>();
   const [gifGalleryOpen, setGifGalleryOpen] = useState<boolean>(false);
   const [chosenGif, setChosenGif] = useState<string>("");
+  const [message, setJoinedMessage] = useState<any>([]);
 
-  const [values, setValues] = useState<Object>({
+  
+  console.log(message)
+
+  const [values, setValues] = useState<object>({
     roomName: "",
     password: "",
   });
@@ -63,6 +67,7 @@ function MainPage(props: Props) {
       await socket.on("user-session", (lUser: any) => {
         setUser(lUser);
       });
+
       await socket.on("chat-message", function (data: any) {
         if (!messages) {
           setMessages([data]);
@@ -70,6 +75,15 @@ function MainPage(props: Props) {
           setMessages([...messages, data]);
         }
       });
+
+      await socket.on("joined", (msg: string) => {
+        setJoinedMessage((_prevState: any) => [...message, msg])
+      })
+      await socket.on('left', (msg: string) => {
+        console.log(msg)
+        setJoinedMessage((_prevState: any) => [...message, msg])
+      })
+
     };
     loadUser();
   });
@@ -105,6 +119,9 @@ function MainPage(props: Props) {
                 inputProps={{ maxLength: 15 }}
                 onChange={handleChange}
               />
+              <Typography variant="body2">
+                Password is not required (but your room might be raided ⚔)
+              </Typography>
               <TextField
                 className={classes.textFieldStyle}
                 id="outlined-basic"
@@ -114,24 +131,36 @@ function MainPage(props: Props) {
                 onChange={handleChange}
               />
             </form>
-            <Button
-              onClick={() => {
-                creatNewRoom(values, props.userInfo);
-                props.handleInputField(false);
-              }}
-            >
-              Create
-            </Button>
+            <Box>
+              <Button
+                color="secondary"
+                variant="contained"
+                onClick={() => {
+                  creatNewRoom(values, props.userInfo);
+                  props.handleInputField(false);
+                }}
+              >
+                Create
+              </Button>
+            </Box>
           </Box>
         </Box>
       ) : (
         <>
           <Box className={classes.contentWrapper}>
+            <Box>
+                {message.map((msg: string) =>[
+                  <Typography>
+                    {msg}
+                  </Typography>
+                ])}
+            </Box>
             <Box
               className={
                 messages ? classes.messageContainer : classes.logoContainer
               }
             >
+              
               {messages ? (
                 messages
                   .map((m: any, i: any) => (
@@ -307,6 +336,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   roomFormContainer: {
     display: "flex",
     flexDirection: "column",
+    alignItems: "center",
   },
   gifIcon: {
     height: "2.8rem",

@@ -23,43 +23,43 @@ function onConnection(socket) {
   socket.on("join-lobby", (name) => {
     const { user, error } = addUser({ id: socket.id, name, room: "Lobby" });
     const loggedInUser = getUser(socket.id);
-    socket.join("Lobby", () => {
-      console.log("test");
-      io.to(socked.id).emit("joined-succ", "joined");
-      io.to("Lobby").to("joined", `joined the room!`);
-      io.emit("rooms-updated", getRooms());
-    });
+    socket.join("Lobby");
+    io.to(socket.id).emit("joined-successfully", "joined");
+    io.to('Lobby').emit("joined", `${loggedInUser.name} joined the #Lobby`);
     io.emit("room-session", getRooms());
     socket.emit("user-session", loggedInUser);
   });
 
   socket.on("create-room", (data) => {
+    const userSession = getUser(socket.id);
+    socket.leave(userSession.room);
+    io.to(userSession.room).emit("left", `${userSession.name} left the room`);
     const user = createRoom(
       data.userInfo.id,
       data.roomInfo.roomName,
       data.roomInfo.password
     );
-    const userSession = getUser(socket.id);
-    socket.leave("Lobby");
     socket.join(data.roomInfo.roomName);
+    io.to(data.room).emit("joined", `${userSession.name} joined ${data.room}`);
     io.emit("room-session", getRooms());
     socket.emit("current-room", userSession);
+    console.log(io.sockets.adapter.rooms)
   });
 
   socket.on('switch-room', (data) => {
       const userSession = getUser(socket.id);
       socket.leave(userSession.room)
+      io.to(userSession.room).emit("left", `${userSession.name} left the room`);
       const user = switchRoom(
         socket.id,
         data.room,
       );
       socket.join(data.room)  
+      io.to(data.room).emit("joined", `${userSession.name} joined ${data.room}`);
       socket.emit("current-room", userSession);
       io.emit("room-session", getRooms()); 
       console.log(io.sockets.adapter.rooms)
   })
-
-  /* io.emit("room-session", getRooms()); */
 
   socket.on("disconnect", () => {
     console.log("user disconnected");

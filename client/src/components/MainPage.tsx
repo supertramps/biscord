@@ -60,33 +60,38 @@ function MainPage(props: Props) {
   }
 
   useEffect(() => {
-    const loadUser = async () => {
-      if (!socket) {
-        return;
-      }
-      await socket.on("user-session", (lUser: any) => {
-        setUser(lUser);
-      });
-
-      await socket.on("chat-message", function (data: any) {
-        if (!messages) {
-          setMessages([data]);
-        } else {
-          setMessages([...messages, data]);
-        }
-      });
-
-      await socket.on("joined", (msg: string) => {
-        setJoinedMessage((_prevState: any) => [...joinedMessage, msg]);
-        setSnackbarOpen(true);
-      });
-      await socket.on("left", (msg: string) => {
-        console.log(msg);
-        setJoinedMessage((_prevState: any) => [...joinedMessage, msg]);
-      });
+    if (!socket) return;
+    const handleUserSession = (lUser: any) => {
+      setUser(lUser);
     };
-    loadUser();
-  }, [messageHolder]);
+    const handleChatMessage = function (data: any) {
+      if (!messages) {
+        setMessages([data]);
+      } else {
+        setMessages([...messages, data]);
+      }
+    };
+    const handleJoined = (msg: string) => {
+      setJoinedMessage((_prevState: any) => [...joinedMessage, msg]);
+      setSnackbarOpen(true);
+    };
+    const handleLeft = (msg: string) => {
+      console.log(msg);
+      setJoinedMessage((_prevState: any) => [...joinedMessage, msg]);
+    };
+    
+    socket.on("user-session", handleUserSession);
+    socket.on("chat-message", handleChatMessage);
+    socket.on("joined", handleJoined);
+    socket.on("left", handleLeft);
+
+    return () => {
+      socket.off("user-session", handleUserSession);
+      socket.off("chat-message", handleChatMessage);
+      socket.off("joined", handleJoined);
+      socket.off("left", handleLeft);
+    };
+  });
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;

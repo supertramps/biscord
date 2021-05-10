@@ -86,7 +86,7 @@ function MainPage(props: Props) {
       });
     };
     loadUser();
-  });
+  }, [messageHolder]);
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;

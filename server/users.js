@@ -1,11 +1,10 @@
 const users = [];
 
 function addUser({ id, name, room }) {
-  const exisitingUser = users.find((user) => user.name === name);
-  if (exisitingUser) {
-    return { error: "Usernmae is taken" };
-  }
-  const user = { id, name, room, password: "" };
+  const val = Math.floor(1000 + Math.random() * 9000);
+  console.log(val);
+
+  const user = { id, name: `${name}#${val}`, room, password: "" };
   users.push(user);
   return user;
 }

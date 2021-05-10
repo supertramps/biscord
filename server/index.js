@@ -7,6 +7,10 @@ const server = http.createServer(app);
 const io = socketIO(server, { pingTimeout: 25000 });
 const port = process.env.PORT || 6969;
 
+const rooms = {
+  'lobby': { password: '123' }
+}
+
 const {
   addUser,
   removeUser,
@@ -87,7 +91,7 @@ function getRooms(password) {
   const socketsRooms = io.sockets.adapter.rooms;
   for (const socket of socketsRooms) {
     const actualRooms = socket.filter((key) => key === socket[0]);
-    if (actualRooms[0].length < 19) {
+    if (actualRooms[0].length < 19) { // good enough?
       if (actualRooms[0] === password.room) {
         rooms.push({ room: actualRooms[0], password: password });
       } else {

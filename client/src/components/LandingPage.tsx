@@ -32,32 +32,42 @@ function LandingPage(props: IProps) {
       <Typography className={classes.greeterStyle}>
         Like Discord with a 🐝
       </Typography>
-      <form noValidate autoComplete="off">
-        <TextField
-          className={classes.textFieldStyle}
-          id="outlined-basic"
-          label="Your name..."
-          variant="outlined"
-          onChange={(event) => handleChange(event.target.value)}
-          InputProps={{
-            classes: { notchedOutline: classes.noBorder },
-          }}
-        />
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+        }}
+        noValidate
+        autoComplete="off"
+        className={classes.formFlex}
+      >
+        <Box>
+          <TextField
+            className={classes.textFieldStyle}
+            id="outlined-basic"
+            label="Your name..."
+            variant="outlined"
+            onChange={(event) => handleChange(event.target.value)}
+            InputProps={{
+              classes: { notchedOutline: classes.noBorder },
+            }}
+          />
+        </Box>
+        <Box mt={3}>
+          <Button
+            type="submit"
+            className={classes.joinButton}
+            color="secondary"
+            onClick={() => {
+              if (username !== "") {
+                getUserName(username);
+                props.usernameSet(true);
+              }
+            }}
+          >
+            Join
+          </Button>
+        </Box>
       </form>
-      <Box mt={3}>
-        <Button
-          className={classes.joinButton}
-          color="secondary"
-          onClick={() => {
-            if (username !== "") {
-              getUserName(username);
-              props.usernameSet(true);
-            }
-          }}
-        >
-          Join
-        </Button>
-      </Box>
     </Box>
   );
 }
@@ -91,5 +101,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   noBorder: {
     border: "none",
+  },
+  formFlex: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
 }));

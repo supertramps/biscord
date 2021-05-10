@@ -39,8 +39,7 @@ function MainPage(props: Props) {
   const [chosenGif, setChosenGif] = useState<string>("");
   const [joinedMessage, setJoinedMessage] = useState<any>([]);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-
-  console.log(joinedMessage);
+  // const [textInputValue, setTextInputValue] = useState("");
 
   const [values, setValues] = useState<object>({
     roomName: "",
@@ -97,9 +96,9 @@ function MainPage(props: Props) {
     }));
   };
 
-  function handleSnackbarClose (){
-    setSnackbarOpen(false)
-  } 
+  function handleSnackbarClose() {
+    setSnackbarOpen(false);
+  }
 
   const gifContainerOptions = [
     {
@@ -114,7 +113,14 @@ function MainPage(props: Props) {
       {props.inputFieldsOpen ? (
         <Box className={classes.root}>
           <Box className={classes.roomFormContainer}>
-            <form noValidate autoComplete="off" className={classes.form}>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+              }}
+              noValidate
+              autoComplete="off"
+              className={classes.form}
+            >
               <TextField
                 className={classes.textFieldStyle}
                 id="outlined-basic"
@@ -135,19 +141,20 @@ function MainPage(props: Props) {
                 name="password"
                 onChange={handleChange}
               />
+              <Box>
+                <Button
+                  type="submit"
+                  color="secondary"
+                  variant="contained"
+                  onClick={() => {
+                    creatNewRoom(values, props.userInfo);
+                    props.handleInputField(false);
+                  }}
+                >
+                  Create
+                </Button>
+              </Box>
             </form>
-            <Box>
-              <Button
-                color="secondary"
-                variant="contained"
-                onClick={() => {
-                  creatNewRoom(values, props.userInfo);
-                  props.handleInputField(false);
-                }}
-              >
-                Create
-              </Button>
-            </Box>
           </Box>
         </Box>
       ) : (
@@ -164,7 +171,7 @@ function MainPage(props: Props) {
                   open={snackbarOpen}
                   onClose={handleSnackbarClose}
                   message={msg}
-                />
+                />,
               ])}
             </Box>
             <Box
@@ -195,7 +202,9 @@ function MainPage(props: Props) {
                 <ReactGiphySearchbox
                   apiKey="nGgKX5djKNAVoYChgFHSzk7Q2tnOs65p"
                   // @ts-ignore
-                  onSelect={(item) => setChosenGif(item.embed_url)}
+                  onSelect={(item) => {
+                    setMessageHolder(item.embed_url);
+                  }}
                   autoFocus={true}
                   masonryConfig={gifContainerOptions}
                   poweredByGiphy={false}
@@ -209,14 +218,21 @@ function MainPage(props: Props) {
             </Box>
           ) : null}
           <Box mb={3} className={classes.formContainer}>
-            <form className={classes.formStyling}>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+              }}
+              className={classes.formStyling}
+            >
               <Box className={classes.formFlex}>
                 <Box mr={2} className={classes.inputContainer}>
                   <input
                     placeholder="Message #React"
                     type="text"
                     className={classes.textFieldStyling}
-                    onChange={(event) => setMessageHolder(event.target.value)}
+                    onChange={(event) => {
+                      setMessageHolder(event.target.value);
+                    }}
                   />
                 </Box>
 
@@ -233,6 +249,7 @@ function MainPage(props: Props) {
 
                 <Box className={classes.buttonContainer}>
                   <Button
+                    type="submit"
                     onClick={() => {
                       // addMessageToArray();
                       setChosenGif("");

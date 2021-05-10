@@ -41,8 +41,16 @@ function ChatMessage(props: Iprops) {
           <Avatar className={classes.avatarStyle}>{avatar}</Avatar>
         </Box>
         <Box ml={2} className={classes.messageWrapper}>
-          {props.gifUrl ? <iframe src={props.gifUrl}></iframe> : null}
-          <Typography variant="body1">{props.message}</Typography>
+          {props.message.includes("giphy.com") ? (
+            <iframe
+              className={classes.iframeStyle}
+              src={props.message}
+              height="100%"
+              width="100%"
+            ></iframe>
+          ) : (
+            <Typography variant="body1">{props.message}</Typography>
+          )}
         </Box>
       </Box>
     </Box>
@@ -79,6 +87,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: "3rem",
     background:
       "linear-gradient(126.18deg, #5317FD -6.87%, rgba(236, 152, 233, 0.91) 125.18%)",
+  },
+  iframeStyle: {
+    border: "none",
+    cursor: "default",
+    width: "100%",
   },
 }));
 

@@ -40,8 +40,6 @@ function MainPage(props: Props) {
   const [joinedMessage, setJoinedMessage] = useState<any>([]);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-  console.log(joinedMessage);
-
   const [values, setValues] = useState<object>({
     roomName: "",
     password: "",
@@ -69,11 +67,13 @@ function MainPage(props: Props) {
         setUser(lUser);
       });
 
-      await socket.on("chat-message", function (data: any) {
+      await socket.on("chat-message", function (incomingMessage: any) {
         if (!messages) {
-          setMessages([data]);
+          setMessages([incomingMessage.message]);
+          console.log(messages);
         } else {
-          setMessages([...messages, data]);
+          setMessages([...messages, incomingMessage.message]);
+          console.log(messages);
         }
       });
 
@@ -97,9 +97,9 @@ function MainPage(props: Props) {
     }));
   };
 
-  function handleSnackbarClose (){
-    setSnackbarOpen(false)
-  } 
+  function handleSnackbarClose() {
+    setSnackbarOpen(false);
+  }
 
   const gifContainerOptions = [
     {
@@ -164,7 +164,7 @@ function MainPage(props: Props) {
                   open={snackbarOpen}
                   onClose={handleSnackbarClose}
                   message={msg}
-                />
+                />,
               ])}
             </Box>
             <Box
@@ -177,9 +177,9 @@ function MainPage(props: Props) {
                   .map((m: any, i: any) => (
                     <ChatMessage
                       time={moment().format("MMM Do YY")}
-                      profile={m.loggedInUser}
+                      profile={m.user}
                       key={i}
-                      message={m.msg}
+                      message={m.content}
                       gifUrl={chosenGif}
                     />
                   ))

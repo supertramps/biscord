@@ -17,6 +17,8 @@ const {
   users,
 } = require("./users");
 
+const { handleIncomingMessage } = require("./messages");
+
 function onConnection(socket) {
   console.log("Client was connected", socket.id);
 
@@ -51,18 +53,25 @@ function onConnection(socket) {
 
   socket.on("chat-message", (msg) => {
     const loggedInUser = getUser(socket.id);
-    // console.log(loggedInUser.room);
-    // console.log(msg);
-    io.to(loggedInUser.room).emit("chat-message", { msg, loggedInUser });
+    const message = handleIncomingMessage(
+      msg,
+      loggedInUser.name,
+      loggedInUser.room,
+      "now"
+    );
+    console.log(message);
+    io.to(message.room).emit("chat-message", { message });
   });
 
   socket.on("switch-room", (data) => {
+    const { userSwitch, room } = data;
+    console.log(room.room);
     const userSession = getUser(socket.id);
     console.log("DATA: ", data.room.room, "USER: ", userSession.room);
     if (userSession.room !== data.room.room) {
       socket.leave(userSession.room);
       io.to(userSession.room).emit("left", `${userSession.name} left the room`);
-      const user = switchRoom(socket.id, data.room);
+      const user = switchRoom(socket.id, data.room.room);
       socket.join(data.room);
       io.to(data.room).emit(
         "joined",
@@ -88,11 +97,7 @@ function getRooms(password) {
   for (const socket of socketsRooms) {
     const actualRooms = socket.filter((key) => key === socket[0]);
     if (actualRooms[0].length < 19) {
-      if (actualRooms[0] === password.room) {
-        rooms.push({ room: actualRooms[0], password: password });
-      } else {
-        rooms.push({ room: actualRooms[0] });
-      }
+      rooms.push({ room: actualRooms[0] });
     }
   }
   return [...new Set(rooms)];

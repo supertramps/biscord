@@ -86,7 +86,6 @@ function SidePanel(props: Props) {
     if (user) {
       getAvatarLetter();
     }
-    console.log(rooms, "rooms");
   });
 
   return (

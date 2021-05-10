@@ -143,7 +143,7 @@ function SidePanel(props: Props) {
                 <Typography>{!user ? "Please log in" : user.name}</Typography>
               </Box>
             </Box>
-            <Typography>X</Typography>
+           
           </Box>
           <Box mt={1} className={classes.connectionStatus}>
             <Box mr={1}>

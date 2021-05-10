@@ -11,10 +11,11 @@ import {
   TextField,
   Tooltip,
   Zoom,
+  Snackbar,
 } from "@material-ui/core";
 import moment from "moment";
 import discordDark from "../assets/discord-dark.png";
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { SocketContext } from "../providers/SocketContext";
 import ChatMessage from "./ChatMessage";
 import GifIcon from "../assets/gif_icon.svg";
@@ -36,10 +37,10 @@ function MainPage(props: Props) {
   const [user, setUser] = useState<any>();
   const [gifGalleryOpen, setGifGalleryOpen] = useState<boolean>(false);
   const [chosenGif, setChosenGif] = useState<string>("");
-  const [message, setJoinedMessage] = useState<any>([]);
+  const [joinedMessage, setJoinedMessage] = useState<any>([]);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-  
-  console.log(message)
+  console.log(joinedMessage);
 
   const [values, setValues] = useState<object>({
     roomName: "",
@@ -77,13 +78,13 @@ function MainPage(props: Props) {
       });
 
       await socket.on("joined", (msg: string) => {
-        setJoinedMessage((_prevState: any) => [...message, msg])
-      })
-      await socket.on('left', (msg: string) => {
-        console.log(msg)
-        setJoinedMessage((_prevState: any) => [...message, msg])
-      })
-
+        setJoinedMessage((_prevState: any) => [...joinedMessage, msg]);
+        setSnackbarOpen(true);
+      });
+      await socket.on("left", (msg: string) => {
+        console.log(msg);
+        setJoinedMessage((_prevState: any) => [...joinedMessage, msg]);
+      });
     };
     loadUser();
   });
@@ -95,6 +96,10 @@ function MainPage(props: Props) {
       [name]: value,
     }));
   };
+
+  function handleSnackbarClose (){
+    setSnackbarOpen(false)
+  } 
 
   const gifContainerOptions = [
     {
@@ -149,18 +154,24 @@ function MainPage(props: Props) {
         <>
           <Box className={classes.contentWrapper}>
             <Box>
-                {message.map((msg: string) =>[
-                  <Typography>
-                    {msg}
-                  </Typography>
-                ])}
+              {joinedMessage.map((msg: string) => [
+                <Snackbar
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "center",
+                  }}
+                  autoHideDuration={6000}
+                  open={snackbarOpen}
+                  onClose={handleSnackbarClose}
+                  message={msg}
+                />
+              ])}
             </Box>
             <Box
               className={
                 messages ? classes.messageContainer : classes.logoContainer
               }
             >
-              
               {messages ? (
                 messages
                   .map((m: any, i: any) => (

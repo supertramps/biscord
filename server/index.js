@@ -23,13 +23,14 @@ function onConnection(socket) {
   socket.on("join-lobby", (name) => {
     const { user, error } = addUser({ id: socket.id, name, room: "Lobby" });
     const loggedInUser = getUser(socket.id);
-    socket.join("Lobby");
-    // console.log(socket.id, "socket ID");
-    io.to(socket.id).emit("joined-successfully", "joined");
-    io.to("Lobby").emit("joined", `${loggedInUser.name} joined the #Lobby`);
-    io.emit("room-session", getRooms(loggedInUser));
-    socket.emit("user-session", loggedInUser);
-    socket.emit("current-room", loggedInUser);
+    if (loggedInUser) {
+      socket.join("Lobby");
+      io.to(socket.id).emit("joined-successfully", "joined");
+      io.to("Lobby").emit("joined", `${loggedInUser.name} joined the #Lobby`);
+      io.emit("room-session", getRooms(loggedInUser));
+      socket.emit("user-session", loggedInUser);
+      socket.emit("current-room", loggedInUser);
+    }
   });
 
   socket.on("create-room", (data) => {
@@ -57,7 +58,7 @@ function onConnection(socket) {
 
   socket.on("switch-room", (data) => {
     const userSession = getUser(socket.id);
-    console.log("DATA: ", data.room.room, "USER: ",userSession.room );
+    console.log("DATA: ", data.room.room, "USER: ", userSession.room);
     if (userSession.room !== data.room.room) {
       socket.leave(userSession.room);
       io.to(userSession.room).emit("left", `${userSession.name} left the room`);

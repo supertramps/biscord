@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -17,7 +17,7 @@ interface IProps {
 function LandingPage(props: IProps) {
   const classes = useStyles();
   const [username, setUsername] = useState<string>("");
-  const { getUserName } = useContext(SocketContext);
+  const { socket, getUserName } = useContext(SocketContext);
 
   function handleChange(value: string) {
     setUsername(value);

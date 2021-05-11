@@ -40,7 +40,7 @@ function ChatMessage(props: Iprops) {
         <Box ml={2}>
           <Avatar className={classes.avatarStyle}>{avatar}</Avatar>
         </Box>
-        {props.message.includes("giphy.com") ? (
+        {props.message.includes("giphy.com/embed") ? (
           <Box ml={2} className={classes.gifWrapper}>
             <iframe
               className={classes.iframeStyle}

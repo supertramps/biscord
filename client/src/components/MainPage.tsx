@@ -23,7 +23,7 @@ import GifIcon from "../assets/gif_icon.svg";
 // @ts-ignore
 import ReactGiphySearchbox from "react-giphy-searchbox";
 // @ts-ignore
-import giphyRandom from "giphyRandom";
+import giphyRandom from "giphy-random";
 
 interface Props {
   inputFieldsOpen: any;
@@ -42,12 +42,14 @@ function MainPage(props: Props) {
   const [joinedMessage, setJoinedMessage] = useState<any>([]);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [gifSelected, setGifSelected] = useState(false);
+  const [randomGif, setRandomGif] = useState<string>("");
 
   const [values, setValues] = useState<object>({
     roomName: "",
     password: "",
   });
 
+  // Opens the GIF grid and searchbar
   function openGifGallery() {
     if (gifGalleryOpen === false) {
       setGifGalleryOpen(true);
@@ -57,40 +59,27 @@ function MainPage(props: Props) {
     console.log("GIF panel is open");
   }
 
+  // Makes a post to the server with the current state of messageHolder
   function postman() {
     socket.emit("chat-message", messageHolder);
   }
-
-  // (async () => {
-  //   const API_KEY = "nGgKX5djKNAVoYChgFHSzk7Q2tnOs65p";
-
-  //   const { data } = await giphyRandom(API_KEY, {
-  //     tag: "cat",
-  //   });
-
-  //   console.log(data);
-  // })();
 
   useEffect(() => {
     if (!socket) return;
     if (messageHolder.includes("giphy.com/")) {
       socket.emit("chat-message", messageHolder);
-      console.log(messageHolder);
       setMessageHolder("");
     }
-
-    // if (socket.emit("chat-message") === "/gif") {
-    //   socket.emit("chat-message", "big lol");
-    // }
+    console.log("useeffect fired");
   }, [messageHolder]);
 
   useEffect(() => {
     if (!socket) return;
+
     const handleUserSession = (lUser: any) => {
       setUser(lUser);
     };
     const handleChatMessage = function (data: any) {
-      console.log("MessageHandler 🔥");
       if (!messages) {
         const { messagesInCurrentRoom, loggedInUser } = data;
         setMessages(messagesInCurrentRoom);
@@ -221,7 +210,7 @@ function MainPage(props: Props) {
                 messages
                   .map((m: any, i: any) => (
                     <ChatMessage
-                      time={moment().format("LT")}
+                      time={m.time}
                       profile={m.user}
                       key={i}
                       message={m.message}

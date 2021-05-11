@@ -7,7 +7,7 @@ const server = http.createServer(app);
 const io = socketIO(server, { pingTimeout: 25000 });
 const port = process.env.PORT || 6969;
 
-const { messages, handleMessages } = require("./messages");
+const { messages, handleMessages, filterMessages } = require("./messages");
 const {
   addUser,
   removeUser,
@@ -20,23 +20,24 @@ const {
 
 const { rooms, createNewRoom, removeRoom } = require("./rooms");
 
-
 function onConnection(socket) {
   console.log("Client was connected", socket.id);
 
   socket.on("join-lobby", (name) => {
-    
     const { user, error } = addUser({ id: socket.id, name, room: "Lobby" });
-    const loggedInUser = getUser(socket.id);
-    if (loggedInUser) {
+    const userSession = getUser(socket.id);
+    if (userSession) {
       socket.join("Lobby");
       io.to(socket.id).emit("joined-successfully", "joined");
-      io.to("Lobby").emit("joined", `${loggedInUser.name} joined the #Lobby`);
+      io.to("Lobby").emit("joined", `${userSession.name} joined the #Lobby`);
       const checkRoomsOnSocket = getRooms();
-      const remove = removeRoom(checkRoomsOnSocket)
-      io.emit("room-session", remove );
-      socket.emit("user-session", loggedInUser);
-      socket.emit("current-room", loggedInUser);
+      const remove = removeRoom(checkRoomsOnSocket);
+      io.emit("room-session", remove);
+
+      socket.emit("user-session", userSession);
+      socket.emit("current-room", userSession);
+      getMessages(userSession.room, socket);
+
     }
   });
 
@@ -50,20 +51,24 @@ function onConnection(socket) {
     const newRoom = createNewRoom(roomInfo.roomName, roomInfo.password);
     socket.join(roomInfo.roomName);
     const checkRoomsOnSocket = getRooms();
-    const remove = removeRoom(checkRoomsOnSocket)
-    console.log(remove)
+    const remove = removeRoom(checkRoomsOnSocket)  
     io.to(roomInfo.roomName).emit("joined", `${userSession.name} joined ${roomInfo.roomName}`);
     io.emit("room-session", remove);
     socket.emit("current-room", userSession);
+    getMessages(userSession.room, socket);
   });
 
-  socket.on("chat-message", (msg) => {
+  socket.on("chat-message", async (msg) => {
     const userSession = getUser(socket.id);
-    handleMessages(msg, userSession.name, userSession.room, "now");
 
-    const messagesInCurrentRoom = messages.filter(m => m.room === userSession.room);
+    await handleMessages(msg, userSession.name, userSession.room, "now");
+    const messagesInCurrentRoom = filterMessages(userSession.room);
 
-    io.to(userSession.room).emit("chat-message", { messagesInCurrentRoom, loggedInUser: userSession });
+
+    io.to(userSession.room).emit("chat-message", {
+      messagesInCurrentRoom,
+      loggedInUser: userSession,
+    });
   });
 
   socket.on("switch-room", (data) => {
@@ -75,7 +80,7 @@ function onConnection(socket) {
       io.to(userSession.room).emit("left", `${userSession.name} left the room`);
       const user = switchRoom(socket.id, room.roomName);
       const checkRoomsOnSocket = getRooms();
-      const remove = removeRoom(checkRoomsOnSocket)
+      const remove = removeRoom(checkRoomsOnSocket);
       socket.join(room.roomName);
       io.to(room.roomName).emit(
         "joined",
@@ -83,6 +88,8 @@ function onConnection(socket) {
       );
       socket.emit("current-room", userSession);
       io.emit("room-session", remove);
+      getMessages(userSession.room, socket);
+
       // console.log(io.sockets.adapter.rooms);
     }
   });
@@ -93,6 +100,15 @@ function onConnection(socket) {
 }
 
 io.on("connection", onConnection);
+
+function getMessages(room, socket) {
+  const userSession = getUser(socket.id);
+  const messagesInCurrentRoom = filterMessages(room);
+  io.to(room).emit("chat-message", {
+    messagesInCurrentRoom,
+    loggedInUser: userSession,
+  });
+}
 
 function getRooms() {
   let rooms = [];

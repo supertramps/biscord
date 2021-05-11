@@ -34,6 +34,7 @@ function SidePanel(props: Props) {
 
   const [userRoom, setCurrentUserRoom] = useState<any>({ password: "" });
 
+  console.log(rooms)
 
   // Checks if there is a user, changes connection status
   function checkIfOnline() {
@@ -73,7 +74,6 @@ function SidePanel(props: Props) {
       });
 
       await socket.on("room-session", (room: any) => {
-        console.log(room, "room log");
         setRooms(room);
       });
       await socket.on("current-room", (room: any) => {
@@ -114,15 +114,15 @@ function SidePanel(props: Props) {
                         switchRooms(userRoom, room);
                       }}
                     >
-                      {room.room ? `#${room.room}` : null}
+                      {room.roomName ? `#${room.roomName}` : null}
                     </Typography>
                   </Link>
 
-                  {rooms.password !== "" ? (
+                  {rooms.map((r: any) => r.password !== "" ? (
                     <Box ml={2} mt={1}>
                       <img src={passwordIcon} alt="" />
                     </Box>
-                  ) : null}
+                  ) : null)}
                 </Box>
               ))
             : null}

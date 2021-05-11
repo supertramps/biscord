@@ -63,7 +63,7 @@ function onConnection(socket) {
   socket.on("chat-message", async (msg) => {
     const userSession = getUser(socket.id);
 
-    handleMessages(msg, userSession.name, userSession.room, "now");
+    await handleMessages(msg, userSession.name, userSession.room, "now");
     const messagesInCurrentRoom = filterMessages(userSession.room);
 
 

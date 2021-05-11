@@ -95,7 +95,6 @@ function MainPage(props: Props) {
       setSnackbarOpen(true);
     };
     const handleLeft = (msg: string) => {
-      console.log(msg);
       setJoinedMessage((_prevState: any) => [...joinedMessage, msg]);
     };
 
@@ -173,6 +172,10 @@ function MainPage(props: Props) {
                   onClick={() => {
                     creatNewRoom(values, props.userInfo);
                     props.handleInputField(false);
+                    setValues({
+                      roomName: "",
+                      password: "",
+                    })
                   }}
                 >
                   Create

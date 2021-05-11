@@ -106,7 +106,6 @@ function MainPage(props: Props) {
       setSnackbarOpen(true);
     };
     const handleLeft = (msg: string) => {
-      console.log(msg);
       setJoinedMessage((_prevState: any) => [...joinedMessage, msg]);
     };
 
@@ -125,7 +124,6 @@ function MainPage(props: Props) {
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
-    console.log(name, value)
     setValues((prevState) => ({
       ...prevState,
       [name]: value,

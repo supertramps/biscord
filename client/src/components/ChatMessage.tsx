@@ -15,7 +15,7 @@ function ChatMessage(props: Iprops) {
   const [profile, setProfile] = useState<string>();
 
   const handleUser = (value: string) => {
-    const trimedName: string = value.slice(0, 1);
+    const trimedName: string = value.charAt(0).toUpperCase();
     setAvatar(trimedName);
     setProfile(value);
   };
@@ -32,7 +32,7 @@ function ChatMessage(props: Iprops) {
 
   return (
     <Box className={classes.root}>
-      <Box ml={2} className={classes.chatMetaData}>
+      <Box ml={10} mt={3} className={classes.chatMetaData}>
         <Typography variant="body2">{profile}</Typography>
         <Typography variant="body2">{props.time}</Typography>
       </Box>
@@ -50,9 +50,14 @@ function ChatMessage(props: Iprops) {
             ></iframe>
           </Box>
         ) : (
-          <Box className={classes.messageWrapper}>
+          <Box ml={2} className={classes.messageWrapper}>
             <Box className={classes.textContainer}>
-              <Typography noWrap={false} display="block" variant="body1">
+              <Typography
+                style={{ wordWrap: "break-word" }}
+                noWrap={false}
+                display="block"
+                variant="body1"
+              >
                 {props.message}
               </Typography>
             </Box>
@@ -85,7 +90,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: "#40444B",
     padding: ".5rem",
     borderRadius: "10px",
-    maxWidth: "50vw",
+    maxWidth: "35vw",
+  },
+  textContainer: {
+    maxWidth: "100%",
   },
   avatarStyle: {
     bottom: 0,
@@ -100,9 +108,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     cursor: "default",
     borderRadius: "20px",
   },
-  textContainer: {
-    maxWidth: "50vw",
-  },
+
   gifWrapper: {
     padding: ".5rem",
     borderRadius: "10px",

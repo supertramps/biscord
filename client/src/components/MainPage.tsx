@@ -92,11 +92,11 @@ function MainPage(props: Props) {
     const handleChatMessage = function (data: any) {
       console.log("MessageHandler 🔥");
       if (!messages) {
-        const {messagesInCurrentRoom, loggedInUser} = data;
+        const { messagesInCurrentRoom, loggedInUser } = data;
         setMessages(messagesInCurrentRoom);
         console.log(messages);
       } else {
-        const {messagesInCurrentRoom, loggedInUser} = data;
+        const { messagesInCurrentRoom, loggedInUser } = data;
         setMessages(messagesInCurrentRoom);
         console.log(messages);
       }
@@ -218,10 +218,8 @@ function MainPage(props: Props) {
                 messages
                   .map((m: any, i: any) => (
                     <ChatMessage
-
                       time={moment().format("LT")}
                       profile={m.user}
-
                       key={i}
                       message={m.message}
                       gifUrl={chosenGif}
@@ -381,9 +379,25 @@ const useStyles = makeStyles((theme: Theme) => ({
   messageContainer: {
     height: "100%",
     display: "flex",
-    overflow: "auto",
+    overflowX: "auto",
     alignItems: "flex-start",
     flexDirection: "column-reverse",
+    "&::-webkit-scrollbar": {
+      width: "0.7em",
+    },
+    "&::-webkit-scrollbar-track": {
+      boxShadow: "inset 0 0 6px rgba(0,0,0,0.00)",
+      webkitBoxShadow: "inset 0 0 6px rgba(0,0,0,0.00)",
+      // margin: "0 30px",
+      margin: "1rem",
+    },
+    "&::-webkit-scrollbar-thumb": {
+      backgroundColor: "rgba(0,0,0,.1)",
+      outline: "1px solid slategrey",
+      border: " 4px solid transparent",
+      borderRadius: "8px",
+      backgroundClip: "padding-box",
+    },
   },
   logoContainer: {
     height: "100%",
@@ -407,7 +421,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   contentWrapper: {
     width: "100%",
-    height: "100%",
+    maxHeight: "95%",
   },
 
   roomFormContainer: {

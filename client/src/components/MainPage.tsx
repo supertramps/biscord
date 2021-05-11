@@ -208,7 +208,7 @@ function MainPage(props: Props) {
                 messages
                   .map((m: any, i: any) => (
                     <ChatMessage
-                      time={moment().format("LT")}
+                      time={m.time}
                       profile={m.user}
                       key={i}
                       message={m.message}

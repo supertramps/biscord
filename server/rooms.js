@@ -1,10 +1,8 @@
 
-const rooms = [{
+let rooms = [{
     roomName: "Lobby",
     password: "",
 }];
-
-//if getRooms does not exist remove it. 
 
 function createNewRoom(name,password){
     const room = {roomName: name, password: password};

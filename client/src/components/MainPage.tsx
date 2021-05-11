@@ -71,11 +71,6 @@ function MainPage(props: Props) {
   //   console.log(data);
   // })();
 
-  // function clearInput() {
-  //   const inputfield = document.getElementById("inputField")!.value as HTMLInputElement;
-  //   inputfield.
-  // }
-
   useEffect(() => {
     if (!socket) return;
     if (messageHolder.includes("giphy.com/")) {
@@ -84,7 +79,7 @@ function MainPage(props: Props) {
       setMessageHolder("");
     }
 
-    // if (socket.emit("chat-message", "/gif")) {
+    // if (socket.emit("chat-message") === "/gif") {
     //   socket.emit("chat-message", "big lol");
     // }
   }, [messageHolder]);
@@ -218,7 +213,7 @@ function MainPage(props: Props) {
                 messages
                   .map((m: any, i: any) => (
                     <ChatMessage
-                      time={moment().format("MMM Do YY")}
+                      time={moment().format("LT")}
                       profile={m.loggedInUser}
                       key={i}
                       message={m.msg}
@@ -265,6 +260,8 @@ function MainPage(props: Props) {
                     id="inputField"
                     placeholder="Send a message..."
                     type="text"
+                    autoFocus={true}
+                    autoComplete="off"
                     value={messageHolder}
                     className={classes.textFieldStyling}
                     onChange={(event) => {

@@ -64,12 +64,15 @@ function MainPage(props: Props) {
   function postman() {
     socket.emit("chat-message", messageHolder);
   }
-  function messagePending() {
-    socket.emit("typing", true);
-    setTimeout(() => {
+
+  function messagePending(value: string) {
+    if (value.length > 0) {
+      socket.emit("typing", true);
+    } else {
       socket.emit("typing", false);
-    }, 2000);
+    }
   }
+
   useEffect(() => {
     if (!socket) return;
     if (messageHolder.includes("giphy.com/")) {
@@ -269,7 +272,7 @@ function MainPage(props: Props) {
                     value={messageHolder}
                     className={classes.textFieldStyling}
                     onChange={(event) => {
-                      messagePending();
+                      messagePending(event.target.value);
                       setMessageHolder(event.target.value);
                     }}
                   />
@@ -307,7 +310,7 @@ function MainPage(props: Props) {
           </Box>
           {typing ? (
             <Box>
-              <Typography variant="body2">Someone is typeing...</Typography>
+              <Typography variant="body2">Someone is typing...</Typography>
             </Box>
           ) : null}
         </>

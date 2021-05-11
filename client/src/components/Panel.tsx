@@ -101,6 +101,7 @@ function SidePanel(props: Props) {
         </Box>
         <Box mt={2} ml={5} className={classes.roomList}>
           {rooms
+
             ? rooms.map((room: any, i: number) => (
                 <Box className={classes.roomContainer}>
                   <Link>
@@ -124,6 +125,7 @@ function SidePanel(props: Props) {
                   )}
                 </Box>
               ))
+
             : null}
         </Box>
       </Box>

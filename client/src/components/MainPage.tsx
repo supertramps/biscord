@@ -22,6 +22,8 @@ import GifIcon from "../assets/gif_icon.svg";
 
 // @ts-ignore
 import ReactGiphySearchbox from "react-giphy-searchbox";
+// @ts-ignore
+import giphyRandom from "giphyRandom";
 
 interface Props {
   inputFieldsOpen: any;
@@ -33,13 +35,13 @@ function MainPage(props: Props) {
   const [messages, setMessages] = useState<any>();
   const [messageHolder, setMessageHolder] = useState("");
   const classes = useStyles();
-  const { creatNewRoom, socket } = useContext(SocketContext);
+  const { creatNewRoom, socket, room } = useContext(SocketContext);
   const [user, setUser] = useState<any>();
   const [gifGalleryOpen, setGifGalleryOpen] = useState<boolean>(false);
   const [chosenGif, setChosenGif] = useState<string>("");
   const [joinedMessage, setJoinedMessage] = useState<any>([]);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  // const [textInputValue, setTextInputValue] = useState("");
+  const [gifSelected, setGifSelected] = useState(false);
 
   const [values, setValues] = useState<object>({
     roomName: "",
@@ -58,6 +60,29 @@ function MainPage(props: Props) {
   function postman() {
     socket.emit("chat-message", messageHolder);
   }
+
+  // (async () => {
+  //   const API_KEY = "nGgKX5djKNAVoYChgFHSzk7Q2tnOs65p";
+
+  //   const { data } = await giphyRandom(API_KEY, {
+  //     tag: "cat",
+  //   });
+
+  //   console.log(data);
+  // })();
+
+  useEffect(() => {
+    if (!socket) return;
+    if (messageHolder.includes("giphy.com/")) {
+      socket.emit("chat-message", messageHolder);
+      console.log(messageHolder);
+      setMessageHolder("");
+    }
+
+    // if (socket.emit("chat-message") === "/gif") {
+    //   socket.emit("chat-message", "big lol");
+    // }
+  }, [messageHolder]);
 
   useEffect(() => {
     if (!socket) return;
@@ -193,8 +218,10 @@ function MainPage(props: Props) {
                 messages
                   .map((m: any, i: any) => (
                     <ChatMessage
-                      time={moment().format("MMM Do YY")}
+
+                      time={moment().format("LT")}
                       profile={m.user}
+
                       key={i}
                       message={m.message}
                       gifUrl={chosenGif}
@@ -237,8 +264,12 @@ function MainPage(props: Props) {
               <Box className={classes.formFlex}>
                 <Box mr={2} className={classes.inputContainer}>
                   <input
-                    placeholder="Message #React"
+                    id="inputField"
+                    placeholder="Send a message..."
                     type="text"
+                    autoFocus={true}
+                    autoComplete="off"
+                    value={messageHolder}
                     className={classes.textFieldStyling}
                     onChange={(event) => {
                       setMessageHolder(event.target.value);
@@ -263,7 +294,10 @@ function MainPage(props: Props) {
                     onClick={() => {
                       // addMessageToArray();
                       setChosenGif("");
+                      setMessageHolder("");
+                      // clearInput();
                       postman();
+                      setGifSelected(false);
                     }}
                     color="primary"
                     className={classes.buttonStyling}
@@ -316,6 +350,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   inputContainer: {
     width: "100%",
     height: "100%",
+    boxShadow: "3px 5px 6px -4px rgba(0,0,0,0.7)",
+  },
+  sendGifContainer: {
+    width: "10%",
+    // height: "100%",
     boxShadow: "3px 5px 6px -4px rgba(0,0,0,0.7)",
   },
   inputForm: {
@@ -397,6 +436,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     right: "5rem",
     backgroundColor: "#40444B",
     borderRadius: "10px",
+  },
+  iframeStyle: {
+    border: "none",
+    cursor: "default",
+    width: "100%",
   },
 }));
 

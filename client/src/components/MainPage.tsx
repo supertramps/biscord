@@ -90,10 +90,15 @@ function MainPage(props: Props) {
       setUser(lUser);
     };
     const handleChatMessage = function (data: any) {
+      console.log("MessageHandler 🔥");
       if (!messages) {
-        setMessages([data]);
+        const {messagesInCurrentRoom, loggedInUser} = data;
+        setMessages(messagesInCurrentRoom);
+        console.log(messages);
       } else {
-        setMessages([...messages, data]);
+        const {messagesInCurrentRoom, loggedInUser} = data;
+        setMessages(messagesInCurrentRoom);
+        console.log(messages);
       }
     };
     const handleJoined = (msg: string) => {
@@ -213,10 +218,12 @@ function MainPage(props: Props) {
                 messages
                   .map((m: any, i: any) => (
                     <ChatMessage
+
                       time={moment().format("LT")}
-                      profile={m.loggedInUser}
+                      profile={m.user}
+
                       key={i}
-                      message={m.msg}
+                      message={m.message}
                       gifUrl={chosenGif}
                     />
                   ))

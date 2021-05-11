@@ -34,8 +34,8 @@ function SidePanel(props: Props) {
   const [avatarLetter, setAvatarLetter] = useState<string>("");
   const [userRoom, setCurrentUserRoom] = useState<any>({ password: "" });
   const [selectedRoom, setSelectedRoom] = useState<any>()
-
-  console.log(rooms)
+  const [password, setPassword] = useState<any>()
+  const [passwordMatch, setPasswordMatch] = useState<any>(false)
 
   const handleOpen = () => {
     setRoomValidationModal(true);
@@ -96,6 +96,21 @@ function SidePanel(props: Props) {
       getAvatarLetter();
     }
   });
+
+  const handleChange = (e: any) => {
+    setPassword(e.target.value)
+  };
+
+  function checkPassword(password: string){
+    const room = rooms.find((r: any) => selectedRoom === r.roomName && password === r.password);
+    if(room){
+      setPasswordMatch(false);
+      switchRooms(userRoom, room); 
+      handleClose();
+    } else {
+      setPasswordMatch(true);
+    }
+  };
 
   return (
     <Box className={classes.root}>
@@ -177,46 +192,49 @@ function SidePanel(props: Props) {
           </Button>
         </Box>
       </Box>
-    <Modal
+      <Modal
         className={classes.modal}
         open={roomValidationModal}
         onClose={handleClose}
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
-    >
-          <Box className={classes.roomFormContainer}>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-              }}
-              noValidate
-              autoComplete="off"
-              className={classes.form}
-            >
-              <Typography variant="body2">
-                Join room {selectedRoom}
-              </Typography>
-              <TextField
-                className={classes.textFieldStyle}
-                id="outlined-basic"
-                label="Password...(⚔)"
-                variant="outlined"
-                name="password"
-              />
-              <Box>
-                <Button
-                  type="submit"
-                  color="secondary"
-                  variant="contained"
-                  onClick={() => {
-                   
-                  }}
-                >
-                  Join
-                </Button>
-              </Box>
-            </form>
-          </Box>
+      >
+        <Box className={classes.roomFormContainer}>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+            }}
+            noValidate
+            autoComplete="off"
+            className={classes.form}
+          >
+            <Typography variant="body2">
+              Join room {selectedRoom}
+            </Typography>
+            <TextField
+              error={passwordMatch}
+              className={classes.textFieldStyle}
+              id="outlined-basic"
+              label="Password...(⚔)"
+              variant="outlined"
+              name="password"
+              onChange={handleChange}
+              helperText="Wrong password"
+            />
+            <Box>
+              <Button
+                type="submit"
+                color="secondary"
+                variant="contained"
+                onClick={() => {
+                  checkPassword(password)
+                }}
+              >
+                Join
+              </Button>
+            </Box>
+          </form>
+        </Box>
       </Modal>
     </Box>
   );

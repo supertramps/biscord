@@ -95,6 +95,12 @@ function SidePanel(props: Props) {
     if (user) {
       getAvatarLetter();
     }
+
+    return () => {
+      socket.off("user-session", handleUserSession);
+      socket.off("room-session", handleRoomSession);
+      socket.off("current-room", handleCurrentRoom);
+    }
   });
 
   const handleChange = (e: any) => {

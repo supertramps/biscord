@@ -40,18 +40,24 @@ function ChatMessage(props: Iprops) {
         <Box ml={2}>
           <Avatar className={classes.avatarStyle}>{avatar}</Avatar>
         </Box>
-        <Box ml={2} className={classes.messageWrapper}>
-          {props.message.includes("giphy.com") ? (
+        {props.message.includes("giphy.com") ? (
+          <Box ml={2} className={classes.gifWrapper}>
             <iframe
               className={classes.iframeStyle}
               src={props.message}
-              height="100%"
-              width="100%"
+              height="200px"
+              width="300px"
             ></iframe>
-          ) : (
-            <Typography variant="body1">{props.message}</Typography>
-          )}
-        </Box>
+          </Box>
+        ) : (
+          <Box className={classes.messageWrapper}>
+            <Box className={classes.textContainer}>
+              <Typography noWrap={false} display="block" variant="body1">
+                {props.message}
+              </Typography>
+            </Box>
+          </Box>
+        )}
       </Box>
     </Box>
   );
@@ -79,6 +85,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: "#40444B",
     padding: ".5rem",
     borderRadius: "10px",
+    maxWidth: "50vw",
   },
   avatarStyle: {
     bottom: 0,
@@ -91,7 +98,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   iframeStyle: {
     border: "none",
     cursor: "default",
-    width: "100%",
+    borderRadius: "20px",
+  },
+  textContainer: {
+    maxWidth: "50vw",
+  },
+  gifWrapper: {
+    padding: ".5rem",
+    borderRadius: "10px",
   },
 }));
 

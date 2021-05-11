@@ -254,7 +254,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: "center",
     height: "100vh",
     width: "20vw",
-    minWidth: "10rem",
+    minWidth: "20rem",
     backgroundColor: "#23272A",
   },
   roomList: {

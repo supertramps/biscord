@@ -37,7 +37,6 @@ function onConnection(socket) {
       socket.emit("user-session", userSession);
       socket.emit("current-room", userSession);
       getMessages(userSession.room, socket);
-
     }
   });
 
@@ -63,7 +62,6 @@ function onConnection(socket) {
 
     await handleMessages(msg, userSession.name, userSession.room, "now");
     const messagesInCurrentRoom = filterMessages(userSession.room);
-
 
     io.to(userSession.room).emit("chat-message", {
       messagesInCurrentRoom,

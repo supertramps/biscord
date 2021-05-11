@@ -31,8 +31,9 @@ function SidePanel(props: Props) {
   const [rooms, setRooms] = useState<any>();
   const [statusIcon, setStatusIcon] = useState<any>(offlineIcon);
   const [avatarLetter, setAvatarLetter] = useState<string>("");
-
   const [userRoom, setCurrentUserRoom] = useState<any>({ password: "" });
+
+  console.log(rooms)
 
   // Checks if there is a user, changes connection status
   function checkIfOnline() {
@@ -101,31 +102,26 @@ function SidePanel(props: Props) {
         </Box>
         <Box mt={2} ml={5} className={classes.roomList}>
           {rooms
-
             ? rooms.map((room: any, i: number) => (
                 <Box className={classes.roomContainer}>
                   <Link>
-                    <Typography
-                      key={i}
-                      variant="body1"
-                      onClick={() => {
-                        switchRooms(userRoom, room);
-                      }}
-                    >
-                      {room.roomName ? `#${room.roomName}` : null}
-                    </Typography>
-                  </Link>
-
-                  {rooms.map((r: any) =>
-                    r.password !== "" ? (
+                    <Box>
+                      <Typography
+                        key={i}
+                        variant="body1"
+                        onClick={() => {
+                          switchRooms(userRoom, room);
+                        }}
+                      >
+                        {room.roomName ? `#${room.roomName}` : null}
+                      </Typography>
                       <Box ml={2} mt={1}>
-                        <img src={passwordIcon} alt="" />
+                        {room.password !== "" ? <img src={passwordIcon} alt="" /> : null}
                       </Box>
-                    ) : null
-                  )}
+                    </Box>
+                  </Link>
                 </Box>
               ))
-
             : null}
         </Box>
       </Box>

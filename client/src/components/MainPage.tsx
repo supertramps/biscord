@@ -125,6 +125,7 @@ function MainPage(props: Props) {
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
+    console.log(name, value)
     setValues((prevState) => ({
       ...prevState,
       [name]: value,
@@ -184,6 +185,10 @@ function MainPage(props: Props) {
                   onClick={() => {
                     creatNewRoom(values, props.userInfo);
                     props.handleInputField(false);
+                    setValues({
+                      roomName: "",
+                      password: "",
+                    })
                   }}
                 >
                   Create

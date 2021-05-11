@@ -41,6 +41,7 @@ function onConnection(socket) {
   });
 
   socket.on("create-room", (data) => {
+    console.log(data)
     const { roomInfo, userInfo } = data;
     const userSession = getUser(socket.id);
     socket.leave(userSession.room);
@@ -50,6 +51,7 @@ function onConnection(socket) {
     socket.join(roomInfo.roomName);
     const checkRoomsOnSocket = getRooms();
     const remove = removeRoom(checkRoomsOnSocket)
+    console.log(remove)
     io.to(roomInfo.roomName).emit("joined", `${userSession.name} joined ${roomInfo.roomName}`);
     io.emit("room-session", remove);
     socket.emit("current-room", userSession);

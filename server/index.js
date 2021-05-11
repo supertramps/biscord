@@ -37,7 +37,6 @@ function onConnection(socket) {
       socket.emit("user-session", userSession);
       socket.emit("current-room", userSession);
       getMessages(userSession.room, socket);
-
     }
   });
 
@@ -60,12 +59,15 @@ function onConnection(socket) {
     getMessages(userSession.room, socket);
   });
 
+  socket.on("typing", (value) => {
+    io.emit("typing", value);
+  });
+
   socket.on("chat-message", async (msg) => {
     const userSession = getUser(socket.id);
 
     await handleMessages(msg, userSession.name, userSession.room, "now");
     const messagesInCurrentRoom = filterMessages(userSession.room);
-
 
     io.to(userSession.room).emit("chat-message", {
       messagesInCurrentRoom,

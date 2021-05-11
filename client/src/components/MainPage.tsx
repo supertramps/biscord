@@ -43,6 +43,7 @@ function MainPage(props: Props) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [gifSelected, setGifSelected] = useState(false);
   const [randomGif, setRandomGif] = useState<string>("");
+  const [typing, setTyping] = useState(false);
 
   const [values, setValues] = useState<object>({
     roomName: "",
@@ -63,7 +64,12 @@ function MainPage(props: Props) {
   function postman() {
     socket.emit("chat-message", messageHolder);
   }
-
+  function messagePending() {
+    socket.emit("typing", true);
+    setTimeout(() => {
+      socket.emit("typing", false);
+    }, 2000);
+  }
   useEffect(() => {
     if (!socket) return;
     if (messageHolder.includes("giphy.com/")) {
@@ -98,11 +104,15 @@ function MainPage(props: Props) {
       console.log(msg);
       setJoinedMessage((_prevState: any) => [...joinedMessage, msg]);
     };
+    const handleTyping = (value: boolean) => {
+      setTyping(value);
+    };
 
     socket.on("user-session", handleUserSession);
     socket.on("chat-message", handleChatMessage);
     socket.on("joined", handleJoined);
     socket.on("left", handleLeft);
+    socket.on("typing", handleTyping);
 
     return () => {
       socket.off("user-session", handleUserSession);
@@ -259,6 +269,7 @@ function MainPage(props: Props) {
                     value={messageHolder}
                     className={classes.textFieldStyling}
                     onChange={(event) => {
+                      messagePending();
                       setMessageHolder(event.target.value);
                     }}
                   />
@@ -279,10 +290,9 @@ function MainPage(props: Props) {
                   <Button
                     type="submit"
                     onClick={() => {
-                      // addMessageToArray();
+                      socket.emit("typing", false);
                       setChosenGif("");
                       setMessageHolder("");
-                      // clearInput();
                       postman();
                       setGifSelected(false);
                     }}
@@ -295,6 +305,11 @@ function MainPage(props: Props) {
               </Box>
             </form>
           </Box>
+          {typing ? (
+            <Box>
+              <Typography variant="body2">Someone is typeing...</Typography>
+            </Box>
+          ) : null}
         </>
       )}
     </Box>

@@ -40,7 +40,7 @@ function getMessages(room, session, io) {
     messagesInCurrentRoom,
     loggedInUser: session,
   });
-
+}
 
 
 module.exports = {

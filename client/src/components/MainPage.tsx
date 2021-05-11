@@ -24,7 +24,6 @@ import GifIcon from "../assets/gif_icon.svg";
 import ReactGiphySearchbox from "react-giphy-searchbox";
 // @ts-ignore
 import giphyRandom from "giphy-random";
-import { LocalLibraryTwoTone } from "@material-ui/icons";
 
 interface Props {
   inputFieldsOpen: any;

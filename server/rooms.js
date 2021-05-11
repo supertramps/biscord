@@ -13,7 +13,7 @@ function createNewRoom(name,password){
 }
 
 function removeRoom(data){
-    console.log(data)
+    console.log(data, "From removeRoom function")
     /* return rooms; */
 }
 

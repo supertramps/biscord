@@ -17,19 +17,22 @@ const {
   users,
 } = require("./users");
 
-const {rooms, createNewRoom, removeRoom} = require("./rooms")
+let {rooms, createNewRoom, removeRoom} = require("./rooms")
 
 function onConnection(socket) {
   console.log("Client was connected", socket.id);
 
   socket.on("join-lobby", (name) => {
+    
     const { user, error } = addUser({ id: socket.id, name, room: "Lobby" });
     const loggedInUser = getUser(socket.id);
     if (loggedInUser) {
       socket.join("Lobby");
       io.to(socket.id).emit("joined-successfully", "joined");
       io.to("Lobby").emit("joined", `${loggedInUser.name} joined the #Lobby`);
-      io.emit("room-session", rooms);
+      const checkRoomsOnSocket = getRooms();
+      const remove = removeRoom(checkRoomsOnSocket)
+      io.emit("room-session", remove );
       socket.emit("user-session", loggedInUser);
       socket.emit("current-room", loggedInUser);
     }
@@ -47,8 +50,10 @@ function onConnection(socket) {
     );
     const newRoom = createNewRoom(roomInfo.roomName, roomInfo.password)
     socket.join(roomInfo.roomName);
+    const checkRoomsOnSocket = getRooms();
+    const remove = removeRoom(checkRoomsOnSocket)
     io.to(roomInfo.roomName).emit("joined", `${userSession.name} joined ${roomInfo.roomName}`);
-    io.emit("room-session", rooms);
+    io.emit("room-session", remove);
     socket.emit("current-room", userSession);
     // console.log(io.sockets.adapter.rooms);
   });
@@ -69,14 +74,13 @@ function onConnection(socket) {
       const user = switchRoom(socket.id, data.room);
       const checkRoomsOnSocket = getRooms();
       const remove = removeRoom(checkRoomsOnSocket)
-      console.log(rooms)
       socket.join(data.room);
       io.to(data.room).emit(
         "joined",
         `${userSession.name} joined ${room.roomName}`
       );
       socket.emit("current-room", userSession);
-      io.emit("room-session", rooms);
+      io.emit("room-session", remove);
       // console.log(io.sockets.adapter.rooms);
     }
   });

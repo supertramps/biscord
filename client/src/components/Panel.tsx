@@ -105,7 +105,7 @@ function SidePanel(props: Props) {
             ? rooms.map((room: any, i: number) => (
                 <Box className={classes.roomContainer}>
                   <Link>
-                    <Box>
+                    <Box className={classes.panelRooms}>
                       <Typography
                         key={i}
                         variant="body1"
@@ -255,10 +255,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   roomContainer: {
     width: "100%",
-    display: "flex",
+    
     alignItems: "center",
     justifyContent: "flex-start",
   },
+  panelRooms: {
+    display: "flex",
+  }
 }));
 
 export default SidePanel;

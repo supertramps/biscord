@@ -379,7 +379,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   messageContainer: {
     height: "100%",
     display: "flex",
-    overflowX: "auto",
+    overflow: "auto",
     alignItems: "flex-start",
     flexDirection: "column-reverse",
     "&::-webkit-scrollbar": {
@@ -421,7 +421,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   contentWrapper: {
     width: "100%",
-    maxHeight: "95%",
+    height: "94%",
+    maxHeight: "94%",
   },
 
   roomFormContainer: {

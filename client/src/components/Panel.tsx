@@ -34,8 +34,6 @@ function SidePanel(props: Props) {
 
   const [userRoom, setCurrentUserRoom] = useState<any>({ password: "" });
 
-  console.log(rooms)
-
   // Checks if there is a user, changes connection status
   function checkIfOnline() {
     if (!user) {
@@ -65,28 +63,27 @@ function SidePanel(props: Props) {
   };
 
   useEffect(() => {
-    const loadUser = async () => {
-      if (!socket) {
-        return;
-      }
-      await socket.on("user-session", (lUser: any) => {
-        setUser(lUser);
-      });
+    if (!socket) return;
 
-      await socket.on("room-session", (room: any) => {
-        setRooms(room);
-      });
-      await socket.on("current-room", (room: any) => {
-        setCurrentUserRoom(room);
-      });
+    const handleUserSession = (lUser: any) => {
+      setUser(lUser);
     };
-    loadUser();
+    const handleRoomSession = (room: any) => {
+      setRooms(room);
+    };
+    const handleCurrentRoom = (room: any) => {
+      setCurrentUserRoom(room);
+    };
+
+    socket.on("user-session", handleUserSession);
+    socket.on("room-session", handleRoomSession);
+    socket.on("current-room", handleCurrentRoom);
+
     checkIfOnline();
     checkIfValid();
     if (user) {
       getAvatarLetter();
     }
-    console.log(rooms, "rooms");
   });
 
   return (
@@ -118,11 +115,13 @@ function SidePanel(props: Props) {
                     </Typography>
                   </Link>
 
-                  {rooms.map((r: any) => r.password !== "" ? (
-                    <Box ml={2} mt={1}>
-                      <img src={passwordIcon} alt="" />
-                    </Box>
-                  ) : null)}
+                  {rooms.map((r: any) =>
+                    r.password !== "" ? (
+                      <Box ml={2} mt={1}>
+                        <img src={passwordIcon} alt="" />
+                      </Box>
+                    ) : null
+                  )}
                 </Box>
               ))
             : null}
@@ -143,7 +142,6 @@ function SidePanel(props: Props) {
                 <Typography>{!user ? "Please log in" : user.name}</Typography>
               </Box>
             </Box>
-           
           </Box>
           <Box mt={1} className={classes.connectionStatus}>
             <Box mr={1}>

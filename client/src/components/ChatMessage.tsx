@@ -25,7 +25,7 @@ function ChatMessage(props: Iprops) {
     if (!props.profile) {
       return;
     } else {
-      handleUser(props.profile.name);
+      handleUser(props.profile);
     }
     hold();
   });

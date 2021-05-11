@@ -43,7 +43,9 @@ function MainPage(props: Props) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [gifSelected, setGifSelected] = useState(false);
   const [randomGif, setRandomGif] = useState<string>("");
+  const [currentRoom, setCurrentRoom] = useState<any>();
 
+  console.log(currentRoom)
   const [values, setValues] = useState<object>({
     roomName: "",
     password: "",
@@ -76,6 +78,10 @@ function MainPage(props: Props) {
   useEffect(() => {
     if (!socket) return;
 
+    const handleCurrentRoom = (room: any) => {
+      setCurrentRoom(room)
+    }
+
     const handleUserSession = (lUser: any) => {
       setUser(lUser);
     };
@@ -102,12 +108,14 @@ function MainPage(props: Props) {
     socket.on("chat-message", handleChatMessage);
     socket.on("joined", handleJoined);
     socket.on("left", handleLeft);
+    socket.on("current-room", handleCurrentRoom)
 
     return () => {
       socket.off("user-session", handleUserSession);
       socket.off("chat-message", handleChatMessage);
       socket.off("joined", handleJoined);
       socket.off("left", handleLeft);
+      socket.off("current-room", handleCurrentRoom)
     };
   });
 
@@ -187,6 +195,9 @@ function MainPage(props: Props) {
       ) : (
         <>
           <Box className={classes.contentWrapper}>
+              <Typography variant="body2">
+                 #{currentRoom}
+              </Typography>
             <Box>
               {joinedMessage.map((msg: string) => [
                 <Snackbar

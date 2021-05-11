@@ -20,12 +20,10 @@ const {
 
 const { rooms, createNewRoom, removeRoom } = require("./rooms");
 
-
 function onConnection(socket) {
   console.log("Client was connected", socket.id);
 
   socket.on("join-lobby", (name) => {
-    
     const { user, error } = addUser({ id: socket.id, name, room: "Lobby" });
     const loggedInUser = getUser(socket.id);
     if (loggedInUser) {
@@ -33,8 +31,8 @@ function onConnection(socket) {
       io.to(socket.id).emit("joined-successfully", "joined");
       io.to("Lobby").emit("joined", `${loggedInUser.name} joined the #Lobby`);
       const checkRoomsOnSocket = getRooms();
-      const remove = removeRoom(checkRoomsOnSocket)
-      io.emit("room-session", remove );
+      const remove = removeRoom(checkRoomsOnSocket);
+      io.emit("room-session", remove);
       socket.emit("user-session", loggedInUser);
       socket.emit("current-room", loggedInUser);
     }
@@ -49,19 +47,27 @@ function onConnection(socket) {
     const newRoom = createNewRoom(roomInfo.roomName, roomInfo.password);
     socket.join(roomInfo.roomName);
     const checkRoomsOnSocket = getRooms();
-    const remove = removeRoom(checkRoomsOnSocket)
-    io.to(roomInfo.roomName).emit("joined", `${userSession.name} joined ${roomInfo.roomName}`);
+    const remove = removeRoom(checkRoomsOnSocket);
+    io.to(roomInfo.roomName).emit(
+      "joined",
+      `${userSession.name} joined ${roomInfo.roomName}`
+    );
     io.emit("room-session", remove);
     socket.emit("current-room", userSession);
   });
 
-  socket.on("chat-message", (msg) => {
+  socket.on("chat-message", async (msg) => {
     const userSession = getUser(socket.id);
-    handleMessages(msg, userSession.name, userSession.room, "now");
+    await handleMessages(msg, userSession.name, userSession.room, "now");
 
-    const messagesInCurrentRoom = messages.filter(m => m.room === userSession.room);
+    const messagesInCurrentRoom = messages.filter(
+      (m) => m.room === userSession.room
+    );
 
-    io.to(userSession.room).emit("chat-message", { messagesInCurrentRoom, loggedInUser: userSession });
+    io.to(userSession.room).emit("chat-message", {
+      messagesInCurrentRoom,
+      loggedInUser: userSession,
+    });
   });
 
   socket.on("switch-room", (data) => {
@@ -73,7 +79,7 @@ function onConnection(socket) {
       io.to(userSession.room).emit("left", `${userSession.name} left the room`);
       const user = switchRoom(socket.id, room.roomName);
       const checkRoomsOnSocket = getRooms();
-      const remove = removeRoom(checkRoomsOnSocket)
+      const remove = removeRoom(checkRoomsOnSocket);
       socket.join(room.roomName);
       io.to(room.roomName).emit(
         "joined",

@@ -2,7 +2,6 @@ const users = [];
 
 function addUser({ id, name, room }) {
   const val = Math.floor(1000 + Math.random() * 9000);
-
   const user = { id, name: `${name}#${val}`, room, password: "" };
   users.push(user);
   return user;

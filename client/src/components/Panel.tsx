@@ -27,13 +27,23 @@ interface Props {
 function SidePanel(props: Props) {
   const classes = useStyles();
   const { socket, room } = useContext(SocketContext);
+  const [roomValidationModal, setRoomValidationModal] = useState(false);
   const [user, setUser] = useState<any>();
   const [rooms, setRooms] = useState<any>();
   const [statusIcon, setStatusIcon] = useState<any>(offlineIcon);
   const [avatarLetter, setAvatarLetter] = useState<string>("");
   const [userRoom, setCurrentUserRoom] = useState<any>({ password: "" });
+  const [selectedRoom, setSelectedRoom] = useState<any>()
 
   console.log(rooms)
+
+  const handleOpen = () => {
+    setRoomValidationModal(true);
+  };
+
+  const handleClose = () => {
+    setRoomValidationModal(false);
+  };
 
   // Checks if there is a user, changes connection status
   function checkIfOnline() {
@@ -110,7 +120,10 @@ function SidePanel(props: Props) {
                         key={i}
                         variant="body1"
                         onClick={() => {
-                          switchRooms(userRoom, room);
+                          setSelectedRoom(room.roomName)
+                          room.password === "" 
+                          ? switchRooms(userRoom, room) 
+                          : handleOpen()
                         }}
                       >
                         {room.roomName ? `#${room.roomName}` : null}
@@ -164,6 +177,47 @@ function SidePanel(props: Props) {
           </Button>
         </Box>
       </Box>
+    <Modal
+        className={classes.modal}
+        open={roomValidationModal}
+        onClose={handleClose}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+    >
+          <Box className={classes.roomFormContainer}>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+              }}
+              noValidate
+              autoComplete="off"
+              className={classes.form}
+            >
+              <Typography variant="body2">
+                Join room {selectedRoom}
+              </Typography>
+              <TextField
+                className={classes.textFieldStyle}
+                id="outlined-basic"
+                label="Password...(⚔)"
+                variant="outlined"
+                name="password"
+              />
+              <Box>
+                <Button
+                  type="submit"
+                  color="secondary"
+                  variant="contained"
+                  onClick={() => {
+                   
+                  }}
+                >
+                  Join
+                </Button>
+              </Box>
+            </form>
+          </Box>
+      </Modal>
     </Box>
   );
 }
@@ -261,7 +315,29 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   panelRooms: {
     display: "flex",
-  }
+  },
+  modal : {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  textFieldStyle: {
+    width: "30rem",
+    background: "#40444B",
+    margin: "1rem",
+  },
+  form: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
+  },
+  roomFormContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: 'center',
+  },
 }));
 
 export default SidePanel;

@@ -101,7 +101,6 @@ function SidePanel(props: Props) {
         </Box>
         <Box mt={2} ml={5} className={classes.roomList}>
           {rooms
-
             ? rooms.map((room: any, i: number) => (
                 <Box className={classes.roomContainer}>
                   <Link>
@@ -125,7 +124,6 @@ function SidePanel(props: Props) {
                   )}
                 </Box>
               ))
-
             : null}
         </Box>
       </Box>
@@ -180,7 +178,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: "center",
     height: "100vh",
     width: "20vw",
-    minWidth: "10rem",
+    minWidth: "20rem",
     backgroundColor: "#23272A",
   },
   roomList: {

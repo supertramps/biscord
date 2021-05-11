@@ -1,8 +1,10 @@
 const messages = [];
+const moment = require("moment")
 
 function handleMessages(msg, user, room, time) {
-  const message = { message: msg, user, room, time };
-  messages.push(message);
+  const message = { message: msg, user, room, time: moment().format("[Today at] HH:mm:ss") };
+  console.log(messages);
+  messages.push(message, "EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
 }
 
 function filterMessages(room) {

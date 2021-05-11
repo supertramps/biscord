@@ -69,14 +69,13 @@ function onConnection(socket) {
       const user = switchRoom(socket.id, data.room);
       const checkRoomsOnSocket = getRooms();
       const remove = removeRoom(checkRoomsOnSocket)
-      console.log(rooms)
       socket.join(data.room);
       io.to(data.room).emit(
         "joined",
         `${userSession.name} joined ${room.roomName}`
       );
       socket.emit("current-room", userSession);
-      io.emit("room-session", rooms);
+      io.emit("room-session", remove);
       // console.log(io.sockets.adapter.rooms);
     }
   });

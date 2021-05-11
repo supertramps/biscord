@@ -13,10 +13,8 @@ function createNewRoom(name,password){
 }
 
 function removeRoom(data){
-    console.log(data)
-    /* return rooms; */
+    const newRooms = rooms.filter(r => data.find(r2 => r.roomName === r2.room))
+    return newRooms;
 }
-
-
 
 module.exports = {rooms,createNewRoom, removeRoom};

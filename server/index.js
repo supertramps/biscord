@@ -20,17 +20,21 @@ const {
 
 const { rooms, createNewRoom, removeRoom } = require("./rooms");
 
+
 function onConnection(socket) {
   console.log("Client was connected", socket.id);
 
   socket.on("join-lobby", (name) => {
+    
     const { user, error } = addUser({ id: socket.id, name, room: "Lobby" });
     const loggedInUser = getUser(socket.id);
     if (loggedInUser) {
       socket.join("Lobby");
       io.to(socket.id).emit("joined-successfully", "joined");
       io.to("Lobby").emit("joined", `${loggedInUser.name} joined the #Lobby`);
-      io.emit("room-session", rooms);
+      const checkRoomsOnSocket = getRooms();
+      const remove = removeRoom(checkRoomsOnSocket)
+      io.emit("room-session", remove );
       socket.emit("user-session", loggedInUser);
       socket.emit("current-room", loggedInUser);
     }
@@ -44,11 +48,10 @@ function onConnection(socket) {
     const user = createRoom(socket.id, roomInfo.roomName, roomInfo.password);
     const newRoom = createNewRoom(roomInfo.roomName, roomInfo.password);
     socket.join(roomInfo.roomName);
-    io.to(roomInfo.roomName).emit(
-      "joined",
-      `${userSession.name} joined ${roomInfo.roomName}`
-    );
-    io.emit("room-session", rooms);
+    const checkRoomsOnSocket = getRooms();
+    const remove = removeRoom(checkRoomsOnSocket)
+    io.to(roomInfo.roomName).emit("joined", `${userSession.name} joined ${roomInfo.roomName}`);
+    io.emit("room-session", remove);
     socket.emit("current-room", userSession);
   });
 
@@ -70,14 +73,15 @@ function onConnection(socket) {
       io.to(userSession.room).emit("left", `${userSession.name} left the room`);
       const user = switchRoom(socket.id, room.roomName);
       const checkRoomsOnSocket = getRooms();
-      // const remove = removeRoom(checkRoomsOnSocket);
+      const remove = removeRoom(checkRoomsOnSocket)
       socket.join(room);
       io.to(room).emit(
         "joined",
         `${userSession.name} joined ${room.roomName}`
       );
       socket.emit("current-room", userSession);
-      io.emit("room-session", rooms);
+      io.emit("room-session", remove);
+      // console.log(io.sockets.adapter.rooms);
     }
   });
 

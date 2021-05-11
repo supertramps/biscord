@@ -1,10 +1,8 @@
 
-const rooms = [{
+let rooms = [{
     roomName: "Lobby",
     password: "",
 }];
-
-//if getRooms does not exist remove it. 
 
 function createNewRoom(name,password){
     const room = {roomName: name, password: password};
@@ -13,10 +11,8 @@ function createNewRoom(name,password){
 }
 
 function removeRoom(data){
-    console.log(data, "From removeRoom function")
-    /* return rooms; */
+    const newRooms = rooms.filter(r => data.find(r2 => r.roomName === r2.room))
+    return newRooms;
 }
-
-
 
 module.exports = {rooms,createNewRoom, removeRoom};

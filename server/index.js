@@ -35,7 +35,7 @@ function onConnection(socket) {
       io.emit("room-session", remove);
 
       socket.emit("user-session", userSession);
-      socket.emit("current-room", userSession);
+      socket.emit("current-room", userSession.room);
       getMessages(userSession.room, socket);
     }
   });
@@ -56,7 +56,7 @@ function onConnection(socket) {
       `${userSession.name} joined ${roomInfo.roomName}`
     );
     io.emit("room-session", remove);
-    socket.emit("current-room", userSession);
+    socket.emit("current-room", roomInfo.roomName);
     getMessages(userSession.room, socket);
   });
 
@@ -87,7 +87,7 @@ function onConnection(socket) {
         "joined",
         `${userSession.name} joined ${room.roomName}`
       );
-      socket.emit("current-room", userSession);
+      socket.emit("current-room", room.roomName);
       io.emit("room-session", remove);
       getMessages(userSession.room, socket);
 

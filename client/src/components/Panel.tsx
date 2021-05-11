@@ -34,7 +34,6 @@ function SidePanel(props: Props) {
 
   const [userRoom, setCurrentUserRoom] = useState<any>({ password: "" });
 
-
   // Checks if there is a user, changes connection status
   function checkIfOnline() {
     if (!user) {
@@ -104,27 +103,29 @@ function SidePanel(props: Props) {
         </Box>
         <Box mt={2} ml={5} className={classes.roomList}>
           {rooms
-            ? rooms.map((room: any, i: number) => (
-                <Box className={classes.roomContainer}>
-                  <Link>
-                    <Typography
-                      key={i}
-                      variant="body1"
-                      onClick={() => {
-                        switchRooms(userRoom, room);
-                      }}
-                    >
-                      {room.room ? `#${room.room}` : null}
-                    </Typography>
-                  </Link>
+            ? rooms
+                .map((room: any, i: number) => (
+                  <Box className={classes.roomContainer}>
+                    <Link>
+                      <Typography
+                        key={i}
+                        variant="body1"
+                        onClick={() => {
+                          switchRooms(userRoom, room);
+                        }}
+                      >
+                        {room.room ? `#${room.room}` : null}
+                      </Typography>
+                    </Link>
 
-                  {rooms.password !== "" ? (
-                    <Box ml={2} mt={1}>
-                      <img src={passwordIcon} alt="" />
-                    </Box>
-                  ) : null}
-                </Box>
-              ))
+                    {rooms.password !== "" ? (
+                      <Box ml={2} mt={1}>
+                        <img src={passwordIcon} alt="" />
+                      </Box>
+                    ) : null}
+                  </Box>
+                ))
+                .reverse()
             : null}
         </Box>
       </Box>
@@ -143,7 +144,6 @@ function SidePanel(props: Props) {
                 <Typography>{!user ? "Please log in" : user.name}</Typography>
               </Box>
             </Box>
-           
           </Box>
           <Box mt={1} className={classes.connectionStatus}>
             <Box mr={1}>

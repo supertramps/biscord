@@ -10,9 +10,7 @@ const port = process.env.PORT || 6969;
 const { messages, handleMessages, filterMessages } = require("./messages");
 const {
   addUser,
-  removeUser,
   getUser,
-  getUsersInRoom,
   createRoom,
   switchRoom,
   users,
@@ -38,7 +36,6 @@ function onConnection(socket) {
       socket.emit("current-room", userSession.room);
       io.emit("users-in-room", users)
       getMessages(userSession.room, socket);
-      console.log(users);
     }
   });
 

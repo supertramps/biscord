@@ -91,11 +91,9 @@ function MainPage(props: Props) {
   useEffect(() => {
     if (!socket) return;
 
-
     // const handleUserSession = (lUser: any) => {
     //   // setUser(lUser);
     // };
-
 
     const handleCurrentRoom = (room: any) => {
       setCurrentRoom(room)
@@ -103,6 +101,7 @@ function MainPage(props: Props) {
     const handleCurrentRooms= (rooms: any) => {
       setRooms(rooms)
     }
+    
     const handleChatMessage = function (data: any) {
       if (!messages) {
         const { messagesInCurrentRoom, loggedInUser } = data;
@@ -111,12 +110,8 @@ function MainPage(props: Props) {
         const { messagesInCurrentRoom, loggedInUser } = data;
         setMessages(messagesInCurrentRoom);
       }
+    }
 
-    const handleChatMessage = function (data: any) {
-      const { messagesInCurrentRoom, loggedInUser } = data;
-      setMessages(messagesInCurrentRoom);
-
-    };
     const handleJoined = (msg: string) => {
       setJoinedMessage((_prevState: any) => [...joinedMessage, msg]);
       setSnackbarOpen(true);
@@ -151,8 +146,8 @@ function MainPage(props: Props) {
       socket.off("left", handleLeft);
       socket.off("current-room", handleCurrentRoom)
       socket.off('room-session', handleCurrentRooms);
-
     };
+
   });
 
   const handleChange = (e: { target: { name: string; value: string } }) => {

@@ -33,13 +33,11 @@ function SidePanel(props: Props) {
   const [statusIcon, setStatusIcon] = useState<any>(offlineIcon);
   const [avatarLetter, setAvatarLetter] = useState<string>("");
   const [userRoom, setCurrentUserRoom] = useState<any>({ password: "" });
-  const [selectedRoom, setSelectedRoom] = useState<any>()
-  const [password, setPassword] = useState<any>()
-  const [passwordMatch, setPasswordMatch] = useState<any>(false)
-  const [usersInRoom, setUsersInRoom] = useState<any>()
+  const [selectedRoom, setSelectedRoom] = useState<any>();
+  const [password, setPassword] = useState<any>();
+  const [passwordMatch, setPasswordMatch] = useState<any>(false);
+  const [usersInRoom, setUsersInRoom] = useState<any>();
 
-  console.log(usersInRoom)
-  
   const handleOpen = () => {
     setRoomValidationModal(true);
   };
@@ -107,23 +105,25 @@ function SidePanel(props: Props) {
       socket.off("room-session", handleRoomSession);
       socket.off("current-room", handleCurrentRoom);
       socket.off("users-in-room", handleUsersInRoom);
-    }
+    };
   });
 
   const handleChange = (e: any) => {
-    setPassword(e.target.value)
+    setPassword(e.target.value);
   };
 
-  function checkPassword(password: string){
-    const room = rooms.find((r: any) => selectedRoom === r.roomName && password === r.password);
-    if(room){
+  function checkPassword(password: string) {
+    const room = rooms.find(
+      (r: any) => selectedRoom === r.roomName && password === r.password
+    );
+    if (room) {
       setPasswordMatch(false);
-      switchRooms(userRoom, room); 
+      switchRooms(userRoom, room);
       handleClose();
     } else {
       setPasswordMatch(true);
     }
-  };
+  }
 
   return (
     <Box className={classes.root}>
@@ -141,33 +141,40 @@ function SidePanel(props: Props) {
         <Box mt={2} ml={5} className={classes.roomList}>
           {rooms
             ? rooms.map((room: any, i: number) => (
-                <Box className={classes.roomContainer}>
+                <Box key={i} className={classes.roomContainer}>
                   <Link>
                     <Box className={classes.panelRooms}>
                       <Typography
-                        key={i}
                         variant="body1"
                         onClick={() => {
-                          setSelectedRoom(room.roomName)
-                          room.password === "" 
-                          ? switchRooms(userRoom, room) 
-                          : handleOpen()
+                          setSelectedRoom(room.roomName);
+                          room.password === ""
+                            ? switchRooms(userRoom, room)
+                            : handleOpen();
                         }}
                       >
                         {room.roomName ? `#${room.roomName}` : null}
                       </Typography>
                       <Box ml={2} mt={1}>
-                        {room.password !== "" ? <img src={passwordIcon} alt="" /> : null}
+                        {room.password !== "" ? (
+                          <img src={passwordIcon} alt="" />
+                        ) : null}
                       </Box>
                     </Box>
                   </Link>
-                  {usersInRoom ? usersInRoom.map((users: any) => (
-                    users.room === room.roomName ? (
-                    <Typography className={classes.inRoom} variant="body2">
-                      {users.name}
-                    </Typography>
-                    ) : null
-                  )) : null}
+                  {usersInRoom
+                    ? usersInRoom.map((users: any, i: string) =>
+                        users.room === room.roomName ? (
+                          <Typography
+                            key={i}
+                            className={classes.inRoom}
+                            variant="body2"
+                          >
+                            {users.name}
+                          </Typography>
+                        ) : null
+                      )
+                    : null}
                 </Box>
               ))
             : null}
@@ -228,9 +235,7 @@ function SidePanel(props: Props) {
             autoComplete="off"
             className={classes.form}
           >
-            <Typography variant="body2">
-              Join room {selectedRoom}
-            </Typography>
+            <Typography variant="body2">Join room {selectedRoom}</Typography>
             <TextField
               error={passwordMatch}
               className={classes.textFieldStyle}
@@ -247,7 +252,7 @@ function SidePanel(props: Props) {
                 color="secondary"
                 variant="contained"
                 onClick={() => {
-                  checkPassword(password)
+                  checkPassword(password);
                 }}
               >
                 Join
@@ -347,14 +352,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   roomContainer: {
     width: "100%",
-    
+
     alignItems: "center",
     justifyContent: "flex-start",
   },
   panelRooms: {
     display: "flex",
   },
-  modal : {
+  modal: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -374,14 +379,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   inRoom: {
-    fontSize: '0.9rem',
+    fontSize: "0.9rem",
     color: "#40444B",
     paddingLeft: "2rem",
     paddingTop: "0.2rem",
-  }
+  },
 }));
 
 export default SidePanel;

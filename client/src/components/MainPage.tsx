@@ -58,7 +58,6 @@ function MainPage(props: Props) {
     } else if (gifGalleryOpen === true) {
       setGifGalleryOpen(false);
     }
-    console.log("GIF panel is open");
   }
 
   // Makes a post to the server with the current state of messageHolder
@@ -88,26 +87,21 @@ function MainPage(props: Props) {
   useEffect(() => {
     if (!socket) return;
 
-
     // const handleUserSession = (lUser: any) => {
     //   // setUser(lUser);
     // };
 
-
     const handleCurrentRoom = (room: any) => {
-      setCurrentRoom(room)
-    }
-
+      setCurrentRoom(room);
+    };
 
     const handleChatMessage = function (data: any) {
       if (!messages) {
         const { messagesInCurrentRoom, loggedInUser } = data;
         setMessages(messagesInCurrentRoom);
-        console.log(messages);
       } else {
         const { messagesInCurrentRoom, loggedInUser } = data;
         setMessages(messagesInCurrentRoom);
-        console.log(messages);
       }
     };
     const handleJoined = (msg: string) => {
@@ -120,20 +114,16 @@ function MainPage(props: Props) {
     const handleTyping = (value: boolean, luser: any) => {
       setTyping(value);
       setUser(luser.name);
-      console.log(user, "USERRSSS");
-      
     };
 
-
     // Creates our event listeners.
-      // socket.off("user-session", handleUserSession);
- 
+    // socket.off("user-session", handleUserSession);
+
     socket.on("chat-message", handleChatMessage);
     socket.on("joined", handleJoined);
     socket.on("left", handleLeft);
-    socket.on("current-room", handleCurrentRoom)
+    socket.on("current-room", handleCurrentRoom);
     socket.on("typing", handleTyping);
-        
 
     return () => {
       // Removes all the event listeners (Happy browser is a good browser 🥰)!
@@ -141,7 +131,7 @@ function MainPage(props: Props) {
       socket.off("chat-message", handleChatMessage);
       socket.off("joined", handleJoined);
       socket.off("left", handleLeft);
-      socket.off("current-room", handleCurrentRoom)
+      socket.off("current-room", handleCurrentRoom);
     };
   });
 
@@ -223,13 +213,12 @@ function MainPage(props: Props) {
       ) : (
         <>
           <Box className={classes.contentWrapper}>
-              <Typography variant="body2">
-                 #{currentRoom}
-              </Typography>
+            <Typography variant="body2">#{currentRoom}</Typography>
             <Box>
               {/* Here we render our snackbar, it pops up at the top when a user joins a room. */}
-              {joinedMessage.map((msg: string) => [
+              {joinedMessage.map((msg: string, i: string) => [
                 <Snackbar
+                  key={i}
                   anchorOrigin={{
                     vertical: "top",
                     horizontal: "center",
@@ -249,7 +238,7 @@ function MainPage(props: Props) {
               {/* If there is any messeges in the array we map them in reverse here (newest first). If not we render a logo.  */}
               {messages ? (
                 messages
-                  .map((m: any, i: any) => (
+                  .map((m: any, i: string) => (
                     <ChatMessage
                       time={m.time}
                       profile={m.user}
@@ -497,10 +486,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: "100%",
   },
   messagePending: {
-    bottom:0,
+    bottom: 0,
     position: "absolute",
     marginBottom: ".3rem",
-    height: "1rem"
+    height: "1rem",
   },
 }));
 

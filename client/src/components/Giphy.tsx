@@ -15,7 +15,6 @@ import {
   Zoom,
 } from "@material-ui/core";
 
-
 function Giphy() {
   const [gifURL, setGifURL] = useState<string>("");
   const classes = useStyles();
@@ -33,11 +32,9 @@ function Giphy() {
     });
 
     const json = await response.json();
-    console.log(json.data[0]);
 
     setGifURL(json.data[0].embed_url);
   };
-  console.log(gifURL);
 
   useEffect(() => {
     fetchGif();

@@ -46,8 +46,6 @@ function MainPage(props: Props) {
   const [typing, setTyping] = useState(false);
   const [currentRoom, setCurrentRoom] = useState<any>();
 
-
-  console.log(currentRoom)
   const [values, setValues] = useState<object>({
     roomName: "",
     password: "",

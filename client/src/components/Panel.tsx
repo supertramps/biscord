@@ -36,7 +36,10 @@ function SidePanel(props: Props) {
   const [selectedRoom, setSelectedRoom] = useState<any>()
   const [password, setPassword] = useState<any>()
   const [passwordMatch, setPasswordMatch] = useState<any>(false)
+  const [usersInRoom, setUsersInRoom] = useState<any>()
 
+  console.log(usersInRoom)
+  
   const handleOpen = () => {
     setRoomValidationModal(true);
   };
@@ -75,7 +78,9 @@ function SidePanel(props: Props) {
 
   useEffect(() => {
     if (!socket) return;
-
+    const handleUsersInRoom = (users: any) => {
+      setUsersInRoom(users);
+    };
     const handleUserSession = (lUser: any) => {
       setUser(lUser);
     };
@@ -89,6 +94,7 @@ function SidePanel(props: Props) {
     socket.on("user-session", handleUserSession);
     socket.on("room-session", handleRoomSession);
     socket.on("current-room", handleCurrentRoom);
+    socket.on("users-in-room", handleUsersInRoom);
 
     checkIfOnline();
     checkIfValid();
@@ -100,6 +106,7 @@ function SidePanel(props: Props) {
       socket.off("user-session", handleUserSession);
       socket.off("room-session", handleRoomSession);
       socket.off("current-room", handleCurrentRoom);
+      socket.off("users-in-room", handleUsersInRoom);
     }
   });
 
@@ -154,6 +161,13 @@ function SidePanel(props: Props) {
                       </Box>
                     </Box>
                   </Link>
+                  {usersInRoom ? usersInRoom.map((users: any) => (
+                    users.room === room.roomName ? (
+                    <Typography className={classes.inRoom} variant="body2">
+                      {users.name}
+                    </Typography>
+                    ) : null
+                  )) : null}
                 </Box>
               ))
             : null}
@@ -362,6 +376,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: "center",
     justifyContent: 'center',
   },
+  inRoom: {
+    fontSize: '0.9rem',
+    color: "#40444B",
+    paddingLeft: "2rem",
+    paddingTop: "0.2rem",
+  }
 }));
 
 export default SidePanel;

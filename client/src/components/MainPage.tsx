@@ -45,6 +45,10 @@ function MainPage(props: Props) {
   const [randomGif, setRandomGif] = useState<string>("");
   const [typing, setTyping] = useState(false);
   const [currentRoom, setCurrentRoom] = useState<any>();
+  const [roomAlreadyExists, setRoomAlreadyExists] = useState<any>(false);
+  const [rooms, setRooms] = useState<any>();
+  
+  console.log(rooms)
 
   const [values, setValues] = useState<object>({
     roomName: "",
@@ -94,13 +98,24 @@ function MainPage(props: Props) {
 
 
     const handleCurrentRoom = (room: any) => {
-      setCurrentRoom(room);
-    };
-
+      setCurrentRoom(room)
+    }
+    const handleCurrentRooms= (rooms: any) => {
+      setRooms(rooms)
+    }
+    const handleChatMessage = function (data: any) {
+      if (!messages) {
+        const { messagesInCurrentRoom, loggedInUser } = data;
+        setMessages(messagesInCurrentRoom);
+      } else {
+        const { messagesInCurrentRoom, loggedInUser } = data;
+        setMessages(messagesInCurrentRoom);
+      }
 
     const handleChatMessage = function (data: any) {
       const { messagesInCurrentRoom, loggedInUser } = data;
       setMessages(messagesInCurrentRoom);
+
     };
     const handleJoined = (msg: string) => {
       setJoinedMessage((_prevState: any) => [...joinedMessage, msg]);
@@ -112,8 +127,6 @@ function MainPage(props: Props) {
     const handleTyping = (value: boolean, luser: any) => {
       setTyping(value);
       setUser(luser.name);
-      console.log(user, "USERRSSS");
-      
     };
 
 
@@ -126,6 +139,7 @@ function MainPage(props: Props) {
 
     socket.on("current-room", handleCurrentRoom)
     socket.on("typing", handleTyping);
+    socket.on('room-session', handleCurrentRooms);
         
 
 
@@ -135,7 +149,9 @@ function MainPage(props: Props) {
       socket.off("chat-message", handleChatMessage);
       socket.off("joined", handleJoined);
       socket.off("left", handleLeft);
-      socket.off("current-room", handleCurrentRoom);
+      socket.off("current-room", handleCurrentRoom)
+      socket.off('room-session', handleCurrentRooms);
+
     };
   });
 
@@ -147,6 +163,22 @@ function MainPage(props: Props) {
     }));
   };
 
+  function roomExists(newRoom: any){
+    const roomExists = rooms.find((room: any) => room.roomName === newRoom.roomName)
+    if(roomExists){
+      setRoomAlreadyExists(true);
+      return;
+    } else {
+      setRoomAlreadyExists(false);
+      props.handleInputField(false);
+      creatNewRoom(values, props.userInfo);
+      setValues({
+        roomName: "",
+        password: "",
+      });
+    }
+  }
+  
   function handleSnackbarClose() {
     setSnackbarOpen(false);
   }
@@ -175,6 +207,7 @@ function MainPage(props: Props) {
               className={classes.form}
             >
               <TextField
+                error={roomAlreadyExists}
                 className={classes.textFieldStyle}
                 id="outlined-basic"
                 label="Room name..."
@@ -182,6 +215,7 @@ function MainPage(props: Props) {
                 name="roomName"
                 inputProps={{ maxLength: 15 }}
                 onChange={handleChange}
+                helperText="Room name taken"
               />
               <Typography variant="body2">
                 Password is not required (but your room might be raided ⚔)
@@ -200,12 +234,7 @@ function MainPage(props: Props) {
                   color="secondary"
                   variant="contained"
                   onClick={() => {
-                    creatNewRoom(values, props.userInfo);
-                    props.handleInputField(false);
-                    setValues({
-                      roomName: "",
-                      password: "",
-                    });
+                    roomExists(values)
                   }}
                 >
                   Create

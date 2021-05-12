@@ -60,7 +60,8 @@ function onConnection(socket) {
   });
 
   socket.on("typing", (value) => {
-    io.emit("typing", value);
+    const userSession = getUser(socket.id);
+    io.emit("typing", value, userSession);
   });
 
   socket.on("chat-message", async (msg) => {

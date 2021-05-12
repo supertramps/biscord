@@ -85,9 +85,10 @@ function MainPage(props: Props) {
   useEffect(() => {
     if (!socket) return;
 
-    const handleUserSession = (lUser: any) => {
-      setUser(lUser);
-    };
+    // const handleUserSession = (lUser: any) => {
+    //   // setUser(lUser);
+    // };
+
     const handleChatMessage = function (data: any) {
       if (!messages) {
         const { messagesInCurrentRoom, loggedInUser } = data;
@@ -107,18 +108,21 @@ function MainPage(props: Props) {
       console.log(msg);
       setJoinedMessage((_prevState: any) => [...joinedMessage, msg]);
     };
-    const handleTyping = (value: boolean) => {
+    const handleTyping = (value: boolean, luser: any) => {
       setTyping(value);
+      setUser(luser.name);
+      console.log(user, "USERRSSS");
+      
     };
 
-    socket.on("user-session", handleUserSession);
+    // socket.on("user-session", handleUserSession);
     socket.on("chat-message", handleChatMessage);
     socket.on("joined", handleJoined);
     socket.on("left", handleLeft);
     socket.on("typing", handleTyping);
 
     return () => {
-      socket.off("user-session", handleUserSession);
+      // socket.off("user-session", handleUserSession);
       socket.off("chat-message", handleChatMessage);
       socket.off("joined", handleJoined);
       socket.off("left", handleLeft);
@@ -308,11 +312,11 @@ function MainPage(props: Props) {
               </Box>
             </form>
           </Box>
-          {typing ? (
-            <Box>
-              <Typography variant="body2">Someone is typing...</Typography>
-            </Box>
-          ) : null}
+          <Box className={classes.messagePending}>
+            {typing ? (
+              <Typography variant="body2">{user} is typing...</Typography>
+            ) : null}
+          </Box>
         </>
       )}
     </Box>
@@ -463,6 +467,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: "none",
     cursor: "default",
     width: "100%",
+  },
+  messagePending: {
+    bottom:0,
+    position: "absolute",
+    marginBottom: ".3rem",
+    height: "1rem"
   },
 }));
 

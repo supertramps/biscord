@@ -18,6 +18,7 @@ import searchIcon from "../assets/search_icon.svg";
 import onlineIcon from "../assets/online_icon.svg";
 import offlineIcon from "../assets/offline_icon.svg";
 import passwordIcon from "../assets/password.svg";
+import { findByLabelText } from "@testing-library/dom";
 
 interface Props {
   createInputFields: any;
@@ -33,10 +34,12 @@ function SidePanel(props: Props) {
   const [statusIcon, setStatusIcon] = useState<any>(offlineIcon);
   const [avatarLetter, setAvatarLetter] = useState<string>("");
   const [userRoom, setCurrentUserRoom] = useState<any>({ password: "" });
-  const [selectedRoom, setSelectedRoom] = useState<any>()
-  const [password, setPassword] = useState<any>()
-  const [passwordMatch, setPasswordMatch] = useState<any>(false)
-  const [usersInRoom, setUsersInRoom] = useState<any>()
+  const [selectedRoom, setSelectedRoom] = useState<any>();
+  const [password, setPassword] = useState<any>();
+  const [passwordMatch, setPasswordMatch] = useState<any>(false);
+  const [usersInRoom, setUsersInRoom] = useState<any>();
+
+  console.log(usersInRoom);
 
   const handleOpen = () => {
     setRoomValidationModal(true);
@@ -105,23 +108,25 @@ function SidePanel(props: Props) {
       socket.off("room-session", handleRoomSession);
       socket.off("current-room", handleCurrentRoom);
       socket.off("users-in-room", handleUsersInRoom);
-    }
+    };
   });
 
   const handleChange = (e: any) => {
-    setPassword(e.target.value)
+    setPassword(e.target.value);
   };
 
-  function checkPassword(password: string){
-    const room = rooms.find((r: any) => selectedRoom === r.roomName && password === r.password);
-    if(room){
+  function checkPassword(password: string) {
+    const room = rooms.find(
+      (r: any) => selectedRoom === r.roomName && password === r.password
+    );
+    if (room) {
       setPasswordMatch(false);
-      switchRooms(userRoom, room); 
+      switchRooms(userRoom, room);
       handleClose();
     } else {
       setPasswordMatch(true);
     }
-  };
+  }
 
   return (
     <Box className={classes.root}>
@@ -146,26 +151,52 @@ function SidePanel(props: Props) {
                         key={i}
                         variant="body1"
                         onClick={() => {
-                          setSelectedRoom(room.roomName)
-                          room.password === "" 
-                          ? switchRooms(userRoom, room) 
-                          : handleOpen()
+                          setSelectedRoom(room.roomName);
+                          room.password === ""
+                            ? switchRooms(userRoom, room)
+                            : handleOpen();
                         }}
                       >
                         {room.roomName ? `#${room.roomName}` : null}
                       </Typography>
                       <Box ml={2} mt={1}>
-                        {room.password !== "" ? <img src={passwordIcon} alt="" /> : null}
+                        {room.password !== "" ? (
+                          <img src={passwordIcon} alt="" />
+                        ) : null}
                       </Box>
                     </Box>
                   </Link>
-                  {usersInRoom ? usersInRoom.map((users: any) => (
-                    users.room === room.roomName ? (
-                    <Typography className={classes.inRoom} variant="body2">
-                      {users.name}
-                    </Typography>
-                    ) : null
-                  )) : null}
+                  {usersInRoom
+                    ? usersInRoom.map((users: any) =>
+                        users.room === room.roomName ? (
+                          <>
+                            <Box ml={3} className={classes.userList}>
+                              <Box>
+                                <Avatar
+                                  variant="circular"
+                                  className={classes.userListAvatar}
+                                >
+                                  <Typography
+                                    className={classes.avatarText}
+                                    variant="body2"
+                                  >
+                                    {users.name.charAt(0).toUpperCase()}
+                                  </Typography>
+                                </Avatar>
+                              </Box>
+                              <Box mb={1}>
+                                <Typography
+                                  className={classes.inRoom}
+                                  variant="body2"
+                                >
+                                  {users.name}
+                                </Typography>
+                              </Box>
+                            </Box>
+                          </>
+                        ) : null
+                      )
+                    : null}
                 </Box>
               ))
             : null}
@@ -226,9 +257,7 @@ function SidePanel(props: Props) {
             autoComplete="off"
             className={classes.form}
           >
-            <Typography variant="body2">
-              Join room {selectedRoom}
-            </Typography>
+            <Typography variant="body2">Join room {selectedRoom}</Typography>
             <TextField
               error={passwordMatch}
               className={classes.textFieldStyle}
@@ -245,7 +274,7 @@ function SidePanel(props: Props) {
                 color="secondary"
                 variant="contained"
                 onClick={() => {
-                  checkPassword(password)
+                  checkPassword(password);
                 }}
               >
                 Join
@@ -345,14 +374,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   roomContainer: {
     width: "100%",
-    
+
     alignItems: "center",
     justifyContent: "flex-start",
   },
   panelRooms: {
     display: "flex",
   },
-  modal : {
+  modal: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -372,14 +401,25 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   inRoom: {
-    fontSize: '0.9rem',
-    color: "#40444B",
-    paddingLeft: "2rem",
-    paddingTop: "0.2rem",
-  }
+    paddingLeft: ".5rem",
+    paddingTop: "0.5rem",
+  },
+  userList: {
+    display: "flex",
+    alignItems: "center",
+  },
+  userListAvatar: {
+    width: "1rem",
+    height: "1rem",
+    background:
+      "linear-gradient(126.18deg, #5317FD -6.87%, rgba(236, 152, 233, 0.91) 125.18%)",
+  },
+  avatarText: {
+    color: "#fefefe",
+  },
 }));
 
 export default SidePanel;

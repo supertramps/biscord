@@ -47,8 +47,8 @@ function MainPage(props: Props) {
   const [currentRoom, setCurrentRoom] = useState<any>();
   const [roomAlreadyExists, setRoomAlreadyExists] = useState<any>(false);
   const [rooms, setRooms] = useState<any>();
-  
-  console.log(rooms)
+
+  console.log(rooms);
 
   const [values, setValues] = useState<object>({
     roomName: "",
@@ -66,7 +66,11 @@ function MainPage(props: Props) {
 
   // Makes a post to the server with the current state of messageHolder
   function postman() {
-    socket.emit("chat-message", messageHolder);
+    if (messageHolder !== "") {
+      socket.emit("chat-message", messageHolder);
+    } else {
+      return;
+    }
   }
 
   function messagePending(value: string) {
@@ -96,13 +100,11 @@ function MainPage(props: Props) {
     // };
 
     const handleCurrentRoom = (room: any) => {
-
-      setCurrentRoom(room)
-    }
-    const handleCurrentRooms= (rooms: any) => {
-      setRooms(rooms)
-    }
-    
+      setCurrentRoom(room);
+    };
+    const handleCurrentRooms = (rooms: any) => {
+      setRooms(rooms);
+    };
 
     const handleChatMessage = function (data: any) {
       if (!messages) {
@@ -112,7 +114,7 @@ function MainPage(props: Props) {
         const { messagesInCurrentRoom, loggedInUser } = data;
         setMessages(messagesInCurrentRoom);
       }
-    }
+    };
 
     const handleJoined = (msg: string) => {
       setJoinedMessage((_prevState: any) => [...joinedMessage, msg]);
@@ -133,12 +135,9 @@ function MainPage(props: Props) {
     socket.on("joined", handleJoined);
     socket.on("left", handleLeft);
 
-
-    socket.on("current-room", handleCurrentRoom)
+    socket.on("current-room", handleCurrentRoom);
     socket.on("typing", handleTyping);
-    socket.on('room-session', handleCurrentRooms);
-
-
+    socket.on("room-session", handleCurrentRooms);
 
     return () => {
       // Removes all the event listeners (Happy browser is a good browser 🥰)!
@@ -146,11 +145,9 @@ function MainPage(props: Props) {
       socket.off("chat-message", handleChatMessage);
       socket.off("joined", handleJoined);
       socket.off("left", handleLeft);
-      socket.off("current-room", handleCurrentRoom)
-      socket.off('room-session', handleCurrentRooms);
-
+      socket.off("current-room", handleCurrentRoom);
+      socket.off("room-session", handleCurrentRooms);
     };
-
   });
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
@@ -161,9 +158,11 @@ function MainPage(props: Props) {
     }));
   };
 
-  function roomExists(newRoom: any){
-    const roomExists = rooms.find((room: any) => room.roomName === newRoom.roomName)
-    if(roomExists){
+  function roomExists(newRoom: any) {
+    const roomExists = rooms.find(
+      (room: any) => room.roomName === newRoom.roomName
+    );
+    if (roomExists) {
       setRoomAlreadyExists(true);
       return;
     } else {
@@ -176,7 +175,7 @@ function MainPage(props: Props) {
       });
     }
   }
-  
+
   function handleSnackbarClose() {
     setSnackbarOpen(false);
   }
@@ -232,7 +231,7 @@ function MainPage(props: Props) {
                   color="secondary"
                   variant="contained"
                   onClick={() => {
-                    roomExists(values)
+                    roomExists(values);
                   }}
                 >
                   Create
@@ -244,7 +243,6 @@ function MainPage(props: Props) {
       ) : (
         <>
           <Box className={classes.contentWrapper}>
-
             <Box mr={1} className={classes.currentRoomWrapper}>
               <Typography variant="body2">#{currentRoom}</Typography>
             </Box>

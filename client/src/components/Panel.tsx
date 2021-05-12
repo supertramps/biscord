@@ -258,27 +258,30 @@ function SidePanel(props: Props) {
             className={classes.form}
           >
             <Typography variant="body2">Join room {selectedRoom}</Typography>
-            <TextField
-              error={passwordMatch}
-              className={classes.textFieldStyle}
-              id="outlined-basic"
-              label="Password...(⚔)"
-              variant="outlined"
-              name="password"
-              onChange={handleChange}
-              helperText="Wrong password"
-            />
-            <Box>
-              <Button
-                type="submit"
-                color="secondary"
-                variant="contained"
-                onClick={() => {
-                  checkPassword(password);
-                }}
-              >
-                Join
-              </Button>
+            <Box className={classes.passwordContainer}>
+              <TextField
+                error={passwordMatch}
+                className={classes.textFieldStyle}
+                color="primary"
+                id="outlined-basic"
+                label="Password...(⚔)"
+                variant="outlined"
+                name="password"
+                onChange={handleChange}
+                helperText="Wrong password"
+              />
+              <Box mb={2}>
+                <Button
+                  type="submit"
+                  color="secondary"
+                  variant="contained"
+                  onClick={() => {
+                    checkPassword(password);
+                  }}
+                >
+                  Join
+                </Button>
+              </Box>
             </Box>
           </form>
         </Box>
@@ -388,8 +391,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   textFieldStyle: {
     width: "30rem",
-    background: "#40444B",
+    background: "#23272A",
     margin: "1rem",
+    color: "#fefefe",
   },
   form: {
     display: "flex",
@@ -419,6 +423,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   avatarText: {
     color: "#fefefe",
+  },
+  passwordContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    height: "100%",
+    width: "100%",
+    backgroundColor: "#23272A",
   },
 }));
 

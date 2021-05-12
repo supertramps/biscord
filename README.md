@@ -10,6 +10,8 @@
 This project is made for an assignment where we got to learn more about WebSockets.
 This project was made by [Asaf Läckgren](https://github.com/intradastingly), [Sebastian Zazzi](https://github.com/zazzzi) & [Alexander Liljedahl](https://github.com/supertramps)
 
+You can type `/help` in the chat to learn about the available commands.
+
 #### Front End
 
 The front end is written in [react (TypeScript)](https://create-react-app.dev/) with [material-UI](https://material-ui.com/) as design system.

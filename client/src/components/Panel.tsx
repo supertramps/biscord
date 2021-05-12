@@ -38,8 +38,6 @@ function SidePanel(props: Props) {
   const [passwordMatch, setPasswordMatch] = useState<any>(false)
   const [usersInRoom, setUsersInRoom] = useState<any>()
 
-  console.log(usersInRoom)
-  
   const handleOpen = () => {
     setRoomValidationModal(true);
   };

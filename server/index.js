@@ -99,6 +99,9 @@ function onConnection(socket) {
   });
 
   socket.on("disconnect", () => {
+    const checkRoomsOnSocket = getRooms();
+    const remove = removeRoom(checkRoomsOnSocket);
+    io.emit("room-session", remove);
     console.log("user disconnected");
   });
 }

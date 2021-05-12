@@ -13,7 +13,7 @@ import {
   Zoom,
 } from "@material-ui/core";
 import { useContext, useEffect, useState } from "react";
-import { SocketContext } from "../providers/SocketContext";
+import { SocketContext, User, Room } from "../providers/SocketContext";
 import searchIcon from "../assets/search_icon.svg";
 import onlineIcon from "../assets/online_icon.svg";
 import offlineIcon from "../assets/offline_icon.svg";
@@ -21,7 +21,7 @@ import passwordIcon from "../assets/password.svg";
 import { findByLabelText } from "@testing-library/dom";
 
 interface Props {
-  createInputFields: any;
+  createInputFields: (value: boolean) => void;
   userInfo: any;
 }
 
@@ -29,15 +29,16 @@ function SidePanel(props: Props) {
   const classes = useStyles();
   const { socket, room } = useContext(SocketContext);
   const [roomValidationModal, setRoomValidationModal] = useState(false);
-  const [user, setUser] = useState<any>();
-  const [rooms, setRooms] = useState<any>();
-  const [statusIcon, setStatusIcon] = useState<any>(offlineIcon);
+  const [user, setUser] = useState<User>();
+  const [rooms, setRooms] = useState<Array<Room>>();
+  const [statusIcon, setStatusIcon] = useState(offlineIcon);
   const [avatarLetter, setAvatarLetter] = useState<string>("");
   const [userRoom, setCurrentUserRoom] = useState<any>({ password: "" });
-  const [selectedRoom, setSelectedRoom] = useState<any>();
+  const [selectedRoom, setSelectedRoom] = useState<string>();
   const [password, setPassword] = useState<any>();
-  const [passwordMatch, setPasswordMatch] = useState<any>(false);
-  const [usersInRoom, setUsersInRoom] = useState<any>();
+  const [passwordMatch, setPasswordMatch] = useState(false);
+  const [usersInRoom, setUsersInRoom] = useState<Array<User>>();
+
   const handleOpen = () => {
     setRoomValidationModal(true);
   };
@@ -57,12 +58,12 @@ function SidePanel(props: Props) {
 
   // Get first letter from user.name to set as avatar
   function getAvatarLetter() {
-    const username = user.name;
+    const username = user!.name;
     const avatarLetter = username.charAt(0).toUpperCase();
     setAvatarLetter(avatarLetter);
   }
 
-  function switchRooms(userSwitch: any, room: any) {
+  function switchRooms(userSwitch: User, room: Room) {
     socket.emit("switch-room", { userSwitch, room });
   }
 
@@ -76,16 +77,16 @@ function SidePanel(props: Props) {
 
   useEffect(() => {
     if (!socket) return;
-    const handleUsersInRoom = (users: any) => {
+    const handleUsersInRoom = (users: Array<User>) => {
       setUsersInRoom(users);
     };
-    const handleUserSession = (lUser: any) => {
+    const handleUserSession = (lUser: User) => {
       setUser(lUser);
     };
-    const handleRoomSession = (room: any) => {
+    const handleRoomSession = (room: Array<Room>) => {
       setRooms(room);
     };
-    const handleCurrentRoom = (room: any) => {
+    const handleCurrentRoom = (room: Room) => {
       setCurrentUserRoom(room);
     };
 
@@ -108,13 +109,13 @@ function SidePanel(props: Props) {
     };
   });
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: { target: { value: string; }; }) => {
     setPassword(e.target.value);
   };
 
   function checkPassword(password: string) {
-    const room = rooms.find(
-      (r: any) => selectedRoom === r.roomName && password === r.password
+    const room = rooms!.find(
+      (r: Room) => selectedRoom === r.roomName && password === r.password
     );
     if (room) {
       setPasswordMatch(false);
@@ -140,7 +141,7 @@ function SidePanel(props: Props) {
         </Box>
         <Box mt={2} ml={5} className={classes.roomList}>
           {rooms
-            ? rooms.map((room: any, i: number) => (
+            ? rooms.map((room: Room, i: number) => (
                 <Box key={i} className={classes.roomContainer}>
                   <Link>
                     <Box className={classes.panelRooms}>
@@ -163,8 +164,8 @@ function SidePanel(props: Props) {
                     </Box>
                   </Link>
                   {usersInRoom
-                    ? usersInRoom.map((users: any) =>
-                        users.room === room.roomName ? (
+                    ? usersInRoom.map((user: User) =>
+                        user.room === room.roomName ? (
                           <>
                             <Box ml={3} className={classes.userList}>
                               <Box>
@@ -176,7 +177,7 @@ function SidePanel(props: Props) {
                                     className={classes.avatarText}
                                     variant="body2"
                                   >
-                                    {users.name.charAt(0).toUpperCase()}
+                                    {user.name.charAt(0).toUpperCase()}
                                   </Typography>
                                 </Avatar>
                               </Box>
@@ -185,7 +186,7 @@ function SidePanel(props: Props) {
                                   className={classes.inRoom}
                                   variant="body2"
                                 >
-                                  {users.name}
+                                  {user.name}
                                 </Typography>
                               </Box>
                             </Box>

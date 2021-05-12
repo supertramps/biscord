@@ -19,11 +19,12 @@ import ReactGiphySearchbox from "react-giphy-searchbox";
 
 interface Props {
   inputFieldsOpen: boolean;
-  userInfo: User;
+  userInfo: User | undefined;
   handleInputField: (value: boolean) => void;
 }
 
 function MainPage(props: Props) {
+  //any?? Cant find correct typing
   const [messages, setMessages] = useState<any>([] as Message[]);
   const [messageHolder, setMessageHolder] = useState("");
   const classes = useStyles();
@@ -160,7 +161,7 @@ function MainPage(props: Props) {
     } else {
       setRoomAlreadyExists(false);
       props.handleInputField(false);
-      creatNewRoom(values, props.userInfo);
+      creatNewRoom(values, props.userInfo!);
       setValues({
         roomName: "",
         password: "",

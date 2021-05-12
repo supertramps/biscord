@@ -9,7 +9,7 @@ import LandingPage from "./components/LandingPage";
 import SidePanel from "./components/Panel";
 import { theme } from "./providers/ThemeProvider";
 import MainPage from "./components/MainPage";
-import SocketProvider from "./providers/SocketContext";
+import SocketProvider, { User } from "./providers/SocketContext";
 
 function App() {
   const classes = useStyles();

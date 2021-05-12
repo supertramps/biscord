@@ -43,6 +43,7 @@ function MainPage(props: Props) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [gifSelected, setGifSelected] = useState(false);
   const [randomGif, setRandomGif] = useState<string>("");
+  const [typing, setTyping] = useState(false);
   const [currentRoom, setCurrentRoom] = useState<any>();
 
   const [values, setValues] = useState<object>({
@@ -64,6 +65,14 @@ function MainPage(props: Props) {
     socket.emit("chat-message", messageHolder);
   }
 
+  function messagePending(value: string) {
+    if (value.length > 0) {
+      socket.emit("typing", true);
+    } else {
+      socket.emit("typing", false);
+    }
+  }
+
   useEffect(() => {
     if (!socket) return;
     // If the current message includes a link to Giphy we instantly send it to
@@ -78,13 +87,17 @@ function MainPage(props: Props) {
   useEffect(() => {
     if (!socket) return;
 
+
+    // const handleUserSession = (lUser: any) => {
+    //   // setUser(lUser);
+    // };
+
+
     const handleCurrentRoom = (room: any) => {
       setCurrentRoom(room);
     };
 
-    const handleUserSession = (lUser: any) => {
-      setUser(lUser);
-    };
+
     const handleChatMessage = function (data: any) {
       const { messagesInCurrentRoom, loggedInUser } = data;
       setMessages(messagesInCurrentRoom);
@@ -96,17 +109,29 @@ function MainPage(props: Props) {
     const handleLeft = (msg: string) => {
       setJoinedMessage((_prevState: any) => [...joinedMessage, msg]);
     };
+    const handleTyping = (value: boolean, luser: any) => {
+      setTyping(value);
+      setUser(luser.name);
+      console.log(user, "USERRSSS");
+      
+    };
+
 
     // Creates our event listeners.
-    socket.on("user-session", handleUserSession);
+      // socket.off("user-session", handleUserSession);
+ 
     socket.on("chat-message", handleChatMessage);
     socket.on("joined", handleJoined);
     socket.on("left", handleLeft);
-    socket.on("current-room", handleCurrentRoom);
+
+    socket.on("current-room", handleCurrentRoom)
+    socket.on("typing", handleTyping);
+        
+
 
     return () => {
       // Removes all the event listeners (Happy browser is a good browser 🥰)!
-      socket.off("user-session", handleUserSession);
+      // socket.off("user-session", handleUserSession);
       socket.off("chat-message", handleChatMessage);
       socket.off("joined", handleJoined);
       socket.off("left", handleLeft);
@@ -273,6 +298,7 @@ function MainPage(props: Props) {
                     value={messageHolder}
                     className={classes.textFieldStyling}
                     onChange={(event) => {
+                      messagePending(event.target.value);
                       setMessageHolder(event.target.value);
                     }}
                   />
@@ -293,10 +319,9 @@ function MainPage(props: Props) {
                   <Button
                     type="submit"
                     onClick={() => {
-                      // addMessageToArray();
+                      socket.emit("typing", false);
                       setChosenGif("");
                       setMessageHolder("");
-                      // clearInput();
                       postman();
                       setGifSelected(false);
                     }}
@@ -308,6 +333,11 @@ function MainPage(props: Props) {
                 </Box>
               </Box>
             </form>
+          </Box>
+          <Box className={classes.messagePending}>
+            {typing ? (
+              <Typography variant="body2">{user} is typing...</Typography>
+            ) : null}
           </Box>
         </>
       )}
@@ -458,9 +488,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     cursor: "default",
     width: "100%",
   },
+
   currentRoomWrapper: {
     position: "absolute",
     right: "0",
+  },
+  messagePending: {
+    bottom:0,
+    position: "absolute",
+    marginBottom: ".3rem",
+    height: "1rem"
   },
 }));
 

@@ -107,6 +107,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: "none",
     cursor: "default",
     borderRadius: "20px",
+    pointerEvents: "none",
   },
 
   gifWrapper: {

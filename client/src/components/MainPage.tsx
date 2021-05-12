@@ -58,7 +58,6 @@ function MainPage(props: Props) {
     } else if (gifGalleryOpen === true) {
       setGifGalleryOpen(false);
     }
-    console.log("GIF panel is open");
   }
 
   // Makes a post to the server with the current state of messageHolder
@@ -95,20 +94,13 @@ function MainPage(props: Props) {
 
 
     const handleCurrentRoom = (room: any) => {
-      setCurrentRoom(room)
-    }
+      setCurrentRoom(room);
+    };
 
 
     const handleChatMessage = function (data: any) {
-      if (!messages) {
-        const { messagesInCurrentRoom, loggedInUser } = data;
-        setMessages(messagesInCurrentRoom);
-        console.log(messages);
-      } else {
-        const { messagesInCurrentRoom, loggedInUser } = data;
-        setMessages(messagesInCurrentRoom);
-        console.log(messages);
-      }
+      const { messagesInCurrentRoom, loggedInUser } = data;
+      setMessages(messagesInCurrentRoom);
     };
     const handleJoined = (msg: string) => {
       setJoinedMessage((_prevState: any) => [...joinedMessage, msg]);
@@ -131,9 +123,11 @@ function MainPage(props: Props) {
     socket.on("chat-message", handleChatMessage);
     socket.on("joined", handleJoined);
     socket.on("left", handleLeft);
+
     socket.on("current-room", handleCurrentRoom)
     socket.on("typing", handleTyping);
         
+
 
     return () => {
       // Removes all the event listeners (Happy browser is a good browser 🥰)!
@@ -141,7 +135,7 @@ function MainPage(props: Props) {
       socket.off("chat-message", handleChatMessage);
       socket.off("joined", handleJoined);
       socket.off("left", handleLeft);
-      socket.off("current-room", handleCurrentRoom)
+      socket.off("current-room", handleCurrentRoom);
     };
   });
 
@@ -223,9 +217,9 @@ function MainPage(props: Props) {
       ) : (
         <>
           <Box className={classes.contentWrapper}>
-              <Typography variant="body2">
-                 #{currentRoom}
-              </Typography>
+            <Box mr={1} className={classes.currentRoomWrapper}>
+              <Typography variant="body2">#{currentRoom}</Typography>
+            </Box>
             <Box>
               {/* Here we render our snackbar, it pops up at the top when a user joins a room. */}
               {joinedMessage.map((msg: string) => [
@@ -391,7 +385,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   sendGifContainer: {
     width: "10%",
-    // height: "100%",
     boxShadow: "3px 5px 6px -4px rgba(0,0,0,0.7)",
   },
   inputForm: {
@@ -427,7 +420,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     "&::-webkit-scrollbar-track": {
       boxShadow: "inset 0 0 6px rgba(0,0,0,0.00)",
       webkitBoxShadow: "inset 0 0 6px rgba(0,0,0,0.00)",
-      // margin: "0 30px",
       margin: "1rem",
     },
     "&::-webkit-scrollbar-thumb": {
@@ -495,6 +487,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: "none",
     cursor: "default",
     width: "100%",
+  },
+
+  currentRoomWrapper: {
+    position: "absolute",
+    right: "0",
   },
   messagePending: {
     bottom:0,

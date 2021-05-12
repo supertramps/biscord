@@ -44,7 +44,10 @@ function MainPage(props: Props) {
   const [gifSelected, setGifSelected] = useState(false);
   const [randomGif, setRandomGif] = useState<string>("");
   const [typing, setTyping] = useState(false);
+  const [currentRoom, setCurrentRoom] = useState<any>();
 
+
+  console.log(currentRoom)
   const [values, setValues] = useState<object>({
     roomName: "",
     password: "",
@@ -75,19 +78,28 @@ function MainPage(props: Props) {
 
   useEffect(() => {
     if (!socket) return;
-    if (messageHolder.includes("giphy.com/")) {
+    // If the current message includes a link to Giphy we instantly send it to
+    // the socket for posting. This is how we can send gifs from the GIF gallery by clicking them.
+    // Then we clear the state to dodge the infinite loop 🌌
+    if (messageHolder.includes("giphy.com/embed")) {
       socket.emit("chat-message", messageHolder);
       setMessageHolder("");
     }
-    console.log("useeffect fired");
   }, [messageHolder]);
 
   useEffect(() => {
     if (!socket) return;
 
+
     // const handleUserSession = (lUser: any) => {
     //   // setUser(lUser);
     // };
+
+
+    const handleCurrentRoom = (room: any) => {
+      setCurrentRoom(room)
+    }
+
 
     const handleChatMessage = function (data: any) {
       if (!messages) {
@@ -105,7 +117,6 @@ function MainPage(props: Props) {
       setSnackbarOpen(true);
     };
     const handleLeft = (msg: string) => {
-      console.log(msg);
       setJoinedMessage((_prevState: any) => [...joinedMessage, msg]);
     };
     const handleTyping = (value: boolean, luser: any) => {
@@ -115,17 +126,24 @@ function MainPage(props: Props) {
       
     };
 
-    // socket.on("user-session", handleUserSession);
+
+    // Creates our event listeners.
+      // socket.off("user-session", handleUserSession);
+ 
     socket.on("chat-message", handleChatMessage);
     socket.on("joined", handleJoined);
     socket.on("left", handleLeft);
+    socket.on("current-room", handleCurrentRoom)
     socket.on("typing", handleTyping);
+        
 
     return () => {
+      // Removes all the event listeners (Happy browser is a good browser 🥰)!
       // socket.off("user-session", handleUserSession);
       socket.off("chat-message", handleChatMessage);
       socket.off("joined", handleJoined);
       socket.off("left", handleLeft);
+      socket.off("current-room", handleCurrentRoom)
     };
   });
 
@@ -151,6 +169,8 @@ function MainPage(props: Props) {
 
   return (
     <Box className={classes.root}>
+      {/* If the prop "inputFieldsOpen" from App.tsx is True we render this "modal" 
+      where the user can create a room. If not we proceed to render our messages. */}
       {props.inputFieldsOpen ? (
         <Box className={classes.root}>
           <Box className={classes.roomFormContainer}>
@@ -190,6 +210,10 @@ function MainPage(props: Props) {
                   onClick={() => {
                     creatNewRoom(values, props.userInfo);
                     props.handleInputField(false);
+                    setValues({
+                      roomName: "",
+                      password: "",
+                    });
                   }}
                 >
                   Create
@@ -201,7 +225,11 @@ function MainPage(props: Props) {
       ) : (
         <>
           <Box className={classes.contentWrapper}>
+              <Typography variant="body2">
+                 #{currentRoom}
+              </Typography>
             <Box>
+              {/* Here we render our snackbar, it pops up at the top when a user joins a room. */}
               {joinedMessage.map((msg: string) => [
                 <Snackbar
                   anchorOrigin={{
@@ -220,6 +248,7 @@ function MainPage(props: Props) {
                 messages ? classes.messageContainer : classes.logoContainer
               }
             >
+              {/* If there is any messeges in the array we map them in reverse here (newest first). If not we render a logo.  */}
               {messages ? (
                 messages
                   .map((m: any, i: any) => (
@@ -240,6 +269,7 @@ function MainPage(props: Props) {
           {gifGalleryOpen ? (
             <Box className={classes.gifContainer}>
               <Box>
+                {/* This is our GIF gallery, onSelect sends a gif in the chat */}
                 <ReactGiphySearchbox
                   apiKey="nGgKX5djKNAVoYChgFHSzk7Q2tnOs65p"
                   // @ts-ignore

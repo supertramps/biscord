@@ -163,7 +163,6 @@ function SidePanel(props: Props) {
                     </Box>
                   </Link>
                   {usersInRoom
-
                     ? usersInRoom.map((users: any) =>
                         users.room === room.roomName ? (
                           <>
@@ -191,7 +190,6 @@ function SidePanel(props: Props) {
                               </Box>
                             </Box>
                           </>
-
                         ) : null
                       )
                     : null}
@@ -265,8 +263,9 @@ function SidePanel(props: Props) {
                 label="Password...(⚔)"
                 variant="outlined"
                 name="password"
+                inputProps={{ className: classes.inputColor }}
                 onChange={handleChange}
-                helperText="Wrong password"
+                helperText={passwordMatch ? "Wrong password" : null}
               />
               <Box mb={2}>
                 <Button
@@ -290,6 +289,9 @@ function SidePanel(props: Props) {
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    "& .MuiInputBase-input": {
+      color: "white",
+    },
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
@@ -327,6 +329,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   avatarStyling: {
     background:
       "linear-gradient(126.18deg, #5317FD -6.87%, rgba(236, 152, 233, 0.91) 125.18%)",
+  },
+  inputColor: {
+    color: "#fff",
   },
   connectionStatus: {
     display: "flex",

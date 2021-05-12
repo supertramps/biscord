@@ -212,7 +212,7 @@ function MainPage(props: Props) {
                 name="roomName"
                 inputProps={{ maxLength: 15 }}
                 onChange={handleChange}
-                helperText="Room name taken"
+                helperText={roomAlreadyExists ? "Name is already taken" : null}
               />
               <Typography variant="body2">
                 Password is not required (but your room might be raided ⚔)

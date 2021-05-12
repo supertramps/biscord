@@ -60,6 +60,11 @@ function onConnection(socket) {
     getMessages(userSession.room, socket);
   });
 
+  socket.on("typing", (value) => {
+    const userSession = getUser(socket.id);
+    io.emit("typing", value, userSession);
+  });
+
   socket.on("chat-message", async (msg) => {
     const userSession = getUser(socket.id);
 

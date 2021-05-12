@@ -1,56 +1,48 @@
 import {
-  Avatar,
-  // Icon,
   Box,
   makeStyles,
   Theme,
   Typography,
-  Link,
   Button,
-  Modal,
   TextField,
-  Tooltip,
-  Zoom,
   Snackbar,
 } from "@material-ui/core";
-import moment from "moment";
 import discordDark from "../assets/discord-dark.png";
-import React, { useContext, useEffect, useState } from "react";
-import { SocketContext } from "../providers/SocketContext";
+import { useContext, useEffect, useState } from "react";
+import { SocketContext, Message, Room, User } from "../providers/SocketContext";
 import ChatMessage from "./ChatMessage";
 import GifIcon from "../assets/gif_icon.svg";
 
+
 // @ts-ignore
 import ReactGiphySearchbox from "react-giphy-searchbox";
-// @ts-ignore
-import giphyRandom from "giphy-random";
 
 interface Props {
-  inputFieldsOpen: any;
-  userInfo: any;
+  inputFieldsOpen: boolean;
+  userInfo: User;
   handleInputField: (value: boolean) => void;
 }
 
 function MainPage(props: Props) {
-  const [messages, setMessages] = useState<any>();
+  const [messages, setMessages] = useState<any>([] as Message[]);
   const [messageHolder, setMessageHolder] = useState("");
   const classes = useStyles();
-  const { creatNewRoom, socket, room } = useContext(SocketContext);
-  const [user, setUser] = useState<any>();
+  const { creatNewRoom, socket } = useContext(SocketContext);
+  const [user, setUser] = useState<string>();
   const [gifGalleryOpen, setGifGalleryOpen] = useState<boolean>(false);
   const [chosenGif, setChosenGif] = useState<string>("");
-  const [joinedMessage, setJoinedMessage] = useState<any>([]);
+  const [joinedMessage, setJoinedMessage] = useState<Array<string>>([]);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [gifSelected, setGifSelected] = useState(false);
   const [randomGif, setRandomGif] = useState<string>("");
   const [typing, setTyping] = useState(false);
-  const [currentRoom, setCurrentRoom] = useState<any>();
-  const [roomAlreadyExists, setRoomAlreadyExists] = useState<any>(false);
-  const [rooms, setRooms] = useState<any>();
+  const [currentRoom, setCurrentRoom] = useState<string>();
+  const [roomAlreadyExists, setRoomAlreadyExists] = useState<boolean>(false);
+  const [rooms, setRooms] = useState<Array<Room>>();
 
-  console.log(rooms);
+  
 
-  const [values, setValues] = useState<object>({
+  const [values, setValues] = useState<Room>({
     roomName: "",
     password: "",
   });
@@ -95,18 +87,17 @@ function MainPage(props: Props) {
   useEffect(() => {
     if (!socket) return;
 
-    // const handleUserSession = (lUser: any) => {
-    //   // setUser(lUser);
-    // };
-
-    const handleCurrentRoom = (room: any) => {
+    const handleCurrentRoom = (room: string) => {
       setCurrentRoom(room);
     };
-    const handleCurrentRooms = (rooms: any) => {
+    const handleCurrentRooms = (rooms: Array<Room>) => {
       setRooms(rooms);
     };
 
+    // any? Cant find correct typing
     const handleChatMessage = function (data: any) {
+      console.log(data);
+      
       if (!messages) {
         const { messagesInCurrentRoom, loggedInUser } = data;
         setMessages(messagesInCurrentRoom);
@@ -117,15 +108,15 @@ function MainPage(props: Props) {
     };
 
     const handleJoined = (msg: string) => {
-      setJoinedMessage((_prevState: any) => [...joinedMessage, msg]);
+      setJoinedMessage((_prevState) => [...joinedMessage, msg]);
       setSnackbarOpen(true);
     };
     const handleLeft = (msg: string) => {
-      setJoinedMessage((_prevState: any) => [...joinedMessage, msg]);
+      setJoinedMessage((_prevState) => [...joinedMessage, msg]);
     };
-    const handleTyping = (value: boolean, luser: any) => {
+    const handleTyping = (value: boolean, lUser: User) => {
       setTyping(value);
-      setUser(luser.name);
+      setUser(lUser.name);
     };
 
     // Creates our event listeners.
@@ -158,9 +149,10 @@ function MainPage(props: Props) {
     }));
   };
 
-  function roomExists(newRoom: any) {
-    const roomExists = rooms.find(
-      (room: any) => room.roomName === newRoom.roomName
+  function roomExists(newRoom: Room) {
+    console.log(newRoom)
+    const roomExists = rooms!.find(
+      (room: Room) => room.roomName === newRoom.roomName
     );
     if (roomExists) {
       setRoomAlreadyExists(true);
@@ -248,7 +240,7 @@ function MainPage(props: Props) {
             </Box>
             <Box>
               {/* Here we render our snackbar, it pops up at the top when a user joins a room. */}
-              {joinedMessage.map((msg: string, i: string) => [
+              {joinedMessage.map((msg, i) => [
                 <Snackbar
                   key={i}
                   anchorOrigin={{
@@ -270,7 +262,7 @@ function MainPage(props: Props) {
               {/* If there is any messeges in the array we map them in reverse here (newest first). If not we render a logo.  */}
               {messages ? (
                 messages
-                  .map((m: any, i: string) => (
+                  .map((m: Message, i: string) => (
                     <ChatMessage
                       time={m.time}
                       profile={m.user}

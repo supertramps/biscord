@@ -2,12 +2,21 @@ import { createContext, useEffect, useState } from "react";
 import io from "socket.io-client";
 import { ObjectType } from "typescript";
 
-export interface Message {}
+export interface Message {
+  message: string,
+  user: string,
+  room: string,
+  time: string,
+}
 export interface User {
-  user: string
+  id: string,
+  name: string,
+  room: string,
+  password: string,
 }
 export interface Room {
-  
+  roomName: string,
+  password: string
 }
 
 interface State {

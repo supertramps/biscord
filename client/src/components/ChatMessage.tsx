@@ -1,10 +1,9 @@
 import { Avatar, Box, makeStyles, Theme, Typography } from "@material-ui/core";
-import React, { useContext, useEffect, useState } from "react";
-import { SocketContext } from "../providers/SocketContext";
+import { useEffect, useState } from "react";
 
 interface Iprops {
   message: string;
-  profile: any;
+  profile: string;
   time: string | (string | number)[];
   gifUrl?: string;
 }

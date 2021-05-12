@@ -8,13 +8,7 @@ const io = socketIO(server, { pingTimeout: 25000 });
 const port = process.env.PORT || 6969;
 
 const { messages, handleMessages, filterMessages } = require("./messages");
-const {
-  addUser,
-  getUser,
-  createRoom,
-  switchRoom,
-  users,
-} = require("./users");
+const { addUser, getUser, createRoom, switchRoom, users, removeUser } = require("./users");
 
 const { rooms, createNewRoom, removeRoom } = require("./rooms");
 
@@ -34,7 +28,7 @@ function onConnection(socket) {
 
       socket.emit("user-session", userSession);
       socket.emit("current-room", userSession.room);
-      io.emit("users-in-room", users)
+      io.emit("users-in-room", users);
       getMessages(userSession.room, socket);
     }
   });
@@ -55,7 +49,7 @@ function onConnection(socket) {
     );
     io.emit("room-session", remove);
     socket.emit("current-room", roomInfo.roomName);
-    io.emit("users-in-room", users)
+    io.emit("users-in-room", users);
     getMessages(userSession.room, socket);
   });
 
@@ -94,11 +88,13 @@ function onConnection(socket) {
       socket.emit("current-room", room.roomName);
       io.emit("room-session", remove);
       getMessages(userSession.room, socket);
-      io.emit("users-in-room", users)
+      io.emit("users-in-room", users);
     }
   });
 
   socket.on("disconnect", () => {
+    removeUser(socket.id);
+    io.emit("users-in-room", users);
     console.log("user disconnected");
   });
 }

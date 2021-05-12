@@ -8,7 +8,14 @@ const io = socketIO(server, { pingTimeout: 25000 });
 const port = process.env.PORT || 6969;
 
 const { messages, handleMessages, filterMessages } = require("./messages");
-const { addUser, getUser, createRoom, switchRoom, users, removeUser } = require("./users");
+const {
+  addUser,
+  getUser,
+  createRoom,
+  switchRoom,
+  users,
+  removeUser,
+} = require("./users");
 
 const { rooms, createNewRoom, removeRoom } = require("./rooms");
 
@@ -50,12 +57,13 @@ function onConnection(socket) {
     io.emit("room-session", remove);
     socket.emit("current-room", roomInfo.roomName);
     io.emit("users-in-room", users);
+    io.emit("typing", false, userSession);
     getMessages(userSession.room, socket);
   });
 
   socket.on("typing", (value) => {
     const userSession = getUser(socket.id);
-    io.emit("typing", value, userSession);
+    io.to(userSession.room).emit("typing", value, userSession);
   });
 
   socket.on("chat-message", async (msg) => {
@@ -89,11 +97,11 @@ function onConnection(socket) {
       io.emit("room-session", remove);
       getMessages(userSession.room, socket);
       io.emit("users-in-room", users);
+      io.emit("typing", false, userSession);
     }
   });
 
   socket.on("disconnect", () => {
-
     removeUser(socket.id);
     io.emit("users-in-room", users);
 

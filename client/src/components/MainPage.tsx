@@ -96,12 +96,14 @@ function MainPage(props: Props) {
     // };
 
     const handleCurrentRoom = (room: any) => {
+
       setCurrentRoom(room)
     }
     const handleCurrentRooms= (rooms: any) => {
       setRooms(rooms)
     }
     
+
     const handleChatMessage = function (data: any) {
       if (!messages) {
         const { messagesInCurrentRoom, loggedInUser } = data;
@@ -124,18 +126,18 @@ function MainPage(props: Props) {
       setUser(luser.name);
     };
 
-
     // Creates our event listeners.
-      // socket.off("user-session", handleUserSession);
- 
+    // socket.off("user-session", handleUserSession);
+
     socket.on("chat-message", handleChatMessage);
     socket.on("joined", handleJoined);
     socket.on("left", handleLeft);
 
+
     socket.on("current-room", handleCurrentRoom)
     socket.on("typing", handleTyping);
     socket.on('room-session', handleCurrentRooms);
-        
+
 
 
     return () => {
@@ -146,6 +148,7 @@ function MainPage(props: Props) {
       socket.off("left", handleLeft);
       socket.off("current-room", handleCurrentRoom)
       socket.off('room-session', handleCurrentRooms);
+
     };
 
   });
@@ -241,13 +244,15 @@ function MainPage(props: Props) {
       ) : (
         <>
           <Box className={classes.contentWrapper}>
+
             <Box mr={1} className={classes.currentRoomWrapper}>
               <Typography variant="body2">#{currentRoom}</Typography>
             </Box>
             <Box>
               {/* Here we render our snackbar, it pops up at the top when a user joins a room. */}
-              {joinedMessage.map((msg: string) => [
+              {joinedMessage.map((msg: string, i: string) => [
                 <Snackbar
+                  key={i}
                   anchorOrigin={{
                     vertical: "top",
                     horizontal: "center",
@@ -267,7 +272,7 @@ function MainPage(props: Props) {
               {/* If there is any messeges in the array we map them in reverse here (newest first). If not we render a logo.  */}
               {messages ? (
                 messages
-                  .map((m: any, i: any) => (
+                  .map((m: any, i: string) => (
                     <ChatMessage
                       time={m.time}
                       profile={m.user}
@@ -518,10 +523,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     right: "0",
   },
   messagePending: {
-    bottom:0,
+    bottom: 0,
     position: "absolute",
     marginBottom: ".3rem",
-    height: "1rem"
+    height: "1rem",
   },
 }));
 

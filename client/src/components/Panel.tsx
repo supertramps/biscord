@@ -38,9 +38,6 @@ function SidePanel(props: Props) {
   const [password, setPassword] = useState<any>();
   const [passwordMatch, setPasswordMatch] = useState<any>(false);
   const [usersInRoom, setUsersInRoom] = useState<any>();
-
-  console.log(usersInRoom);
-
   const handleOpen = () => {
     setRoomValidationModal(true);
   };
@@ -144,11 +141,10 @@ function SidePanel(props: Props) {
         <Box mt={2} ml={5} className={classes.roomList}>
           {rooms
             ? rooms.map((room: any, i: number) => (
-                <Box className={classes.roomContainer}>
+                <Box key={i} className={classes.roomContainer}>
                   <Link>
                     <Box className={classes.panelRooms}>
                       <Typography
-                        key={i}
                         variant="body1"
                         onClick={() => {
                           setSelectedRoom(room.roomName);
@@ -167,6 +163,7 @@ function SidePanel(props: Props) {
                     </Box>
                   </Link>
                   {usersInRoom
+
                     ? usersInRoom.map((users: any) =>
                         users.room === room.roomName ? (
                           <>
@@ -194,6 +191,7 @@ function SidePanel(props: Props) {
                               </Box>
                             </Box>
                           </>
+
                         ) : null
                       )
                     : null}

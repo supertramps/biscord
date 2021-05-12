@@ -18,6 +18,7 @@ import searchIcon from "../assets/search_icon.svg";
 import onlineIcon from "../assets/online_icon.svg";
 import offlineIcon from "../assets/offline_icon.svg";
 import passwordIcon from "../assets/password.svg";
+import { findByLabelText } from "@testing-library/dom";
 
 interface Props {
   createInputFields: any;
@@ -37,7 +38,6 @@ function SidePanel(props: Props) {
   const [password, setPassword] = useState<any>();
   const [passwordMatch, setPasswordMatch] = useState<any>(false);
   const [usersInRoom, setUsersInRoom] = useState<any>();
-
   const handleOpen = () => {
     setRoomValidationModal(true);
   };
@@ -163,15 +163,35 @@ function SidePanel(props: Props) {
                     </Box>
                   </Link>
                   {usersInRoom
-                    ? usersInRoom.map((users: any, i: string) =>
+
+                    ? usersInRoom.map((users: any) =>
                         users.room === room.roomName ? (
-                          <Typography
-                            key={i}
-                            className={classes.inRoom}
-                            variant="body2"
-                          >
-                            {users.name}
-                          </Typography>
+                          <>
+                            <Box ml={3} className={classes.userList}>
+                              <Box>
+                                <Avatar
+                                  variant="circular"
+                                  className={classes.userListAvatar}
+                                >
+                                  <Typography
+                                    className={classes.avatarText}
+                                    variant="body2"
+                                  >
+                                    {users.name.charAt(0).toUpperCase()}
+                                  </Typography>
+                                </Avatar>
+                              </Box>
+                              <Box mb={1}>
+                                <Typography
+                                  className={classes.inRoom}
+                                  variant="body2"
+                                >
+                                  {users.name}
+                                </Typography>
+                              </Box>
+                            </Box>
+                          </>
+
                         ) : null
                       )
                     : null}
@@ -382,10 +402,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: "center",
   },
   inRoom: {
-    fontSize: "0.9rem",
-    color: "#40444B",
-    paddingLeft: "2rem",
-    paddingTop: "0.2rem",
+    paddingLeft: ".5rem",
+    paddingTop: "0.5rem",
+  },
+  userList: {
+    display: "flex",
+    alignItems: "center",
+  },
+  userListAvatar: {
+    width: "1rem",
+    height: "1rem",
+    background:
+      "linear-gradient(126.18deg, #5317FD -6.87%, rgba(236, 152, 233, 0.91) 125.18%)",
+  },
+  avatarText: {
+    color: "#fefefe",
   },
 }));
 

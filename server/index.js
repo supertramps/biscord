@@ -8,7 +8,14 @@ const io = socketIO(server, { pingTimeout: 25000 });
 const port = process.env.PORT || 6969;
 
 const { messages, handleMessages, filterMessages } = require("./messages");
-const { addUser, getUser, createRoom, switchRoom, users, removeUser } = require("./users");
+const {
+  addUser,
+  getUser,
+  createRoom,
+  switchRoom,
+  users,
+  removeUser,
+} = require("./users");
 
 const { rooms, createNewRoom, removeRoom } = require("./rooms");
 
@@ -93,7 +100,6 @@ function onConnection(socket) {
   });
 
   socket.on("disconnect", () => {
-
     removeUser(socket.id);
     io.emit("users-in-room", users);
 

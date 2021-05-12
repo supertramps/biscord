@@ -47,9 +47,7 @@ function LandingPage(props: IProps) {
             label="Your name..."
             variant="outlined"
             onChange={(event) => handleChange(event.target.value)}
-            InputProps={{
-              classes: { notchedOutline: classes.noBorder },
-            }}
+            InputProps={{ className: classes.noBorder }}
           />
         </Box>
         <Box mt={3}>
@@ -101,6 +99,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   noBorder: {
     border: "none",
+    color: "#fff",
   },
   formFlex: {
     display: "flex",

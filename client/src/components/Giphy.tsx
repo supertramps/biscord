@@ -1,18 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 import {
-  Avatar,
-  // Icon,
   Box,
   makeStyles,
   Theme,
-  Typography,
-  Link,
-  Button,
-  Modal,
-  TextField,
-  Tooltip,
-  Zoom,
 } from "@material-ui/core";
 
 function Giphy() {

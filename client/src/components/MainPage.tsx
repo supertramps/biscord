@@ -45,7 +45,6 @@ function MainPage(props: Props) {
   const [randomGif, setRandomGif] = useState<string>("");
   const [currentRoom, setCurrentRoom] = useState<any>();
 
-  console.log(currentRoom)
   const [values, setValues] = useState<object>({
     roomName: "",
     password: "",

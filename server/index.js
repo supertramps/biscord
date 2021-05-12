@@ -36,12 +36,13 @@ function onConnection(socket) {
 
       socket.emit("user-session", userSession);
       socket.emit("current-room", userSession.room);
+      io.emit("users-in-room", users)
       getMessages(userSession.room, socket);
+      console.log(users);
     }
   });
 
   socket.on("create-room", (data) => {
-    console.log(data);
     const { roomInfo, userInfo } = data;
     const userSession = getUser(socket.id);
     socket.leave(userSession.room);
@@ -57,6 +58,7 @@ function onConnection(socket) {
     );
     io.emit("room-session", remove);
     socket.emit("current-room", roomInfo.roomName);
+    io.emit("users-in-room", users)
     getMessages(userSession.room, socket);
   });
 
@@ -90,8 +92,7 @@ function onConnection(socket) {
       socket.emit("current-room", room.roomName);
       io.emit("room-session", remove);
       getMessages(userSession.room, socket);
-
-      // console.log(io.sockets.adapter.rooms);
+      io.emit("users-in-room", users)
     }
   });
 
